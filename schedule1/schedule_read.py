@@ -161,6 +161,7 @@ class Schedule:
             return l
         else:
             w = WellParam(wname)
+            self.wells[wname] = w
         # store all data in dict
         w.x = x
         w.y = y 
@@ -179,7 +180,7 @@ class Schedule:
                  "        " + str(phase) + " /" )
         l.append(s_welspecs_hints)
         l.append(s_welspecs)
-        
+        l.append('/')
         l.append('COMPDAT')
         s_compdat_hints = ("-- name x y z1 z2 perf table  CF  diam KH skin  /" )
         s_compdat = ("   " + wname + 
@@ -190,18 +191,30 @@ class Schedule:
                  "  1*  " + str(skin) + " /" )
         l.append(s_compdat_hints)
         l.append(s_compdat)   
+        l.append('/')
         return l
 
-    def make_WCONPROD(name, qliq =10, bhp =50, status = 'OPEN', control = 'BHP', pump=0):
+    def make_WCONPROD(self, wname, qliq =10, bhp =50, status = 'OPEN', control = 'BHP', pump=0):
         """
         start stop production keyword
         pump - indicate pump type, 
                0 - self flow, 1 - 100-500, 2 -200-500, 3 - 200-1000
         """
         l=[]
+        if wname in self.wells:
+            w = self.wells[wname]
+        else:
+            print('well with name '+ wname + ' not found. command ignored')
+            return l
+            
+        # store all data in dict
+        w.lrat = qliq
+        w.bhp = bhp 
+        w.status_work = status
+        w.control = control
         l.append('WCONPROD')
         s_wconprod_hints = ("-- name status control orate wrate grate lrate lrateres bhp /" )
-        s_wconprod = ("   " + name + 
+        s_wconprod = ("   " + wname + 
                       "    " + status +
                       "  " + control +
                       "           3*          " + str(qliq) +
@@ -212,7 +225,7 @@ class Schedule:
         
         return l
     
-    def make_WCONINJE(name, qliq =10, bhp =50, status = 'OPEN', control = 'BHP', pump=0):
+    def make_WCONINJE(self, name, qliq =10, bhp =50, status = 'OPEN', control = 'BHP', pump=0):
         """
         start stop production keyword
         pump - indicate pump type, 
@@ -232,7 +245,7 @@ class Schedule:
         
         return l
     
-    def make_TSTEP(num = 1, step = 30):
+    def make_TSTEP(self, num = 1, step = 30):
         l=[]
         l.append('TSTEP')
         l.append(' ' + str(num)+'*'+str(step))
