@@ -303,16 +303,19 @@ class Events:
                     control = 'BHP'
                     qliq = '1*'
                     if np.isnan(bhp) == True:
-                        bhp = 100
+                        bhp = 400
                 elif np.isnan(bhp) == True:
                     control = 'RATE'
-                    bhp = '1*'
+                    bhp = 400
                 else:
                     control = 'BHP'
-                    bhp = 250
+                    bhp = 400
                 self.schedule_new.extend(self.schedule.make_WCONINJE(wname, qliq, bhp, status, control))
         time = float(event['День']) + float(event['Час'])
-        num = int(time)
+        if time == 1:
+            num = 1
+        else:
+            num = 3
         step = round(time / num, 2)
         self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
         # else: Почему-то пайчарм ругается здесь
@@ -328,7 +331,10 @@ class Events:
             else:
                 self.schedule_new.extend(self.schedule.make_WCONINJE(wname, status = status))
         time = float(event['День']) + float(event['Час'])
-        num = int(time)
+        if time == 1:
+            num = 1
+        else:
+            num = 3
         step = round(time / num, 2)
         self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
         # else: Почему-то пайчарм ругается здесь
@@ -353,14 +359,22 @@ class Events:
         z1 = self.determine_z(event['перфорация верх, м'])
         z2 = self.determine_z(event['перфорация низ, м'])
         if event['Тип скважины'] == 'Добывающая':
-            phase = 'OIL' # непонятно обязательно ли на нагн ставить воду т.к. это и отдельно при запуске задается
+            phase = 'OIL'  # непонятно обязательно ли на нагн ставить воду т.к. это и отдельно при запуске задается
+            w = WellParam(wname)
+            w.type = 'PROD'
         else:
             phase = 'WATER'
+            w = WellParam(wname)
+            w.type = 'INJ'
         skin = 1
-        status = 'SHUT'
+        status = 'OPEN'
         self.schedule_new.extend(self.schedule.make_WELL(wname, x, y, z1, z2, phase, status, skin))
+        self.schedule.wells[wname] = w
         time = float(event['День']) + float(event['Час'])
-        num = int(time)
+        if time == 1:
+            num = 1
+        else:
+            num = 3
         step = round(time / num, 2)
         self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
         return
@@ -373,7 +387,6 @@ class Events:
         excel = excel.dropna(subset = ['Дата мероприятия'])
         excel = excel.drop(excel[excel['Название команды'] == 'Проверка'].index)
         self.excel = excel
-
 
         for event in excel.iterrows():
             if event[1]['Вид мероприятия'] == 'Запуск скважины':

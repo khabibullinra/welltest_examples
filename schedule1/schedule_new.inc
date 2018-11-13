@@ -6,7 +6,7 @@ WELSPECS
 /
 COMPDAT
 -- name x y z1 z2 perf table  CF  diam KH skin  /
-   M1   2*   1 13  SHUT     2*      0.2  1*  1 /
+   M1   2*   1 13  OPEN     2*      0.2  1*  1 /
 /
 TSTEP
  1*1.0
@@ -17,7 +17,7 @@ WELSPECS
 /
 COMPDAT
 -- name x y z1 z2 perf table  CF  diam KH skin  /
-   M2   2*   1 13  SHUT     2*      0.2  1*  1 /
+   M2   2*   1 13  OPEN     2*      0.2  1*  1 /
 /
 TSTEP
  1*1.0
@@ -28,7 +28,7 @@ WELSPECS
 /
 COMPDAT
 -- name x y z1 z2 perf table  CF  diam KH skin  /
-   MI1   2*   1 13  SHUT     2*      0.2  1*  1 /
+   MI1   2*   1 13  OPEN     2*      0.2  1*  1 /
 /
 TSTEP
  1*1.0
@@ -39,7 +39,7 @@ WELSPECS
 /
 COMPDAT
 -- name x y z1 z2 perf table  CF  diam KH skin  /
-   Ì6   2*   1 13  SHUT     2*      0.2  1*  1 /
+   Ì6   2*   1 13  OPEN     2*      0.2  1*  1 /
 /
 TSTEP
  1*1.0
@@ -50,7 +50,7 @@ WELSPECS
 /
 COMPDAT
 -- name x y z1 z2 perf table  CF  diam KH skin  /
-   Ì5   2*   1 13  SHUT     2*      0.2  1*  1 /
+   Ì5   2*   1 13  OPEN     2*      0.2  1*  1 /
 /
 TSTEP
  1*1.0
@@ -61,7 +61,7 @@ WELSPECS
 /
 COMPDAT
 -- name x y z1 z2 perf table  CF  diam KH skin  /
-   Ì4   2*   1 13  SHUT     2*      0.2  1*  1 /
+   Ì4   2*   1 13  OPEN     2*      0.2  1*  1 /
 /
 TSTEP
  1*1.0
@@ -80,9 +80,9 @@ WCONPROD
 TSTEP
  1*1.0
 /
-WCONPROD
--- name status control orate wrate grate lrate lrateres bhp /
-   MI1    OPEN  BHP           3*          1*        1*   350 /
+WCONINJE
+-- name fluid status control lrate lrateres bhp /
+   MI1   WATER  OPEN  BHP     1*        1*   350 /
 /
 TSTEP
  1*1.0
@@ -113,70 +113,70 @@ WCONPROD
    P1    SHUT  BHP           3*          10        1*   50 /
 /
 TSTEP
- 27*1.0
+ 3*9.0
 /
 WCONPROD
 -- name status control orate wrate grate lrate lrateres bhp /
    P1    OPEN  BHP           3*          1*        1*   100 /
 /
 TSTEP
- 30*1.0
+ 3*10.0
 /
 WCONPROD
 -- name status control orate wrate grate lrate lrateres bhp /
    P3    SHUT  BHP           3*          10        1*   50 /
 /
 TSTEP
- 7*1.0
+ 3*2.33
 /
 WCONPROD
 -- name status control orate wrate grate lrate lrateres bhp /
    P3    OPEN  BHP           3*          1*        1*   100 /
 /
 TSTEP
- 10*1.0
+ 3*3.33
 /
 WCONPROD
 -- name status control orate wrate grate lrate lrateres bhp /
    P4    SHUT  BHP           3*          10        1*   50 /
 /
 TSTEP
- 17*1.0
+ 3*5.67
 /
 WCONPROD
 -- name status control orate wrate grate lrate lrateres bhp /
    P4    OPEN  BHP           3*          1*        1*   100 /
 /
 TSTEP
- 20*1.0
+ 3*6.67
 /
 WCONPROD
 -- name status control orate wrate grate lrate lrateres bhp /
    P5    SHUT  BHP           3*          10        1*   50 /
 /
 TSTEP
- 13*1.0
+ 3*4.33
 /
 WCONPROD
 -- name status control orate wrate grate lrate lrateres bhp /
    P5    OPEN  BHP           3*          1*        1*   100 /
 /
 TSTEP
- 16*1.0
+ 3*5.33
 /
 WCONPROD
 -- name status control orate wrate grate lrate lrateres bhp /
    P6    SHUT  BHP           3*          10        1*   50 /
 /
 TSTEP
- 22*1.0
+ 3*7.33
 /
 WCONPROD
 -- name status control orate wrate grate lrate lrateres bhp /
    P6    OPEN  BHP           3*          1*        1*   100 /
 /
 TSTEP
- 25*1.0
+ 3*8.33
 /
 WCONPROD
 -- name status control orate wrate grate lrate lrateres bhp /
@@ -204,46 +204,46 @@ WCONPROD
    PS2    OPEN  BHP           3*          1*        1*   100 /
 /
 TSTEP
- 5*1.0
+ 3*1.67
 /
 WCONINJE
 -- name fluid status control lrate lrateres bhp /
    I1   WATER  SHUT  BHP     10        1*   50 /
 /
 TSTEP
- 10*1.0
+ 3*3.33
 /
 WCONINJE
 -- name fluid status control lrate lrateres bhp /
-   I1   WATER  OPEN  BHP     1*        1*   100 /
+   I1   WATER  OPEN  BHP     1*        1*   400 /
 /
 TSTEP
- 11*1.0
+ 3*3.67
 /
 WCONINJE
 -- name fluid status control lrate lrateres bhp /
    I2   WATER  SHUT  BHP     10        1*   50 /
 /
 TSTEP
- 5*1.0
+ 3*1.67
 /
 WCONINJE
 -- name fluid status control lrate lrateres bhp /
-   I2   WATER  OPEN  BHP     1*        1*   100 /
+   I2   WATER  OPEN  BHP     1*        1*   400 /
 /
 TSTEP
- 6*1.0
+ 3*2.0
 /
 WCONINJE
 -- name fluid status control lrate lrateres bhp /
    I3   WATER  SHUT  BHP     10        1*   50 /
 /
 TSTEP
- 30*1.0
+ 3*10.0
 /
 WCONINJE
 -- name fluid status control lrate lrateres bhp /
-   I3   WATER  OPEN  BHP     1*        1*   100 /
+   I3   WATER  OPEN  BHP     1*        1*   400 /
 /
 TSTEP
  1*1.0
@@ -253,40 +253,40 @@ WCONINJE
    I4   WATER  SHUT  BHP     10        1*   50 /
 /
 TSTEP
- 25*1.0
+ 3*8.33
 /
 WCONINJE
 -- name fluid status control lrate lrateres bhp /
-   I4   WATER  OPEN  BHP     1*        1*   100 /
+   I4   WATER  OPEN  BHP     1*        1*   400 /
 /
 TSTEP
- 27*1.0
+ 3*9.0
 /
 WCONINJE
 -- name fluid status control lrate lrateres bhp /
    I5   WATER  SHUT  BHP     10        1*   50 /
 /
 TSTEP
- 15*1.0
+ 3*5.0
 /
 WCONINJE
 -- name fluid status control lrate lrateres bhp /
-   I5   WATER  OPEN  BHP     1*        1*   100 /
+   I5   WATER  OPEN  BHP     1*        1*   400 /
 /
 TSTEP
- 17*1.0
+ 3*5.67
 /
 WCONINJE
 -- name fluid status control lrate lrateres bhp /
    I6   WATER  SHUT  BHP     10        1*   50 /
 /
 TSTEP
- 20*1.0
+ 3*6.67
 /
 WCONINJE
 -- name fluid status control lrate lrateres bhp /
-   I6   WATER  OPEN  BHP     1*        1*   100 /
+   I6   WATER  OPEN  BHP     1*        1*   400 /
 /
 TSTEP
- 22*1.0
+ 3*7.33
 /
