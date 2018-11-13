@@ -5,16 +5,20 @@ Created on Mon Nov 12 05:02:49 2018
 @author: Rinat Khabibullin
 """
 
-filename = 'rienm1_100x100x15_schedule.inc'
-keywords =['WELSPECS','COMPDAT','WCONPROD','WCONINJE','TSTEP']
+import pandas as pd
+import numpy as np
+
+#filename = 'rienm1_100x100x15_schedule.inc'
+keywords = ['WELSPECS','COMPDAT','WCONPROD','WCONINJE','TSTEP']
 GROUP = 'G1'
 DEPTH = '1*'
 DIAM = 0.2
 
+
 class WellParam:
     """
     store all well params at last date in schedule file
-    need to get skin for  enchancement acounting 
+    need to get skin for enchancement acounting
     """
     def __init__(self,name,x=1,y=1,z1=1,z2=1):
         self.x = x
@@ -49,8 +53,7 @@ class Schedule:
         self.read_file(fname)       # read and parse file
         for l in self.keys:
             self.read_key(l[0],l)   # read keys and params
-            
-    
+
     def read_file(self, name):
         """
         read file 
@@ -93,7 +96,6 @@ class Schedule:
         print('reading '+name+' done: ' +str(len(self.keys)) +' keywords detected')
         pass
 
-
     def read_key(self, key, lines):
         """
         read params from keywords
@@ -111,7 +113,7 @@ class Schedule:
             if key == 'TSTEP':      #ignored at the moment 
                 continue
             if line[-1:] != '/':
-                print('Warning: ' +key+ 'string has no end character \ ')
+                print('Warning: ' + key+ 'string has no end character \ ')
             line = line.split('/')[0]
             params = line.split()   # split data line into parama
             wellname = params[0]    # first in line is well name
@@ -132,6 +134,7 @@ class Schedule:
                 w.control = params[2]           
                 w.lrat = float(params[6])
                 w.bhp = float(params[8])
+                w.type = 'PROD'
                 continue
             if key == 'WCONINJE':
                 w.phase = params[1]
@@ -139,6 +142,7 @@ class Schedule:
                 w.control = params[3]           
                 w.lrat = float(params[4])
                 w.bhp = float(params[6])
+                w.type = 'INJ'
                 continue
             if key == 'WELSPECS':
                 w.group = params[1]
@@ -222,40 +226,170 @@ class Schedule:
                       " /" )
         l.append(s_wconprod_hints)
         l.append(s_wconprod)
-        
+        l.append('/')
         return l
     
-    def make_WCONINJE(self, name, qliq =10, bhp =50, status = 'OPEN', control = 'BHP', pump=0):
+    def make_WCONINJE(self, wname, qliq =10, bhp =50, status = 'OPEN', control = 'BHP', pump=0):
         """
         start stop production keyword
         pump - indicate pump type, 
                0 - self flow, 1 - 100-500, 2 -200-500, 3 - 200-1000
         """
         l=[]
+        if wname in self.wells:
+            w = self.wells[wname]
+        else:
+            print('well with name '+ wname + ' not found. command ignored')
+            return l
+
+        w.lrat = qliq
+        w.bhp = bhp
+        w.status_work = status
+        w.control = control
         l.append('WCONINJE')
         s_wconinje_hints = ("-- name fluid status control lrate lrateres bhp /" )
-        s_wconinje = ("   " + name + '   WATER '
+        s_wconinje = ("   " + wname + '   WATER '
                       " " + status +
                       "  " + control +
                       "     " + str(qliq) +
                       "        1*   " + str(bhp) +
-                      " /" )
+                      " /")
         l.append(s_wconinje_hints)
         l.append(s_wconinje)
-        
+        l.append('/')
         return l
     
     def make_TSTEP(self, num = 1, step = 30):
-        l=[]
+        l =[]
         l.append('TSTEP')
         l.append(' ' + str(num)+'*'+str(step))
         l.append('/')
         return l
-            
-            
-w = Schedule(filename)
 
 
-        
+class Events:
+    """
 
-    
+    """
+    def __init__(self, sname):
+        self.excel = []
+        self.sname = sname
+        self.schedule = Schedule(sname)
+        self.schedule_new = []
+        self.schedule_new.append('------------------------------------ Schedule Section -----------------------------')
+        self.schedule_new.append('SCHEDULE')
+
+    def zapusk(self, event):
+        wname = event['Название скважины']
+        if wname in self.schedule.wells:
+            qliq = event['Контроль дебит']
+            bhp = event['Контроль Рзаб']
+            status = 'OPEN'
+            if self.schedule.wells[wname].type == 'PROD':
+                if np.isnan(qliq) == True:
+                    control = 'BHP'
+                    qliq = '1*'
+                    if np.isnan(bhp) == True:
+                        bhp = 100
+                elif np.isnan(bhp) == True:
+                    control = 'LRAT'
+                    bhp = '1*'
+                else:
+                    control = 'BHP'
+                    bhp = 100
+                self.schedule_new.extend(self.schedule.make_WCONPROD(wname, qliq, bhp, status, control))
+            else:
+                if np.isnan(qliq) == True:
+                    control = 'BHP'
+                    qliq = '1*'
+                    if np.isnan(bhp) == True:
+                        bhp = 100
+                elif np.isnan(bhp) == True:
+                    control = 'RATE'
+                    bhp = '1*'
+                else:
+                    control = 'BHP'
+                    bhp = 250
+                self.schedule_new.extend(self.schedule.make_WCONINJE(wname, qliq, bhp, status, control))
+        time = float(event['День']) + float(event['Час'])
+        num = int(time)
+        step = round(time / num, 2)
+        self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
+        # else: Почему-то пайчарм ругается здесь
+        #    print('Такой скважины нет')
+        return
+
+    def ostanovka(self, event):
+        wname = event['Название скважины']
+        if wname in self.schedule.wells:
+            status = 'SHUT'
+            if self.schedule.wells[wname].type == 'PROD':
+                self.schedule_new.extend(self.schedule.make_WCONPROD(wname, status = status))
+            else:
+                self.schedule_new.extend(self.schedule.make_WCONINJE(wname, status = status))
+        time = float(event['День']) + float(event['Час'])
+        num = int(time)
+        step = round(time / num, 2)
+        self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
+        # else: Почему-то пайчарм ругается здесь
+        #   print('Такой скважины нет')
+        return
+
+    @staticmethod
+    def determine_z(z_m):
+        z_range = np.arange(2500, 2575, 5)
+        i = 1
+        for z in z_range:
+            if z_m > z:
+                i += 1
+            else:
+                break
+        return i
+
+    def build_well(self,event):
+        wname = event['Название скважины']
+        x = event['координата i']
+        y = event['координата j']
+        z1 = self.determine_z(event['перфорация верх, м'])
+        z2 = self.determine_z(event['перфорация низ, м'])
+        if event['Тип скважины'] == 'Добывающая':
+            phase = 'OIL' # непонятно обязательно ли на нагн ставить воду т.к. это и отдельно при запуске задается
+        else:
+            phase = 'WATER'
+        skin = 1
+        status = 'SHUT'
+        self.schedule_new.extend(self.schedule.make_WELL(wname, x, y, z1, z2, phase, status, skin))
+        time = float(event['День']) + float(event['Час'])
+        num = int(time)
+        step = round(time / num, 2)
+        self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
+        return
+
+    def read_excel(self, fname):
+        excel = pd.read_excel(fname)
+        excel.index.names = ['Index']
+        excel.columns = list(excel.loc[6])
+        excel = excel[excel.index > 6]
+        excel = excel.dropna(subset = ['Дата мероприятия'])
+        excel = excel.drop(excel[excel['Название команды'] == 'Проверка'].index)
+        self.excel = excel
+
+
+        for event in excel.iterrows():
+            if event[1]['Вид мероприятия'] == 'Запуск скважины':
+                self.zapusk(event[1])
+            elif event[1]['Вид мероприятия'] == 'Остановка скважины':
+                self.ostanovka(event[1])
+            elif event[1]['Вид мероприятия'] == 'Строительство новой скважины':
+                self.build_well(event[1])
+
+        return
+
+a = Events('rienm1_100x100x15_schedule.inc')
+a.read_excel('Мероприятия РиЭНМ МАЙ.xlsx')
+
+with open("schedule_new.inc", "w") as file:
+    for item in a.schedule_new:
+        print(item, file=file)
+
+#w = Schedule(filename)
