@@ -266,6 +266,13 @@ class Schedule:
         l.append('/')
         return l
 
+    def make_DATES(self, date):
+        l =[]
+        l.append('DATES')
+        l.append(str(date) + '/')
+        l.append('/')
+        return l
+
 
 class Events:
     """
@@ -278,8 +285,18 @@ class Events:
         self.schedule_new = []
         self.schedule_new.append('------------------------------------ Schedule Section -----------------------------')
         self.schedule_new.append('SCHEDULE')
+        self.previous_date = []
+        self.current_date = []
+        self.timedelta = 0
 
-    def zapusk(self, event):
+    def zapusk(self, event, tstep):
+        if tstep == True:
+            if self.timedelta == 1:
+                num = 1
+            else:
+                num = 3
+            step = round(self.timedelta / num, 2)
+            self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
         wname = event['Название скважины']
         if wname in self.schedule.wells:
             qliq = event['Контроль дебит']
@@ -311,18 +328,16 @@ class Events:
                     control = 'BHP'
                     bhp = 400
                 self.schedule_new.extend(self.schedule.make_WCONINJE(wname, qliq, bhp, status, control))
-        time = float(event['День']) + float(event['Час'])
-        if time == 1:
-            num = 1
-        else:
-            num = 3
-        step = round(time / num, 2)
-        self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
-        # else: Почему-то пайчарм ругается здесь
-        #    print('Такой скважины нет')
         return
 
-    def ostanovka(self, event):
+    def ostanovka(self, event, tstep):
+        if tstep == True:
+            if self.timedelta == 1:
+                num = 1
+            else:
+                num = 3
+            step = round(self.timedelta / num, 2)
+            self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
         wname = event['Название скважины']
         if wname in self.schedule.wells:
             status = 'SHUT'
@@ -330,15 +345,6 @@ class Events:
                 self.schedule_new.extend(self.schedule.make_WCONPROD(wname, status = status))
             else:
                 self.schedule_new.extend(self.schedule.make_WCONINJE(wname, status = status))
-        time = float(event['День']) + float(event['Час'])
-        if time == 1:
-            num = 1
-        else:
-            num = 3
-        step = round(time / num, 2)
-        self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
-        # else: Почему-то пайчарм ругается здесь
-        #   print('Такой скважины нет')
         return
 
     @staticmethod
@@ -352,7 +358,14 @@ class Events:
                 break
         return i
 
-    def build_well(self,event):
+    def build_well(self, event, tstep):
+        if tstep == True:
+            if self.timedelta == 1:
+                num = 1
+            else:
+                num = 3
+            step = round(self.timedelta / num, 2)
+            self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
         wname = event['Название скважины']
         x = event['координата i']
         y = event['координата j']
@@ -370,13 +383,6 @@ class Events:
         status = 'OPEN'
         self.schedule_new.extend(self.schedule.make_WELL(wname, x, y, z1, z2, phase, status, skin))
         self.schedule.wells[wname] = w
-        time = float(event['День']) + float(event['Час'])
-        if time == 1:
-            num = 1
-        else:
-            num = 3
-        step = round(time / num, 2)
-        self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
         return
 
     def read_excel(self, fname):
@@ -384,23 +390,46 @@ class Events:
         excel.index.names = ['Index']
         excel.columns = list(excel.loc[6])
         excel = excel[excel.index > 6]
-        excel = excel.dropna(subset = ['Дата мероприятия'])
+        excel = excel.dropna(subset=['Дата мероприятия'])
         excel = excel.drop(excel[excel['Название команды'] == 'Проверка'].index)
+        excel['Дата мероприятия'] = pd.to_datetime(excel['Дата мероприятия'], format='%d %b %y')
+        excel = excel.sort_values(['Дата мероприятия', 'Вид мероприятия'], ascending=[True, False])
+        # Была задумка сделать с DATES и разными TSTEP, пока так сложно, но можно в буд сделать
+        # self.date = excel['Дата мероприятия'].dt.strftime('%d %b %Y').str.upper()
+        # excel['Дата мероприятия'] = excel['Дата мероприятия'].dt.strftime('%d %b %Y').str.upper()
         self.excel = excel
 
+        # date = True  # индикатор генератора DATES
+        self.previous_date = excel.iloc[0]['Дата мероприятия']
         for event in excel.iterrows():
+            self.current_date = event[1]['Дата мероприятия']
+            if self.current_date == self.previous_date:
+                tstep = False  # индикатор генератора TSTEP
+            else:
+                self.timedelta = (self.current_date - self.previous_date).days
+                tstep = True
             if event[1]['Вид мероприятия'] == 'Запуск скважины':
-                self.zapusk(event[1])
+                self.zapusk(event[1], tstep)
             elif event[1]['Вид мероприятия'] == 'Остановка скважины':
-                self.ostanovka(event[1])
+                self.ostanovka(event[1], tstep)
             elif event[1]['Вид мероприятия'] == 'Строительство новой скважины':
-                self.build_well(event[1])
+                self.build_well(event[1], tstep)
+            self.previous_date = self.current_date
 
+        if self.timedelta == 1:
+            num = 1
+        else:
+            num = 3
+        step = round(self.timedelta / num, 2)
+        self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
         return
+
 
 a = Events('rienm1_100x100x15_schedule.inc')
 a.read_excel('Мероприятия РиЭНМ МАЙ.xlsx')
-
+print(a.excel)
+print(a.excel['Название скважины'])
+print(a.excel['Вид мероприятия'])
 with open("schedule_new.inc", "w") as file:
     for item in a.schedule_new:
         print(item, file=file)
