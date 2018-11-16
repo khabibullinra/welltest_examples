@@ -134,7 +134,7 @@ WCONPROD
    P1    OPEN  BHP           3*          1*        1*   100 /
 /
 TSTEP
- 3*0.67
+ 2*1.0
 /
 WELSPECS
 -- name group x y pwf_depth phase /
@@ -165,7 +165,7 @@ WCONINJE
    I3   WATER  OPEN  BHP     1*        1*   400 /
 /
 TSTEP
- 3*10.33
+ 31*1.0
 /
 WELSPECS
 -- name group x y pwf_depth phase /
@@ -192,5 +192,5 @@ WCONPROD
    Ì4    OPEN  LRAT           3*          50        1*   1* /
 /
 TSTEP
- 3*10.33
+ 31*1.0
 /

@@ -71,7 +71,7 @@ class Schedule:
         for line in self.content:
             if line[:2] == '--':            # comment in file detected
                 continue
-            if line == 'SCHEDULE':          # section title ignored 
+            if line == 'SCHEDULE':          # section title ignored
                 print('SCHEDULE section detected')
                 continue
             if line in keywords:            # looking only keywords of interest
@@ -79,20 +79,20 @@ class Schedule:
                 self.lastkey = []           # start collecting keyword params
                 self.lastkey.append(line)
                 keyread = True
-                continue     
+                continue
             if line == '/':                 # end of keyword found
                 if keyread:                 # stop collecting if started before
                     self.keys.append(self.lastkey)
                 keyread = False
                 continue
-            if keyread: 
+            if keyread:
                 line=line.replace('2*',' 1* 1* ')
                 line=line.replace('3*',' 1* 1* 1* ')
                 if len(line) > 2:           # ignore short lines (blank lines)
                     self.lastkey.append(line)
         if keyread:
             self.keys.append(self.lastkey)
-            
+
         print('reading '+name+' done: ' +str(len(self.keys)) +' keywords detected')
         pass
 
@@ -291,11 +291,12 @@ class Events:
 
     def zapusk(self, event, tstep):
         if tstep == True:
-            if self.timedelta == 1:
+            num = int(self.timedelta)
+            if num == 0:
                 num = 1
+                step = self.timedelta
             else:
-                num = 3
-            step = round(self.timedelta / num, 2)
+                step = round(self.timedelta / num, 2)
             self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
         wname = event['Название скважины']
         if wname in self.schedule.wells:
@@ -332,11 +333,12 @@ class Events:
 
     def ostanovka(self, event, tstep):
         if tstep == True:
-            if self.timedelta == 1:
+            num = int(self.timedelta)
+            if num == 0:
                 num = 1
+                step = self.timedelta
             else:
-                num = 3
-            step = round(self.timedelta / num, 2)
+                step = round(self.timedelta / num, 2)
             self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
         wname = event['Название скважины']
         if wname in self.schedule.wells:
@@ -360,11 +362,12 @@ class Events:
 
     def build_well(self, event, tstep):
         if tstep == True:
-            if self.timedelta == 1:
+            num = int(self.timedelta)
+            if num == 0:
                 num = 1
+                step = self.timedelta
             else:
-                num = 3
-            step = round(self.timedelta / num, 2)
+                step = round(self.timedelta / num, 2)
             self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
         wname = event['Название скважины']
         x = event['координата i']
@@ -394,6 +397,8 @@ class Events:
         excel = excel.drop(excel[excel['Название команды'] == 'Проверка'].index)
         excel['Дата мероприятия'] = pd.to_datetime(excel['Дата мероприятия'], format='%d %b %y')
         excel = excel.sort_values(['Дата мероприятия', 'Вид мероприятия'], ascending=[True, False])
+        excel = excel.loc[excel['Вид мероприятия'].isin(['Остановка скважины','Остановка скважины для КВД',
+                                                             'Строительство новой скважины','Запуск скважины'])]
         # Была задумка сделать с DATES и разными TSTEP, пока так сложно, но можно в буд сделать
         # self.date = excel['Дата мероприятия'].dt.strftime('%d %b %Y').str.upper()
         # excel['Дата мероприятия'] = excel['Дата мероприятия'].dt.strftime('%d %b %Y').str.upper()
@@ -406,32 +411,34 @@ class Events:
             if self.current_date == self.previous_date:
                 tstep = False  # индикатор генератора TSTEP
             else:
-                self.timedelta = (self.current_date - self.previous_date).days
+                self.timedelta = (self.current_date - self.previous_date).days + (self.current_date -
+                                                                                  self.previous_date).seconds / (24*3600)
                 tstep = True
             if event[1]['Вид мероприятия'] == 'Запуск скважины':
                 self.zapusk(event[1], tstep)
-            elif event[1]['Вид мероприятия'] == 'Остановка скважины':
+            elif event[1]['Вид мероприятия'] == 'Остановка скважины' or event[1]['Вид мероприятия'] == 'Остановка скважины для КВД':
                 self.ostanovka(event[1], tstep)
             elif event[1]['Вид мероприятия'] == 'Строительство новой скважины':
                 self.build_well(event[1], tstep)
             self.previous_date = self.current_date
 
-        if self.timedelta == 1:
-            num = 1
-        else:
-            num = 3
+        num = int(self.timedelta)
         step = round(self.timedelta / num, 2)
         self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
         return
 
 
-a = Events('rienm1_100x100x15_schedule.inc')
-a.read_excel('Мероприятия РиЭНМ МАЙ.xlsx')
-print(a.excel)
-print(a.excel['Название скважины'])
-print(a.excel['Вид мероприятия'])
-with open("schedule_new.inc", "w") as file:
-    for item in a.schedule_new:
-        print(item, file=file)
+#command_names = ['Petro Squad','Oil Hunters','МАЙ','FlexOil','Бок-Бат-Хо','Взгляд снизу','ЗАСД','Команда А',
+#                 'Фантастическая четверка','ФОН']
+command_names = ['РЕНЕР']
+for name in command_names:
+    a = Events('rienm1_100x100x15_schedule.inc')
+    a.read_excel('Мероприятия РиЭНМ {}.xlsx'.format(name))
+    # print(a.excel)
+    # print(a.excel['Название скважины'])
+    # print(a.excel['Вид мероприятия'])
+    with open("schedule_new_{}.inc".format(name), "w") as file:
+        for item in a.schedule_new:
+            print(item, file=file)
 
 #w = Schedule(filename)
