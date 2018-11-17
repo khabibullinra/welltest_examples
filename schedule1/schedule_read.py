@@ -7,6 +7,7 @@ Created on Mon Nov 12 05:02:49 2018
 
 import pandas as pd
 import numpy as np
+import glob
 
 #filename = 'rienm1_100x100x15_schedule.inc'
 keywords = ['WELSPECS','COMPDAT','WCONPROD','WCONINJE','TSTEP']
@@ -39,6 +40,8 @@ class WellParam:
         self.lrat = 10
         self.bhp = 50
         self.control = 'BHP'
+        self.pump = 'Насос 100-500'
+
 
 
 class Schedule:
@@ -88,6 +91,8 @@ class Schedule:
             if keyread:
                 line=line.replace('2*',' 1* 1* ')
                 line=line.replace('3*',' 1* 1* 1* ')
+                line=line.replace('4*',' 1* 1* 1* 1* ')
+                line=line.replace('5*',' 1* 1* 1* 1* 1* ')
                 if len(line) > 2:           # ignore short lines (blank lines)
                     self.lastkey.append(line)
         if keyread:
@@ -123,31 +128,48 @@ class Schedule:
                 w = WellParam(wellname)
                 self.wells[wellname] = w
             if key == 'COMPDAT':
-                w.z1 = int(params[3])
-                w.z2 = int(params[4])
-                w.status_perf = params[5]
-                w.diam = params[8]
-                w.skin = float(params[10])
+                if params[3] != '1*':
+                    w.z1 = int(params[3])
+                if params[4] != '1*':
+                    w.z2 = int(params[4])
+                if params[5] != '1*':
+                    w.status_perf = params[5]
+                if params[8] != '1*':
+                    w.diam = params[8]
+                if params[10] != '1*':
+                    w.skin = float(params[10])
                 continue
             if key == 'WCONPROD':
-                w.status_work = params[1]
-                w.control = params[2]           
-                w.lrat = float(params[6])
-                w.bhp = float(params[8])
+                if params[1] != '1*':
+                    w.status_work = params[1]
+                if params[2] != '1*':
+                    w.control = params[2]
+                if params[6] != '1*':
+                    w.lrat = float(params[6])
+                if params[8] != '1*':
+                    w.bhp = float(params[8])
                 w.type = 'PROD'
                 continue
             if key == 'WCONINJE':
-                w.phase = params[1]
-                w.status_work = params[2]
-                w.control = params[3]           
-                w.lrat = float(params[4])
-                w.bhp = float(params[6])
+                if params[1] != '1*':
+                    w.phase = params[1]
+                if params[2] != '1*':
+                    w.status_work = params[2]
+                if params[3] != '1*':
+                    w.control = params[3]
+                if params[4] != '1*':
+                    w.lrat = float(params[4])
+                if params[6] != '1*':
+                    w.bhp = float(params[6])
                 w.type = 'INJ'
                 continue
             if key == 'WELSPECS':
-                w.group = params[1]
-                w.x = params[2]
-                w.y = params[3]
+                if params[1] != '1*':
+                    w.group = params[1]
+                if params[2] != '1*':
+                    w.x = params[2]
+                if params[3] != '1*':
+                    w.y = params[3]
                 continue
             print(key + ' param left unread ')
         print(key + ' read done')
@@ -160,7 +182,6 @@ class Schedule:
         """
         l=[]
         if wname in self.wells:
-            w = self.wells[wname]
             print('well with name '+ wname + ' already exist. command ignored')
             return l
         else:
@@ -196,6 +217,22 @@ class Schedule:
         l.append(s_compdat_hints)
         l.append(s_compdat)   
         l.append('/')
+        return l
+
+    def make_perf(self, wname, z1_new, z2_new, status, skin=10):
+        l = []
+        if wname in self.wells:
+            l.append('COMPDAT')
+            s_compdat_hints = ("-- name x y z1 z2 perf table  CF  diam KH skin  /")
+            s_compdat = ("   " + wname +
+                         "   2*   " + str(z1_new) +
+                         " " + str(z2_new) +
+                         "  " + str(status) +
+                         "     2*      " + "  1*  " +
+                         "  1*  " + str(skin) + " /")
+            l.append(s_compdat_hints)
+            l.append(s_compdat)
+            l.append('/')
         return l
 
     def make_WCONPROD(self, wname, qliq =10, bhp =50, status = 'OPEN', control = 'BHP', pump=0):
@@ -289,60 +326,86 @@ class Events:
         self.current_date = []
         self.timedelta = 0
 
-    def zapusk(self, event, tstep):
+    def change_GNO(self,event, tstep):
         if tstep == True:
-            num = int(self.timedelta)
+            num = int(self.timedelta / 0.1)
             if num == 0:
                 num = 1
-                step = self.timedelta
+                step = 0.1
             else:
-                step = round(self.timedelta / num, 2)
+                step = 0.1
             self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
         wname = event['Название скважины']
         if wname in self.schedule.wells:
-            qliq = event['Контроль дебит']
-            bhp = event['Контроль Рзаб']
+            if event['Тип насоса для установки'] == '':
+                self.schedule.wells[wname].pump = ''
+            else:
+                self.schedule.wells[wname].pump = event['Тип насоса для установки']
+
+    def zapusk(self, event, tstep):
+        if tstep == True:
+            num = int(self.timedelta / 0.1)
+            if num == 0:
+                num = 1
+                step = 0.1
+            else:
+                step = 0.1
+            self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
+        wname = event['Название скважины']
+        if wname in self.schedule.wells:
+            pump = self.schedule.wells[wname].pump
+            if pump == '' or pump == 'Нет':
+                pump = 'Насос 100-500'
+            pump_rate = float(pump.split()[1].split('-')[0])
+            pump_head = float(pump.split()[1].split('-')[1])
+            pump_bhp_min = 250 - pump_head/10
+            if not np.isnan(event['Контроль дебит']) and event['Контроль дебит'] > pump_rate:
+                qliq = pump_rate
+            else:
+                qliq = event['Контроль дебит']
+            if not np.isnan(event['Контроль Рзаб']) and event['Контроль Рзаб'] < pump_bhp_min:
+                bhp = pump_bhp_min
+            else:
+                bhp = event['Контроль Рзаб']
             status = 'OPEN'
             if self.schedule.wells[wname].type == 'PROD':
-                if np.isnan(qliq) == True:
+                if np.isnan(qliq):
                     control = 'BHP'
                     qliq = '1*'
-                    if np.isnan(bhp) == True:
-                        bhp = 100
-                elif np.isnan(bhp) == True:
+                    if np.isnan(bhp):
+                        bhp = 200
+                elif np.isnan(bhp):
                     control = 'LRAT'
-                    bhp = '1*'
+                    bhp = 200
                 else:
                     control = 'BHP'
-                    bhp = 100
                 self.schedule_new.extend(self.schedule.make_WCONPROD(wname, qliq, bhp, status, control))
             else:
-                if np.isnan(qliq) == True:
+                if np.isnan(qliq):
                     control = 'BHP'
                     qliq = '1*'
-                    if np.isnan(bhp) == True:
+                    if np.isnan(bhp):
                         bhp = 400
-                elif np.isnan(bhp) == True:
+                elif np.isnan(bhp):
                     control = 'RATE'
                     bhp = 400
                 else:
                     control = 'BHP'
-                    bhp = 400
                 self.schedule_new.extend(self.schedule.make_WCONINJE(wname, qliq, bhp, status, control))
         return
 
     def ostanovka(self, event, tstep):
         if tstep == True:
-            num = int(self.timedelta)
+            num = int(self.timedelta / 0.1)
             if num == 0:
                 num = 1
-                step = self.timedelta
+                step = 0.1
             else:
-                step = round(self.timedelta / num, 2)
+                step = 0.1
             self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
         wname = event['Название скважины']
         if wname in self.schedule.wells:
-            status = 'SHUT'
+            status = 'STOP'
             if self.schedule.wells[wname].type == 'PROD':
                 self.schedule_new.extend(self.schedule.make_WCONPROD(wname, status = status))
             else:
@@ -362,31 +425,75 @@ class Events:
 
     def build_well(self, event, tstep):
         if tstep == True:
-            num = int(self.timedelta)
+            num = int(self.timedelta / 0.1)
             if num == 0:
                 num = 1
-                step = self.timedelta
+                step = 0.1
             else:
-                step = round(self.timedelta / num, 2)
+                step = 0.1
             self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
         wname = event['Название скважины']
-        x = event['координата i']
-        y = event['координата j']
-        z1 = self.determine_z(event['перфорация верх, м'])
-        z2 = self.determine_z(event['перфорация низ, м'])
-        if event['Тип скважины'] == 'Добывающая':
-            phase = 'OIL'  # непонятно обязательно ли на нагн ставить воду т.к. это и отдельно при запуске задается
-            w = WellParam(wname)
-            w.type = 'PROD'
-        else:
-            phase = 'WATER'
-            w = WellParam(wname)
-            w.type = 'INJ'
-        skin = 1
-        status = 'OPEN'
-        self.schedule_new.extend(self.schedule.make_WELL(wname, x, y, z1, z2, phase, status, skin))
-        self.schedule.wells[wname] = w
+        if wname not in self.schedule.wells:
+            x = event['координата i']
+            y = event['координата j']
+            if np.isnan(event['перфорация верх, м']) or np.isnan(event['перфорация низ, м']):
+                z1 = 1
+                z2 = 2
+                status = 'SHUT'
+            else:
+                z1 = self.determine_z(event['перфорация верх, м'])
+                z2 = self.determine_z(event['перфорация низ, м'])
+                status = 'OPEN'
+            z1 = min(z1, z2)
+            z2 = max(z1, z2)
+            if event['Тип скважины'] == 'Добывающая':
+                phase = 'OIL'  # непонятно обязательно ли на нагн ставить воду т.к. это и отдельно при запуске задается
+                w = WellParam(wname)
+                w.type = 'PROD'
+            else:
+                phase = 'WATER'
+                w = WellParam(wname)
+                w.type = 'INJ'
+            skin = 10
+            self.schedule_new.extend(self.schedule.make_WELL(wname, x, y, z1, z2, phase, status, skin))
+            self.schedule.wells[wname] = w
+            return
+
+    def reperforation(self, event, tstep):
+        if tstep == True:
+            num = int(self.timedelta / 0.1)
+            if num == 0:
+                num = 1
+                step = 0.1
+            else:
+                step = 0.1
+            self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
+        wname = event['Название скважины']
+        if wname in self.schedule.wells:
+            z1_new = min(self.determine_z(event['перфорация верх, м']), self.determine_z(event['перфорация низ, м']))
+            z2_new = max(self.determine_z(event['перфорация верх, м']), self.determine_z(event['перфорация низ, м']))
+            status = 'OPEN'
+            self.schedule_new.extend(self.schedule.make_perf(wname, z1_new, z2_new,status))
         return
+
+    def OPZ(self, event, tstep):
+        if tstep == True:
+            num = int(self.timedelta / 0.1)
+            if num == 0:
+                num = 1
+                step = 0.1
+            else:
+                step = 0.1
+            self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
+        wname = event['Название скважины']
+        if wname in self.schedule.wells:
+            z1_new = ' 1* '
+            z2_new = ' 1* '
+            status = 'OPEN'
+            skin = self.schedule.wells[wname].skin / 2
+            self.schedule_new.extend(self.schedule.make_perf(wname, z1_new, z2_new, status, skin))
+        return
+
 
     def read_excel(self, fname):
         excel = pd.read_excel(fname)
@@ -398,7 +505,8 @@ class Events:
         excel['Дата мероприятия'] = pd.to_datetime(excel['Дата мероприятия'], format='%d %b %y')
         excel = excel.sort_values(['Дата мероприятия', 'Вид мероприятия'], ascending=[True, False])
         excel = excel.loc[excel['Вид мероприятия'].isin(['Остановка скважины','Остановка скважины для КВД',
-                                                             'Строительство новой скважины','Запуск скважины'])]
+                                                        'Строительство новой скважины', 'Запуск скважины',
+                                                                                   'Реперфорация', 'ОПЗ', 'Смена ГНО'])]
         # Была задумка сделать с DATES и разными TSTEP, пока так сложно, но можно в буд сделать
         # self.date = excel['Дата мероприятия'].dt.strftime('%d %b %Y').str.upper()
         # excel['Дата мероприятия'] = excel['Дата мероприятия'].dt.strftime('%d %b %Y').str.upper()
@@ -420,25 +528,47 @@ class Events:
                 self.ostanovka(event[1], tstep)
             elif event[1]['Вид мероприятия'] == 'Строительство новой скважины':
                 self.build_well(event[1], tstep)
+            elif event[1]['Вид мероприятия'] == 'Реперфорация':
+                self.reperforation(event[1], tstep)
+            elif event[1]['Вид мероприятия'] == 'ОПЗ':
+                self.OPZ(event[1], tstep)
+            elif event[1]['Вид мероприятия'] == 'Смена ГНО':
+                self.change_GNO(event[1], tstep)
             self.previous_date = self.current_date
 
-        num = int(self.timedelta)
-        step = round(self.timedelta / num, 2)
+        num = int(self.timedelta / 0.1)
+        step = 0.1
         self.schedule_new.extend(self.schedule.make_TSTEP(num, step))
         return
 
 
-#command_names = ['Petro Squad','Oil Hunters','МАЙ','FlexOil','Бок-Бат-Хо','Взгляд снизу','ЗАСД','Команда А',
-#                 'Фантастическая четверка','ФОН']
-command_names = ['РЕНЕР']
+def make_initial_schedule(cname):
+    l = []
+    file1 = open('{}/rienm1_100x100x15_schedule.inc'.format(cname)).read()
+    l.append(file1)
+    file2 = open('{}/RIENM1_100X100X15_BASE_FORECAST1_sch.inc'.format(cname)).read()
+    l.append(file2)
+    file3 = open('{}/RIENM1_100X100X15_BASE_FORECAST1_FORECAST_sch.inc'.format(cname)).read()
+    l.append(file3)
+    with open("{}/schedule_init_{}.inc".format(cname, cname), "w") as file:
+        for item in l:
+            print(item, file=file)
+    return
+
+command_names = ['Petro Squad', 'Oil Hunters', 'МАЙ', 'FlexOil', 'Бок-Бат-Хо', 'Взгляд снизу', 'ЗАСД', 'ФОН', 'РЕНЕР', 'Black altyn', 'KVAZL', 'Ноль пять']
+
+#command_names = ['FlexOil'] #,'Фантастическая четверка', 'Команда А']
 for name in command_names:
-    a = Events('rienm1_100x100x15_schedule.inc')
-    a.read_excel('Мероприятия РиЭНМ {}.xlsx'.format(name))
-    # print(a.excel)
-    # print(a.excel['Название скважины'])
-    # print(a.excel['Вид мероприятия'])
-    with open("schedule_new_{}.inc".format(name), "w") as file:
-        for item in a.schedule_new:
+    make_initial_schedule(name)
+    a = Events('{}/schedule_init_{}.inc'.format(name, name))
+    a.read_excel('{}/Мероприятия РиЭНМ {}.xlsx'.format(name, name))
+    l = []
+    file = open('{}/schedule_init_{}.inc'.format(name, name)).read()
+    l.append(file)
+    for a in a.schedule_new:
+        l.append(a)
+    with open("{}/schedule_new_{}.inc".format(name, name), "w") as file:
+        for item in l:
             print(item, file=file)
 
-#w = Schedule(filename)
+# w = Schedule(filename)
