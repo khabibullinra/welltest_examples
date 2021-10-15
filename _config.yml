@@ -1,2 +1,8 @@
+# Information about where the book exists on the web
+repository:
+  url                       : https://github.com/khabibullinra/welltest_examples # Online location of your book
+  path_to_book              : jupyter/  # Optional path to your book, relative to the repository root
+  branch                    : master  # Which branch of the repository should be used when creating links (optional)
+
 launch_buttons:
   colab_url: "https://colab.research.google.com"
