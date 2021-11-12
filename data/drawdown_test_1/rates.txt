@@ -1,0 +1,6 @@
+                  Time          LiquidRate    CumulativeVolume
+#                 (hr)               (m3/D)                 (m3)
+  0 0 0	
+  0 80 0	
+  120 80 400
+
