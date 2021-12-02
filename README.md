@@ -8,3 +8,5 @@
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/khabibullinra/welltest_examples/HEAD?urlpath=tree)
 
 Или можно скачать себе репозиторий и открыть на своем компьютере с использованием Jupyter Notebook 
+
+Исправление
