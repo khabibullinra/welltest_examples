@@ -1,0 +1,167 @@
+{
+  "main": {
+    "id": "7e725c1b9dc2a7d3",
+    "type": "split",
+    "children": [
+      {
+        "id": "f486ccaf3692a191",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b48e68c2f76b0236",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "2. Простые решения уравнения фильтрации.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "6582e81cf43e9403",
+    "type": "split",
+    "children": [
+      {
+        "id": "f66f85b4a67d8b14",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "da1a1bf6b0ff007c",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "b4a1cc1aaa057d39",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "4d543fe3793910ce",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "9de59354010c4268",
+    "type": "split",
+    "children": [
+      {
+        "id": "d7cc355f1a9f447f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1c2190ea160dcdfa",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "2. Простые решения уравнения фильтрации.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "a1f6356475df9b74",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "2. Простые решения уравнения фильтрации.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "4c66a19e32f84573",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "c890515713b2c5c1",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "2. Простые решения уравнения фильтрации.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "b48e68c2f76b0236",
+  "lastOpenFiles": [
+    "1. Введение.Ценность информации. Деревья решений для обоснования необходимости исследований.md",
+    "Стартовая страница.md",
+    "3. Продвинутые решения уравнения фильтрации.md",
+    "2. Простые решения уравнения фильтрации.md",
+    "2.1. Простые решения уравнения фильтрации.md.2023-09-28_09.04.19.foldersync.old",
+    "база знаний/Формула Дюпюи.md",
+    "база знаний/Закон Дарси.md",
+    "база знаний",
+    "attachments/Pasted image 20230928214913.png",
+    "attachments/Pasted image 20230930081438.png",
+    "attachments/Pasted image 20230928214649.png",
+    "attachments/Pasted image 20230927221235.png",
+    "attachments/Pasted image 20230927093815.png",
+    "attachments/Pasted image 20230927092846.png",
+    "attachments"
+  ]
+}
