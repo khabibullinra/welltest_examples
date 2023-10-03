@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "2. Простые решения уравнения фильтрации.md",
+                "file": "Стартовая страница.md",
                 "mode": "source",
                 "source": false
               }
@@ -69,7 +69,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 380.5
   },
   "right": {
     "id": "9de59354010c4268",
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "2. Простые решения уравнения фильтрации.md",
+                "file": "Стартовая страница.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "2. Простые решения уравнения фильтрации.md",
+                "file": "Стартовая страница.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "2. Простые решения уравнения фильтрации.md"
+                "file": "Стартовая страница.md"
               }
             }
           }
@@ -148,18 +148,18 @@
   },
   "active": "b48e68c2f76b0236",
   "lastOpenFiles": [
-    "attachments/Pasted image 20231003184231.png",
-    "Pasted image 20231003184057.png",
-    "2. Простые решения уравнения фильтрации.md",
-    "attachments/Pasted image 20230927092846.png",
-    "1. Введение.Ценность информации. Деревья решений для обоснования необходимости исследований.md",
-    "Pasted.md",
+    "1. Введение. Ценность информации. Деревья решений для обоснования необходимости исследований.md",
     "Стартовая страница.md",
     "3. Продвинутые решения уравнения фильтрации.md",
+    "2. Простые решения уравнения фильтрации.md",
+    "attachments/Pasted image 20231003184231.png",
+    "Pasted image 20231003184057.png",
+    "attachments/Pasted image 20230927092846.png",
+    "Pasted.md",
     "2.1. Простые решения уравнения фильтрации.md.2023-09-28_09.04.19.foldersync.old",
-    "база знаний/Формула Дюпюи.md",
-    "база знаний/Закон Дарси.md",
-    "база знаний",
+    "know_base/Формула Дюпюи.md",
+    "know_base/Закон Дарси.md",
+    "know_base",
     "attachments/Pasted image 20230928214913.png",
     "attachments/Pasted image 20230930081438.png",
     "attachments/Pasted image 20230928214649.png",
