@@ -37,7 +37,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "2. Простые решения уравнения фильтрации.md",
+                "file": "3. Продвинутые решения уравнения фильтрации.md",
                 "mode": "source",
                 "source": false
               }
@@ -110,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "2. Простые решения уравнения фильтрации.md",
+                "file": "3. Продвинутые решения уравнения фильтрации.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -127,7 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "2. Простые решения уравнения фильтрации.md",
+                "file": "3. Продвинутые решения уравнения фильтрации.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -150,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "2. Простые решения уравнения фильтрации.md"
+                "file": "3. Продвинутые решения уравнения фильтрации.md"
               }
             }
           }
@@ -173,6 +173,7 @@
   },
   "active": "63d2c1d80ef8f964",
   "lastOpenFiles": [
+    "2. Простые решения уравнения фильтрации.md",
     "attachments/Pasted image 20231004115130.png",
     "attachments/Pasted image 20231004114916.png",
     "attachments/Pasted image 20231004114859.png",
@@ -181,14 +182,12 @@
     "attachments/Pasted image 20231004114254.png",
     "attachments/Pasted image 20231004114127.png",
     "Задачи ИСП.md",
-    "2. Простые решения уравнения фильтрации.md",
     "Стартовая страница.md",
     "3. Продвинутые решения уравнения фильтрации.md",
     "1. Введение. Ценность информации. Деревья решений для обоснования необходимости исследований.md",
     "attachments/Pasted image 20230531230930.png",
     "attachments/Pasted image 20230531230449.png",
     "attachments/Pasted image 20230531224215.png",
-    "attachments/Pasted image 20230531223933.png",
     "Pasted.md",
     "2.1. Простые решения уравнения фильтрации.md.2023-09-28_09.04.19.foldersync.old",
     "know_base/Формула Дюпюи.md",
