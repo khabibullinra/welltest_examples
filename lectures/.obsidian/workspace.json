@@ -18,8 +18,33 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "c5e8998cbc97766c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Задачи ИСП.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "63d2c1d80ef8f964",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "2. Простые решения уравнения фильтрации.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -85,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Стартовая страница.md",
+                "file": "2. Простые решения уравнения фильтрации.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Стартовая страница.md",
+                "file": "2. Простые решения уравнения фильтрации.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Стартовая страница.md"
+                "file": "2. Простые решения уравнения фильтрации.md"
               }
             }
           }
@@ -146,22 +171,24 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "b48e68c2f76b0236",
+  "active": "63d2c1d80ef8f964",
   "lastOpenFiles": [
-    "3. Продвинутые решения уравнения фильтрации.md",
+    "attachments/Pasted image 20231004115130.png",
+    "attachments/Pasted image 20231004114916.png",
+    "attachments/Pasted image 20231004114859.png",
+    "attachments/Pasted image 20231004114404.png",
+    "attachments/Pasted image 20231004114317.png",
+    "attachments/Pasted image 20231004114254.png",
+    "attachments/Pasted image 20231004114127.png",
+    "Задачи ИСП.md",
     "2. Простые решения уравнения фильтрации.md",
+    "Стартовая страница.md",
+    "3. Продвинутые решения уравнения фильтрации.md",
     "1. Введение. Ценность информации. Деревья решений для обоснования необходимости исследований.md",
     "attachments/Pasted image 20230531230930.png",
     "attachments/Pasted image 20230531230449.png",
     "attachments/Pasted image 20230531224215.png",
     "attachments/Pasted image 20230531223933.png",
-    "attachments/Pasted image 20230531222257.png",
-    "attachments/Pasted image 20230531222205.png",
-    "attachments/Pasted image 20230531220139.png",
-    "attachments/Pasted image 20230531214947.png",
-    "attachments/Pasted image 20230531212437.png",
-    "Стартовая страница.md",
-    "attachments/Pasted image 20231003184231.png",
     "Pasted.md",
     "2.1. Простые решения уравнения фильтрации.md.2023-09-28_09.04.19.foldersync.old",
     "know_base/Формула Дюпюи.md",
