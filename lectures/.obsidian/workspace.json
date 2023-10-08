@@ -109,38 +109,28 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "!Стартовая страница.md",
+                "file": "slides/3. Продвинутые решения.md",
                 "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "7bc01dfc076114fc",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "3. Продвинутые решения уравнения фильтрации.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "f04b036f62887025",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Задачи ГДИС.md",
-                "mode": "source",
-                "source": false
+                "source": true
               }
             }
           }
         ],
-        "currentTab": 10
+        "currentTab": 8
+      },
+      {
+        "id": "9d4634b1e9d48531",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7cbc57d56c6a0582",
+            "type": "leaf",
+            "state": {
+              "type": "reveal-preview-view",
+              "state": {}
+            }
+          }
+        ]
       }
     ],
     "direction": "vertical"
@@ -206,7 +196,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Задачи ГДИС.md",
+                "file": "slides/3. Продвинутые решения.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -223,7 +213,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Задачи ГДИС.md",
+                "file": "slides/3. Продвинутые решения.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -246,7 +236,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Задачи ГДИС.md"
+                "file": "slides/3. Продвинутые решения.md"
               }
             }
           }
@@ -264,24 +254,66 @@
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
-      "command-palette:Open command palette": false
+      "command-palette:Open command palette": false,
+      "obsidian-advanced-slides:Show Slide Preview": false
     }
   },
-  "active": "f04b036f62887025",
+  "floating": {
+    "id": "18b267f6a9733625",
+    "type": "floating",
+    "children": [
+      {
+        "id": "9d79a9945fcd7073",
+        "type": "window",
+        "children": [
+          {
+            "id": "20476b0b3b247d60",
+            "type": "tabs",
+            "children": [
+              {
+                "id": "7bc01dfc076114fc",
+                "type": "leaf",
+                "state": {
+                  "type": "markdown",
+                  "state": {
+                    "file": "3. Продвинутые решения уравнения фильтрации.md",
+                    "mode": "source",
+                    "source": false
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "direction": "vertical",
+        "x": 419,
+        "y": 1070,
+        "width": 993,
+        "height": 1022,
+        "maximize": false,
+        "zoom": 0
+      }
+    ]
+  },
+  "active": "b06b96eda9d1b6b9",
   "lastOpenFiles": [
-    "Задачи ИСП.md",
-    "Задачи ГДИС.md",
     "3. Продвинутые решения уравнения фильтрации.md",
+    "slides/3. Продвинутые решения.md",
+    "slides/attachments/Pasted image 20231008135107.png",
+    "slides/attachments",
+    "!Стартовая страница.md",
+    "2. Простые решения уравнения фильтрации.md",
+    "slides",
     "3.1. Построение решений с использованием метода источников.md",
+    "4. Интерпретация ГДИС решение обратной задачи.md",
+    "Задачи ГДИС.md",
+    "Задачи ИСП.md",
     "7. Построение секторной модели.md",
     "6. Прокси модели.md",
     "5. Взаимодействие скважин.md",
-    "4. Интерпретация ГДИС решение обратной задачи.md",
     "8. Построение интегрированной секторной модели.md",
     "Список литературы общий.md",
-    "!Стартовая страница.md",
     "Вопросы к экзамену.md",
-    "2. Простые решения уравнения фильтрации.md",
     "attachments/Pasted image 20231004115130.png",
     "attachments/Pasted image 20231004114916.png",
     "attachments/Pasted image 20231004114859.png",
@@ -292,7 +324,6 @@
     "1. Введение. Ценность информации. Деревья решений для обоснования необходимости исследований.md",
     "attachments/Pasted image 20230531230930.png",
     "attachments/Pasted image 20230531230449.png",
-    "attachments/Pasted image 20230531224215.png",
     "Pasted.md",
     "2.1. Простые решения уравнения фильтрации.md.2023-09-28_09.04.19.foldersync.old",
     "know_base/Формула Дюпюи.md",
