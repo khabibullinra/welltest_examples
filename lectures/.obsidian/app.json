@@ -3,5 +3,13 @@
   "attachmentFolderPath": "./attachments",
   "alwaysUpdateLinks": true,
   "newLinkFormat": "relative",
-  "readableLineLength": false
+  "readableLineLength": false,
+  "pdfExportSettings": {
+    "includeName": true,
+    "pageSize": "A4",
+    "landscape": false,
+    "margin": "0",
+    "downscalePercent": 100
+  },
+  "newFileLocation": "current"
 }
