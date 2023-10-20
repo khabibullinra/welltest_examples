@@ -4,10 +4,9 @@
 
 Для запуска можно использовать Google Colab - там можно указать данные репозиторий и открыть любой ноутбук.
 
-Или можно использовать сервис mybinder нажав кнопку ниже
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/khabibullinra/welltest_examples/HEAD?urlpath=tree)
+Раньше можно было использовать mybinder нажав кнопку ниже
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/khabibullinra/welltest_examples/HEAD?urlpath=tree). Но последнее время что то не работало там.
 
 Или можно скачать себе репозиторий и открыть на своем компьютере с использованием Jupyter Notebook 
 
-проверка настройки снова
 
