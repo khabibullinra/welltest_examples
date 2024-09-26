@@ -10,3 +10,7 @@ env/
 *.log
 *.out
 *.synctex.gz
+*.bbl
+*.bcf
+*.blg
+*.run.xml

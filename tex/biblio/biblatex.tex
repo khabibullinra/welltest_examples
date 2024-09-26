@@ -1,0 +1,175 @@
+%%% Реализация библиографии пакетами biblatex и biblatex-gost с использованием движка biber %%%
+
+\usepackage{csquotes} % biblatex рекомендует его подключать. Пакет для оформления сложных блоков цитирования.
+
+\usepackage[%
+	backend=biber,% движок
+	bibencoding=utf8,% кодировка bib файла
+	sorting=none,% настройка сортировки списка литературы
+	style=gost-numeric,% стиль цитирования и библиографии (по ГОСТ)
+	language=autobib,% получение языка из babel/polyglossia, default: autobib % если ставить autocite или auto, то цитаты в тексте с указанием страницы, получат указание страницы на языке оригинала
+	autolang=other,% многоязычная библиография
+	clearlang=true,% внутренний сброс поля language, если он совпадает с языком из babel/polyglossia
+	defernumbers=true,% нумерация проставляется после двух компиляций, зато позволяет выцеплять библиографию по ключевым словам и нумеровать не из большего списка
+	sortcites=true,% сортировать номера затекстовых ссылок при цитировании (если в квадратных скобках несколько ссылок, то отображаться будут отсортированно, а не абы как)
+	doi=true,% Показывать или нет ссылки на DOI
+	isbn=false,% Показывать или нет ISBN, ISSN, ISRN
+	movenames = false,
+	maxnames = 10,
+	]{biblatex}[2016/09/17]
+
+
+
+
+
+%%% Подключение файлов bib %%%
+\addbibresource[label=papers]{biblio/biblio_papers.bib}
+\addbibresource[label=books]{biblio/biblio_books.bib}
+
+
+%http://tex.stackexchange.com/a/141831/79756
+%There is a way to automatically map the language field to the langid field. The following lines in the preamble should be enough to do that.
+%This command will copy the language field into the langid field and will then delete the contents of the language field. The language field will only be deleted if it was successfully copied into the langid field.
+\DeclareSourcemap{ %модификация bib файла перед тем, как им займётся biblatex
+	\maps{
+		\map{% перекидываем значения полей language в поля langid, которыми пользуется biblatex
+			\step[fieldsource=language, fieldset=langid, origfieldval, final]
+			\step[fieldset=language, null]
+		}
+		\map{% перекидываем значения полей numpages в поля pagetotal, которыми пользуется biblatex
+			\step[fieldsource=numpages, fieldset=pagetotal, origfieldval, final]
+			\step[fieldset=numpages, null]
+		}
+		\map{% перекидываем значения полей pagestotal в поля pagetotal, которыми пользуется biblatex
+			\step[fieldsource=pagestotal, fieldset=pagetotal, origfieldval, final]
+			\step[fieldset=pagestotal, null]
+		}
+		\map[overwrite]{% перекидываем значения полей shortjournal, если они есть, в поля journal, которыми пользуется biblatex
+			\step[fieldsource=shortjournal, final]
+			\step[fieldset=journal, origfieldval]
+			\step[fieldset=shortjournal, null]
+		}
+		\map[overwrite]{% перекидываем значения полей shortbooktitle, если они есть, в поля booktitle, которыми пользуется biblatex
+			\step[fieldsource=shortbooktitle, final]
+			\step[fieldset=booktitle, origfieldval]
+			\step[fieldset=shortbooktitle, null]
+		}
+		\map{% если в поле medium написано "Электронный ресурс", то устанавливаем поле media, которым пользуется biblatex, в значение eresource.
+			\step[fieldsource=medium,
+			match=\regexp{Электронный\s+ресурс},
+			final]
+			\step[fieldset=media, fieldvalue=eresource]
+			\step[fieldset=medium, null]
+		}
+	%	\map{% использование media=text по умолчанию
+	%		\step[fieldset=media, fieldvalue=text]
+	%	}
+		\map[overwrite]{% стираем значения всех полей issn
+			\step[fieldset=issn, null]
+		}
+		\map[overwrite]{% стираем значения всех полей abstract, поскольку ими не пользуемся, а там бывают "неприятные" латеху символы
+			\step[fieldsource=abstract]
+			\step[fieldset=abstract,null]
+		}
+		\map[overwrite]{ % переделка формата записи даты
+			\step[fieldsource=urldate,
+			match=\regexp{([0-9]{2})\.([0-9]{2})\.([0-9]{4})},
+			replace={$3-$2-$1$4}, % $4 вставлен исключительно ради нормальной работы программ подсветки синтаксиса, которые некорректно обрабатывают $ в таких конструкциях
+			final]
+		}
+		\map[overwrite]{ % стираем ключевые слова
+			\step[fieldsource=keywords]
+			\step[fieldset=keywords,null]
+		}
+		% реализация foreach различается для biblatex v3.12 и v3.13.
+		% Для версии v3.13 эта конструкция заменяет последующие 5 структур map
+		% \map[overwrite,foreach={authorvak,authorscopus,authorwos,authorconf,authorother}]{ % записываем информацию о типе публикации в ключевые слова
+		%     \step[fieldsource=$MAPLOOP,final=true]
+		%     \step[fieldset=keywords,fieldvalue={,biblio$MAPLOOP},append=true]
+		% }
+		\map[overwrite]{ % записываем информацию о типе публикации в ключевые слова
+			\step[fieldsource=authorvak,final=true]
+			\step[fieldset=keywords,fieldvalue={,biblioauthorvak},append=true]
+		}
+		\map[overwrite]{ % записываем информацию о типе публикации в ключевые слова
+			\step[fieldsource=authorscopus,final=true]
+			\step[fieldset=keywords,fieldvalue={,biblioauthorscopus},append=true]
+		}
+		\map[overwrite]{ % записываем информацию о типе публикации в ключевые слова
+			\step[fieldsource=authorwos,final=true]
+			\step[fieldset=keywords,fieldvalue={,biblioauthorwos},append=true]
+		}
+		\map[overwrite]{ % записываем информацию о типе публикации в ключевые слова
+			\step[fieldsource=authorconf,final=true]
+			\step[fieldset=keywords,fieldvalue={,biblioauthorconf},append=true]
+		}
+		\map[overwrite]{ % записываем информацию о типе публикации в ключевые слова
+			\step[fieldsource=authorother,final=true]
+			\step[fieldset=keywords,fieldvalue={,biblioauthorother},append=true]
+		}
+		\map[overwrite]{ % добавляем ключевые слова, чтобы различать источники
+			\perdatasource{biblio/external.bib}
+			\step[fieldset=keywords, fieldvalue={,biblioexternal},append=true]
+		}
+		\map[overwrite]{ % добавляем ключевые слова, чтобы различать источники
+			\perdatasource{biblio/author.bib}
+			\step[fieldset=keywords, fieldvalue={,biblioauthor},append=true]
+		}
+		\map[overwrite]{ % добавляем ключевые слова, чтобы различать источники
+			\step[fieldset=keywords, fieldvalue={,bibliofull},append=true]
+		}
+		%        \map[overwrite]{% стираем значения всех полей series
+		%            \step[fieldset=series, null]
+		%        }
+		\map[overwrite]{% перекидываем значения полей howpublished в поля organization для типа online
+			\step[typesource=online, typetarget=online, final]
+			\step[fieldsource=howpublished, fieldset=organization, origfieldval]
+			\step[fieldset=howpublished, null]
+		}
+		% Так отключаем [Электронный ресурс]
+		%        \map[overwrite]{% стираем значения всех полей media=eresource
+		%            \step[fieldsource=media,
+		%            match={eresource},
+		%            final]
+		%            \step[fieldset=media, null]
+		%        }
+	}
+}
+
+
+
+\defbibfilter{vakscopuswos}{%
+	keyword=biblioauthorvak or keyword=biblioauthorscopus or keyword=biblioauthorwos
+}
+
+\defbibfilter{scopuswos}{%
+	keyword=biblioauthorscopus or keyword=biblioauthorwos
+}
+
+%%% Тире как разделитель в библиографии традиционной руской длины:
+\renewcommand*{\newblockpunct}{\addperiod\addnbspace\cyrdash\space\bibsentence}
+
+%%% В списке литературы обозначение одной буквой диапазона страниц англоязычного источника %%%
+\DefineBibliographyStrings{english}{%
+	pages = {p\adddot} %заглавность буквы затем по месту определяется работой самого biblatex
+}
+
+%%% Исправление длины тире в диапазонах %%%
+% \cyrdash --- тире «русской» длины, \textendash --- en-dash
+\DefineBibliographyExtras{russian}{%
+	\protected\def\bibrangedash{%
+		\cyrdash\penalty\value{abbrvpenalty}}% almost unbreakable dash
+	\protected\def\bibdaterangesep{\bibrangedash}%тире для дат
+}
+\DefineBibliographyExtras{english}{%
+	\protected\def\bibrangedash{%
+		\cyrdash\penalty\value{abbrvpenalty}}% almost unbreakable dash
+	\protected\def\bibdaterangesep{\bibrangedash}%тире для дат
+}
+
+
+
+
+
+
+

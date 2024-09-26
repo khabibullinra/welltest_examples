@@ -1,6 +1,9 @@
 %!TEX TS-program = xelatex
 
-\documentclass[a4paper,12pt]{article}
+\documentclass[oneside, openany]{memoir}
+
+
+%\documentclass[a4paper,12pt]{article}
 
 \include{settings.tex}
 
@@ -10,9 +13,23 @@
 \title{Простые решения уравнения фильтрации}
 \date{\today}
 
+\input{biblio/biblatex}
+
 \begin{document} % конец преамбулы, начало документа
 	
 	\maketitle
+	
+	\chapter{Простые решения уравнения фильтрации}
+	
+	\section{Уравнение фильтрации}
+	
+	\input{include/welltest_basics_diff_eq_derivation}
+	
+	
+	\section{Стационарные решения уравнения фильтрации}
+	
+	\input{include/welltest_basics_steady_state_solutions}
+	
 	
 	\section{Формула Дюпюи}
 	
@@ -212,4 +229,6 @@
 	
 	на графике от времени в полулогарифмических координатах логарифмическое приближение выглядит как кривая с наклоном $0.5$
 	
+	%\insertbibliofull
+	\printbibliography
 \end{document}
