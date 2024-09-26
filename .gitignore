@@ -14,3 +14,5 @@ env/
 *.bcf
 *.blg
 *.run.xml
+*.code-workspace
+*.lua
