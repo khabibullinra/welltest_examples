@@ -16,3 +16,4 @@ env/
 *.run.xml
 *.code-workspace
 *.lua
+*.pgf-plot*
