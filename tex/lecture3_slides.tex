@@ -1,0 +1,176 @@
+% XeLaTeX document
+\documentclass[aspectratio=169, 11pt]{beamer} % для экранов 16:9 оставить
+
+% \documentclass[11pt]{beamer} % для экранов 4:3 оставить
+
+% Редактируем: конфигурация, личные настройки: имя, название предмета и пр. для титульной страницы и метаданных документа здесь
+
+
+
+%%% Работа с русским языком
+\usepackage[english,russian]{babel}   %% загружает пакет многоязыковой вёрстки
+\usepackage{fontspec}      %% подготавливает загрузку шрифтов Open Type, True Type и др.
+\defaultfontfeatures{Ligatures={TeX},Renderer=Basic}  %% свойства шрифтов по умолчанию
+\setmainfont[Ligatures={TeX,Historic}]{Times New Roman} %% задаёт основной шрифт документа
+\setsansfont{Comic Sans MS}                    %% задаёт шрифт без засечек
+\setmonofont{Courier New}
+
+%\include{include/settings.tex}
+
+
+
+% рабочие ссылки в документе
+\usepackage{hyperref}
+\urlstyle{same}
+% графика
+\usepackage{graphicx}
+\usepackage{tikz}
+%\usepackage{pgfplots}
+
+% качественные листинги кода
+%\usepackage{minted}
+%\usepackage{listings}
+%\usepackage{lstfiracode}
+
+
+% библиография
+\bibliographystyle{templates/gost-numeric.bbx}
+\usepackage{csquotes}
+\usepackage[parentracker=true,backend=biber,hyperref=true,bibencoding=utf8,style=numeric-comp,language=auto,autolang=other,citestyle=gost-numeric,defernumbers=true,bibstyle=gost-numeric,sorting=ntvy]{biblatex}
+
+% для заголовков
+\usepackage{caption} 
+
+% разное для математики
+\usepackage{amsmath, amsfonts, amssymb, amsthm, mathtools}
+
+% водяной знак на документе, см. main.tex
+%\usepackage[printwatermark]{xwatermark} 
+
+% для презентаций
+\usepackage{here}
+\usepackage{animate}
+\usepackage{bm}
+
+
+\newcommand{\university}{РГУ нефти и газа имени И.М.Губкина}
+\newcommand{\faculty}{кафедра РиЭНМ}
+\newcommand{\department}{департамент}
+\newcommand{\city}{Москва}
+\newcommand{\num}{ № 1}
+\newcommand{\docname}{Исследование скважин и пластов. Введение}
+\newcommand{\tutorname}{Хабибуллин Р.А.}
+\newcommand{\studentname}{студент}
+\newcommand{\group}{группы нет}
+
+% настройка метаданных документа
+\institute[\university]{\university \\ \faculty}
+\title[\docname]{Лекция 3. Исследования на стационарных режимах работы}
+\author[\tutorname]{\small  \tutorname}
+\date{\the\year} 
+
+\makeatletter
+\setbeamertemplate{title page}{
+	\begin{minipage}[b][\paperheight]{\textwidth}
+		\centering
+		\ifx\insertinstitute\@empty\else\usebeamertemplate*{institute}\fi
+		\vfill
+		\ifx\inserttitle\@empty\else\usebeamertemplate*{title}\fi
+		\vfill
+		\usebeamertemplate*{title separator}
+		\ifx\beamer@shortauthor\@empty\else\usebeamertemplate*{author}\fi
+		\ifx\insertdate\@empty\else\usebeamertemplate*{date}\fi
+		\vfill
+		\vspace*{1mm}
+	\end{minipage}
+}
+
+
+% ---------------------------------------------------------------------------------------------
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+% ---------------------------------------------------------------------------------------------
+\begin{frame}{Содержание лекции}
+	\begin{enumerate}
+		\item Идея исследований на стационарном режиме работы
+		\item Индикаторная диаграмма IPR
+		\item Построение IPR на основе стационарного решения
+		\item Построение IPR на основе нестационарного решения
+		\item Построение IPR на основе численного решения
+	\end{enumerate}
+
+\end{frame}
+
+% ---------------------------------------------------------------------------------------------
+\begin{frame}{Идея исследований на стационарном режиме работы}
+
+Если при эксплуатации скважины стационарный режим доминирует, то можно восстановив его характеристику обеспечить управление скважиной
+
+\begin{figure}[h!]
+	\begin{center}
+		\includegraphics[width=7cm]{pics/ipr_1.png}
+		%\caption{Индикаторная диаграмма}
+		\label{ris:ipr_1}
+	\end{center}
+\end{figure}
+
+Задача исследования - восстановить IPR
+	
+\end{frame}
+% ---------------------------------------------------------------------------------------------
+\begin{frame}{Индикаторная диаграмма IPR}
+	
+	IPR - ключевая характеристика стационарного режима работы скважины
+	
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=9cm]{pics/ipr_2.png}
+			%\caption{Индикаторная диаграмма}
+			\label{ris:ipr_1}
+		\end{center}
+	\end{figure}
+	
+	Позволяет определить прогнозный дебит скважины при изменении забойного давления
+	
+\end{frame}
+
+% ---------------------------------------------------------------------------------------------
+\begin{frame}{Распространенные модели IPR}
+	
+	\begin{itemize}
+		\item Закон Дарси
+		\item Закон Дарси с поправкой Вогеля (композитная кривая Вогеля)
+		\item Другие подходы
+	\end{itemize}
+	
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[width=7cm]{pics/ipr_1.png}
+			%\caption{Индикаторная диаграмма}
+			\label{ris:ipr_1}
+		\end{center}
+	\end{figure}
+	
+\end{frame}
+
+% ---------------------------------------------------------------------------------------------
+\begin{frame}{Задачи}
+	
+	\begin{enumerate}
+		\item Постройте IPR Вогеля с использованием unifloc VBA
+		\item Постройте IPR с использованием нестационарного решения линейного стока
+		\item Постройте IPR с использованием ГДМ для различных конфигураций
+	\end{enumerate}
+	
+
+	
+\end{frame}
+
+
+% Не редактируем: Страница библиографии (формируется автоматически из книжек, указанных в refs.bib и пометок \cite{имя_источника} в тексте)
+%\include{templates/bib-page}
+
+\end{document}
