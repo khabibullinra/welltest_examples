@@ -1,0 +1,73 @@
+% XeLaTeX document
+\documentclass[aspectratio=169, 11pt]{beamer} % для экранов 16:9 оставить
+% \documentclass[11pt]{beamer} % для экранов 4:3 оставить
+
+\include{include/settings_slides.tex}
+
+
+
+\newcommand{\university}{РГУ нефти и газа имени И.М.Губкина}
+\newcommand{\faculty}{кафедра РиЭНМ}
+\newcommand{\department}{департамент}
+\newcommand{\city}{Москва}
+\newcommand{\num}{ № 1}
+\newcommand{\docname}{Исследование скважин и пластов. Введение}
+\newcommand{\tutorname}{Хабибуллин Р.А.}
+\newcommand{\studentname}{студент}
+\newcommand{\group}{группы нет}
+% настройка метаданных документа
+\institute[\university]{\university \\ \faculty}
+\title[\docname]{Лекция 4. Исследования на нестационарных режимах работы}
+\author[\tutorname]{\small  \tutorname}
+\date{\the\year} 
+
+\makeatletter
+\setbeamertemplate{title page}{
+	\begin{minipage}[b][\paperheight]{\textwidth}
+		\centering
+		\ifx\insertinstitute\@empty\else\usebeamertemplate*{institute}\fi
+		\vfill
+		\ifx\inserttitle\@empty\else\usebeamertemplate*{title}\fi
+		\vfill
+		\usebeamertemplate*{title separator}
+		\ifx\beamer@shortauthor\@empty\else\usebeamertemplate*{author}\fi
+		\ifx\insertdate\@empty\else\usebeamertemplate*{date}\fi
+		\vfill
+		\vspace*{1mm}
+	\end{minipage}
+}
+
+
+% ---------------------------------------------------------------------------------------------
+\begin{document}
+	
+	\begin{frame}
+		\titlepage
+	\end{frame}
+	% ---------------------------------------------------------------------------------------------
+	\begin{frame}{Содержание лекции}
+		\begin{enumerate}
+			\item Продвинутые решения
+			\item Диагностические графики
+			\item Интерпретация исследований на неустановившемся режиме
+		\end{enumerate}
+		
+	\end{frame}
+
+	
+	% ---------------------------------------------------------------------------------------------
+	\begin{frame}{Задачи}
+		
+		\begin{enumerate}
+			\item Постройте что нибудь
+		\end{enumerate}
+		
+		
+		
+	\end{frame}
+	
+	
+	% Не редактируем: Страница библиографии (формируется автоматически из книжек, указанных в refs.bib и пометок \cite{имя_источника} в тексте)
+	%\include{templates/bib-page}
+	
+\end{document}
