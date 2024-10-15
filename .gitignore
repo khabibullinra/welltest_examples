@@ -17,3 +17,6 @@ env/
 *.code-workspace
 *.lua
 *.pgf-plot*
+*.nav
+*.toc
+*.snm
