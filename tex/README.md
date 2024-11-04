@@ -32,3 +32,6 @@ sudo apt-get install msttcorefonts
 sudo apt-get install gnuplot
 ```
 
+---
+
+надо добавить `-shell-escape` в параметрах вызова xelatex для того чтобы можно было использовать gnuplot
