@@ -21,3 +21,4 @@ env/
 *.toc
 *.snm
 *.pdf
+mypy.ini

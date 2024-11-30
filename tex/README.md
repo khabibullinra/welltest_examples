@@ -35,3 +35,10 @@ sudo apt-get install gnuplot
 ---
 
 надо добавить `-shell-escape` в параметрах вызова xelatex для того чтобы можно было использовать gnuplot
+
+
+---
+
+
+для скачивания pdf юпитер ноутбука, на компе должен быть тех pandoc и надо в основной шаблон base.tex.j2 (.venv\share\jupyter\nbconvert\templates\latex)
+добавить команды поддержки русского языка
