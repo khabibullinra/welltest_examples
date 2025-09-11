@@ -1394,7 +1394,7 @@ $$
 	p_D(r_D,t_D) = - \frac{1}{2} Ei \left(- \dfrac{ r_D^2}{4t_d} \right)
 $$
 
-где $-Ei(-x)$ - интегральная показательная функция, рисунок \ref{ris:Ei_plot_1}.
+где $-Ei(-x)$ - интегральная показательная функция, рисунок -@fig-ei_plot.
 
 $$
 Ei(x)=-\int\limits_{x}^{\infty}\frac{e^{-t}}{t}\,\mathrm dt
@@ -1765,13 +1765,8 @@ for td in td_from_t(np.array([1, 10, 50]),
                             q_sm3day=q_sm3day, 
                             b_m3m3=b_m3m3, 
                             mu_cP=mu_cP, 
-                            pi_atma=pi_atma),
-             label=f"t = {t_from_td_hr(td, 
-                                       k_mD=k_mD, 
-                                       phi=phi, 
-                                       mu_cP=mu_cP, 
-                                       ct_1atm=ct_1atm, 
-                                       rw_m=rw_m)[0]:.2f} час")
+                            pi_atma=pi_atma), 
+             label=f"t = {t_from_td_hr(td, k_mD=k_mD, phi=phi, mu_cP=mu_cP, ct_1atm=ct_1atm, rw_m=rw_m)[0]:.2f} час")
 ax1.set_title("Воронка депрессии")
 ax1.set_xlabel("r, m")
 ax1.set_ylabel("p, atm")
