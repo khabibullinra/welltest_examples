@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="lecture_2_slides_files/libs/clipboard/clipboard.min.js"></script>
+<script src="lecture_2_slides_files/libs/quarto-html/tabby.min.js"></script>
+<script src="lecture_2_slides_files/libs/quarto-html/popper.min.js"></script>
+<script src="lecture_2_slides_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="lecture_2_slides_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="lecture_2_slides_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="lecture_2_slides_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.32">
+
+  <meta name="author" content="Ринат Хабибуллин">
+  <title>Лекция 2. Исследования скважин и пластов</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="lecture_2_slides_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="lecture_2_slides_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="lecture_2_slides_files/libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <link href="lecture_2_slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="lecture_2_slides_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="lecture_2_slides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="lecture_2_slides_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="lecture_2_slides_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="lecture_2_slides_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Лекция 2. Исследования скважин и пластов</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Ринат Хабибуллин 
+</div>
+</div>
+</div>
+
+</section>
+<section id="уравнение-фильтрации" class="slide level2">
+<h2>Уравнение фильтрации</h2>
+<p><span id="eq-diff_eq_2"><span class="math display">\[
+    \frac{\partial ^2 p }{\partial r^2} + \frac{1}{r} \frac{\partial p}{\partial r} = \frac{\varphi \mu c_t}{0.00036 k} \frac{\partial p}{\partial t}
+\qquad(1)\]</span></span></p>
+<ul>
+<li><span class="math inline">\(k\)</span> - проницаемость, мД</li>
+<li><span class="math inline">\(\mu\)</span> - вязкость флюида, сП</li>
+<li><span class="math inline">\(p\)</span> - давление, атм</li>
+<li><span class="math inline">\(r\)</span> - расстояние, м</li>
+<li><span class="math inline">\(\rho\)</span> - плотность флюида, кг/м<span class="math inline">\(^3\)</span></li>
+<li><span class="math inline">\(\varphi\)</span> - пористость породы, доли единиц.</li>
+<li><span class="math inline">\(c_t\)</span> - общая сжимаемость породы и флюида, 1/атм</li>
+<li><span class="math inline">\(t\)</span> - время, час</li>
+</ul>
+</section>
+<section id="уравнение-фильтрации-в-безразмерных-переменных" class="slide level2">
+<h2>Уравнение фильтрации в безразмерных переменных</h2>
+<p><span id="eq-equation_dimensionless"><span class="math display">\[
+\frac{\partial p_D}{ \partial t_D} = \frac{1}{r_D}\left[ \frac{ \partial{}}{ \partial{r_D} }\left( r_D \dfrac{\partial p_D}{ \partial r_D} \right) \right]  
+\qquad(2)\]</span></span></p>
+<ul>
+<li><span class="math inline">\(r_D\)</span> - безразмерное расстояние от центра скважины</li>
+<li><span class="math inline">\(t_D\)</span> - безразмерное время</li>
+<li><span class="math inline">\(p_D\)</span> - безразмерное давление</li>
+</ul>
+</section>
+<section id="определения-безразмерных-переменных" class="slide level2">
+<h2>Определения безразмерных переменных</h2>
+<p><span class="math display">\[
+r_D = \frac{r}{r_w}
+\]</span></p>
+<p><span class="math display">\[
+t_D = \frac{0.00036 kt}{\varphi \mu c_t r_w^2}
+\]</span></p>
+<p><span class="math display">\[
+p_D = \frac{kh}{ 18.42 q_s B \mu} \left( p_i - p_{wf} \right)
+\]</span></p>
+<p><span class="math display">\[
+q_D = \frac{q}{q_{ref}}
+\]</span></p>
+</section>
+<section id="безразмерные-переменные-в-python" class="slide level2">
+<h2>Безразмерные переменные в python</h2>
+<div id="60af1a85" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python code-overflow-wrap number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="kw">def</span> r_from_rd_m(rd, rw_m<span class="op">=</span><span class="fl">0.1</span>):</span>
+<span id="cb1-2"><a href=""></a>    <span class="cf">return</span> rd<span class="op">*</span>rw_m</span>
+<span id="cb1-3"><a href=""></a></span>
+<span id="cb1-4"><a href=""></a><span class="kw">def</span> t_from_td_hr(td, k_mD<span class="op">=</span><span class="dv">10</span>, phi<span class="op">=</span><span class="fl">0.2</span>, mu_cP<span class="op">=</span><span class="dv">1</span>, ct_1atm<span class="op">=</span><span class="fl">1e-5</span>, rw_m<span class="op">=</span><span class="fl">0.1</span>):</span>
+<span id="cb1-5"><a href=""></a>    <span class="cf">return</span> td <span class="op">*</span> phi <span class="op">*</span> mu_cP <span class="op">*</span> ct_1atm <span class="op">*</span> rw_m <span class="op">*</span> rw_m <span class="op">/</span> k_mD <span class="op">/</span> <span class="fl">0.00036</span></span>
+<span id="cb1-6"><a href=""></a></span>
+<span id="cb1-7"><a href=""></a><span class="kw">def</span> p_from_pd_atma(pd, k_mD<span class="op">=</span><span class="dv">10</span>, h_m<span class="op">=</span><span class="dv">10</span>, q_sm3day<span class="op">=</span><span class="dv">20</span>, b_m3m3<span class="op">=</span><span class="fl">1.2</span>, mu_cP<span class="op">=</span><span class="dv">1</span>, pi_atma<span class="op">=</span><span class="dv">250</span>):</span>
+<span id="cb1-8"><a href=""></a>    <span class="cf">return</span> pi_atma <span class="op">-</span> pd <span class="op">*</span> <span class="fl">18.42</span> <span class="op">*</span> q_sm3day <span class="op">*</span> b_m3m3 <span class="op">*</span> mu_cP <span class="op">/</span> k_mD <span class="op">/</span> h_m </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>пример</p>
+</section>
+<section id="безразмерные-переменные-в-python-1" class="slide level2">
+<h2>Безразмерные переменные в python</h2>
+<div id="bbfb221a" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a><span class="kw">def</span> rd_from_r(r_m, rw_m<span class="op">=</span><span class="fl">0.1</span>):</span>
+<span id="cb2-2"><a href=""></a>    <span class="cf">return</span> r_m<span class="op">/</span>rw_m</span>
+<span id="cb2-3"><a href=""></a></span>
+<span id="cb2-4"><a href=""></a><span class="kw">def</span> td_from_t(t_hr, k_mD<span class="op">=</span><span class="dv">10</span>, phi<span class="op">=</span><span class="fl">0.2</span>, mu_cP<span class="op">=</span><span class="dv">1</span>, ct_1atm<span class="op">=</span><span class="fl">1e-5</span>, rw_m<span class="op">=</span><span class="fl">0.1</span>):</span>
+<span id="cb2-5"><a href=""></a>    <span class="cf">return</span>  <span class="fl">0.00036</span> <span class="op">*</span> t_hr <span class="op">*</span> k_mD <span class="op">/</span> (phi <span class="op">*</span> mu_cP <span class="op">*</span> ct_1atm <span class="op">*</span> rw_m <span class="op">*</span> rw_m)</span>
+<span id="cb2-6"><a href=""></a></span>
+<span id="cb2-7"><a href=""></a><span class="kw">def</span> pd_from_p(p_atma, k_mD<span class="op">=</span><span class="dv">10</span>, h_m<span class="op">=</span><span class="dv">10</span>, q_sm3day<span class="op">=</span><span class="dv">20</span>, </span>
+<span id="cb2-8"><a href=""></a>              b_m3m3<span class="op">=</span><span class="fl">1.2</span>, mu_cP<span class="op">=</span><span class="dv">1</span>, pi_atma<span class="op">=</span><span class="dv">250</span>):</span>
+<span id="cb2-9"><a href=""></a>    <span class="cf">return</span> (pi_atma <span class="op">-</span> p_atma) <span class="op">/</span> (<span class="fl">18.42</span> <span class="op">*</span> q_sm3day <span class="op">*</span> b_m3m3 <span class="op">*</span> mu_cP) <span class="op">*</span> k_mD <span class="op">*</span> h_m </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="решение-линейного-стока" class="slide level2">
+<h2>Решение линейного стока</h2>
+<ul>
+<li><p>начальное условие. <span class="math display">\[
+t_D &lt; 0, p_D = 0
+\]</span></p></li>
+<li><p>граничное условие на скважине <span class="math display">\[
+\lim_{r_D \to 0} {r_D \frac{\partial p_D}{\partial r_D}} = -1  
+\]</span></p></li>
+<li><p>граничное условие на контуре питания <span class="math display">\[
+r_D = \infty, p_D = 0
+\]</span></p></li>
+</ul>
+<p>Решение<br>
+<span id="eq-eq_solution_d"><span class="math display">\[
+p_D(r_D,t_D) = - \frac{1}{2} Ei \left(- \dfrac{ r_D^2}{4t_d} \right)
+\qquad(3)\]</span></span></p>
+<p>где -Ei(-x) - интегральная показательная функция.</p>
+</section>
+<section id="решение-линейного-стока-в-размерных-переменных" class="slide level2 smaller">
+<h2>Решение линейного стока в размерных переменных</h2>
+<p><span id="eq-ln_solution"><span class="math display">\[
+p\left(r,t\right)=p_i-\frac{18.42q_sB\mu}{kh}\left(-\frac{1}{2}Ei\left(-\frac{\varphi\mu c_tr^2}{0.00144kt}\right)\right)
+\qquad(4)\]</span></span></p>
+<ul>
+<li><span class="math inline">\(r_w\)</span> - радиус скважины, м</li>
+<li><span class="math inline">\(r\)</span> - расстояние от центра скважины до точки в пласте, м</li>
+<li><span class="math inline">\(q_s\)</span> - дебит скважины на поверхности, в нормальных условиях м<sup>3</sup>/сут</li>
+<li><span class="math inline">\(\phi\)</span> - пористость, доли единиц</li>
+<li><span class="math inline">\(\mu\)</span> - вязкость нефти в пласте, сП</li>
+<li><span class="math inline">\(B\)</span> - объемный коэффициент нефти, м<sup>3</sup>/м<sup>3</sup></li>
+<li><span class="math inline">\(p_i\)</span> - начальное давление в пласте, атм</li>
+<li><span class="math inline">\(p\)</span> - давление на расстоянии <span class="math inline">\(r\)</span>, атм</li>
+<li><span class="math inline">\(c_t\)</span> - общая сжимаемость системы в пласте, 1/атм</li>
+</ul>
+</section>
+<section id="логарифмическая-аппроксимация-решения-линейного-стока" class="slide level2">
+<h2>Логарифмическая аппроксимация решения линейного стока</h2>
+<p>Решение с учетом логарифмической аппроксимации в размерных переменных</p>
+<p><span id="eq-ei_solution_full"><span class="math display">\[
+p\left(r,t\right)=p_i-\frac{9.21q_sB\mu}{kh}\left(ln{\frac{kt}{\varphi\mu c_tr^2}}-7.12\right)
+\qquad(5)\]</span></span></p>
+<p>верно при <span id="eq-eq_sol_condition"><span class="math display">\[
+\frac{kt}{\varphi\mu c_tr^2}&gt;70000
+\qquad(6)\]</span></span></p>
+</section>
+<section id="решение-линейного-стока-в-python" class="slide level2">
+<h2>Решение линейного стока в python</h2>
+<div id="78a5e839" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="im">import</span> scipy.special <span class="im">as</span> sc</span>
+<span id="cb3-2"><a href=""></a><span class="co">"""</span></span>
+<span id="cb3-3"><a href=""></a><span class="co">Решение линейного стока уравнения фильтрации</span></span>
+<span id="cb3-4"><a href=""></a><span class="co">"""</span></span>
+<span id="cb3-5"><a href=""></a><span class="kw">def</span> pd_ei(td, rd):</span>
+<span id="cb3-6"><a href=""></a>    <span class="co">"""</span></span>
+<span id="cb3-7"><a href=""></a><span class="co">    Решение линейного стока уравнения фильтрации</span></span>
+<span id="cb3-8"><a href=""></a><span class="co">    rd - безразмерное расстояние</span></span>
+<span id="cb3-9"><a href=""></a><span class="co">    td - безразмерное время</span></span>
+<span id="cb3-10"><a href=""></a><span class="co">    """</span></span>
+<span id="cb3-11"><a href=""></a>    <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span><span class="op">*</span>sc.expi(<span class="op">-</span>rd<span class="op">**</span><span class="dv">2</span> <span class="op">/</span> <span class="dv">4</span> <span class="op">/</span> td)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="график" class="slide level2">
+<h2>График</h2>
+
+<img data-src="lecture_2_slides_files/figure-revealjs/cell-6-output-1.png" class="r-stretch"></section>
+<section id="графики-размерные" class="slide level2">
+<h2>Графики размерные</h2>
+<div class="columns">
+<div class="column" style="width:70%;">
+<div id="1e290d91" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-8-output-1.png"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:30%;">
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a>h_m<span class="op">=</span><span class="dv">10</span> </span>
+<span id="cb4-2"><a href=""></a>q_sm3day<span class="op">=</span><span class="dv">20</span> </span>
+<span id="cb4-3"><a href=""></a>b_m3m3<span class="op">=</span><span class="fl">1.2</span> </span>
+<span id="cb4-4"><a href=""></a>mu_cP<span class="op">=</span><span class="dv">1</span> </span>
+<span id="cb4-5"><a href=""></a>pi_atma<span class="op">=</span><span class="dv">250</span></span>
+<span id="cb4-6"><a href=""></a>rw_m<span class="op">=</span><span class="fl">0.1</span></span>
+<span id="cb4-7"><a href=""></a>k_mD<span class="op">=</span><span class="dv">10</span>, </span>
+<span id="cb4-8"><a href=""></a>phi<span class="op">=</span><span class="fl">0.2</span></span>
+<span id="cb4-9"><a href=""></a>ct_1atm<span class="op">=</span><span class="fl">1e-5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div>
+</section>
+<section id="сравнение-решения-и-логарифмической-аппроксимации" class="slide level2">
+<h2>Сравнение решения и логарифмической аппроксимации</h2>
+
+<img data-src="lecture_2_slides_files/figure-revealjs/cell-9-output-1.png" class="r-stretch"></section>
+<section id="суперпозиция.-восстановление-давления" class="slide level2 smaller">
+<h2>Суперпозиция. Восстановление давления</h2>
+<p><span class="math display">\[
+P_{bu.D}(t_D, t_{pD}, r_D) = P_D(t_D) - P_D(t_D-t_{pD}, r_D) \cdot \mathcal{H}(t_D-t_{pD})
+\]</span></p>
+<p>функция Хевисайда</p>
+<p><span class="math display">\[
+\mathcal{H} = \begin{cases}0 &amp; x &lt; 0\\1 &amp; x = 0\\1 &amp; x &gt; 0\end{cases}
+\]</span></p>
+</section>
+<section id="функция-для-восстановления-давления-python" class="slide level2">
+<h2>Функция для восстановления давления python</h2>
+<div id="a7fd3946" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="kw">def</span> pd_build_up(td, td_p, rd):</span>
+<span id="cb5-2"><a href=""></a>    <span class="co">"""</span></span>
+<span id="cb5-3"><a href=""></a><span class="co">    расчет давления для запуска и последующей остановки скважины</span></span>
+<span id="cb5-4"><a href=""></a><span class="co">    td - время после запуска</span></span>
+<span id="cb5-5"><a href=""></a><span class="co">    td_p - время безразмерное - которое скважина работала до остановки</span></span>
+<span id="cb5-6"><a href=""></a><span class="co">    rd - расстояния от скважины</span></span>
+<span id="cb5-7"><a href=""></a><span class="co">    """</span></span>
+<span id="cb5-8"><a href=""></a>    <span class="co"># применение функции Хевисайда здесь делает расчет корректным</span></span>
+<span id="cb5-9"><a href=""></a>    <span class="co"># для входных векторов td</span></span>
+<span id="cb5-10"><a href=""></a>    <span class="cf">return</span> pd_ei(td, rd) <span class="op">-</span> np.heaviside(td<span class="op">-</span>td_p,<span class="dv">1</span>) <span class="op">*</span> pd_ei(td<span class="op">-</span>td_p, rd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="график-для-восстановления-давления" class="slide level2">
+<h2>График для восстановления давления</h2>
+<div id="7fad4fff" class="cell" data-execution_count="10">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-11-output-1.png"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="8220d1ae" class="cell" data-execution_count="11">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-12-output-1.png"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="графики-распределения-давления-в-пласте" class="slide level2">
+<h2>Графики распределения давления в пласте</h2>
+
+<img data-src="lecture_2_slides_files/figure-revealjs/cell-13-output-1.png" class="r-stretch"></section>
+<section id="радиус-влияния-скважины" class="slide level2">
+<h2>Радиус влияния скважины</h2>
+<p><span id="eq-r_ed"><span class="math display">\[
+r_{eD} = \sqrt {2.2458 t_D}
+\qquad(7)\]</span></span></p>
+
+<img data-src="lecture_2_slides_files/figure-revealjs/cell-15-output-1.png" class="r-stretch"></section>
+<section>
+<section id="решения-в-пространстве-лапласа" class="title-slide slide level1 center">
+<h1>Решения в пространстве Лапласа</h1>
+
+</section>
+<section id="решение" class="slide level2">
+<h2>Решение</h2>
+<p>Рассматривается уравнение фильтрации в безразмерных переменных</p>
+<p><span id="eq-equation_dimensionless"><span class="math display">\[
+\frac{\partial p_D}{ \partial t_D} = \frac{1}{r_D}\left[ \frac{ \partial{}}{ \partial{r_D} }\left( r_D \dfrac{\partial p_D}{ \partial r_D} \right) \right]  
+\qquad(8)\]</span></span></p>
+<p>Решение такого уравнение может быть получено с использованием <a href="https://ru.wikipedia.org/wiki/%D0%9F%D1%80%D0%B5%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_%D0%9B%D0%B0%D0%BF%D0%BB%D0%B0%D1%81%D0%B0">преобразования Лапласа</a>.</p>
+<p><span class="math display">\[
+L \left [ f(t) \right] = \tilde{f}(u) = \int_{0}^{\infty}f(t)e^{-ut}dt
+\]</span></p>
+<p>где <span class="math inline">\(u\)</span> параметр пространства Лапласа соответствующий времени.</p>
+<p>Тогда уравнение в пространстве Лапласа преобразуется к виду:</p>
+<p><span id="eq-bessel"><span class="math display">\[
+u \tilde{p}_D  =  \dfrac{1}{r_D} \left[\dfrac{d}{d r_D} \left(r_D \dfrac{d{\tilde{p}_D}}{d r_D} \right) \right]
+\qquad(9)\]</span></span></p>
+</section>
+<section id="общее-решение" class="slide level2">
+<h2>Общее решение</h2>
+<p>Тогда уравнение в пространстве Лапласа преобразуется к виду:</p>
+<p><span class="math display">\[
+u \tilde{p}_D  =  \dfrac{1}{r_D} \left[\dfrac{d}{d r_D} \left(r_D \dfrac{d{\tilde{p}_D}}{d r_D} \right) \right]
+\]</span></p>
+<p>Уравнение (<a href="#/eq-bessel" class="quarto-xref">9</a>) известно как <a href="https://ru.wikipedia.org/wiki/%D0%9C%D0%BE%D0%B4%D0%B8%D1%84%D0%B8%D1%86%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5_%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8_%D0%91%D0%B5%D1%81%D1%81%D0%B5%D0%BB%D1%8F">модифицированное уравнение Бесселя</a>. Общее решение этого уравнения можно записать в виде</p>
+<p><span id="eq-lapl_general_solution"><span class="math display">\[
+\tilde{p}_D(u, r_D) = A(u) K_0(r_D \sqrt u) + B(u) I_0(r_D \sqrt u)
+\qquad(10)\]</span></span></p>
+<p>где</p>
+<ul>
+<li><span class="math inline">\(u\)</span> - переменная пространства Лапласа, соответствующая времени</li>
+<li><span class="math inline">\(\tilde{p}_D(u, r_D)\)</span> - изображение давления в пространстве Лапласа</li>
+<li><span class="math inline">\(K_0, I_0\)</span> - модифицированные функции Бесселя нулевого порядка (могут быть вычислены, например, с использованием реализации в библиотке <code>scipy.special</code>)</li>
+<li><span class="math inline">\(A(u), B(u)\)</span> - произвольные функции, которые могут быть определены при задании начальных и граничных условий</li>
+</ul>
+</section>
+<section id="решение-линейного-стока-1" class="slide level2">
+<h2>Решение линейного стока</h2>
+<p>Решение для бесконечно малого радиуса скважины в пространстве Лапласа будет иметь вид</p>
+<p><span id="eq-line_source_lapl_solution"><span class="math display">\[
+\tilde{p}_D(u) = \frac{1}{u} K_0 \left( r_D \sqrt u  \right)
+\qquad(11)\]</span></span></p>
+<p>где</p>
+<p><span class="math inline">\(K_0\)</span>, <span class="math inline">\(K_1\)</span> - <a href="https://ru.wikipedia.org/wiki/%D0%9C%D0%BE%D0%B4%D0%B8%D1%84%D0%B8%D1%86%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5_%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8_%D0%91%D0%B5%D1%81%D1%81%D0%B5%D0%BB%D1%8F">модифицированные функции Бесселя</a></p>
+</section>
+<section id="решение-для-конечного-радиуса-скважины" class="slide level2">
+<h2>Решение для конечного радиуса скважины</h2>
+<p><span id="eq-lapl_sol_finite_rw"><span class="math display">\[
+\tilde{p}_D(u) = \frac{K_0 \left( r_D \sqrt u  \right)}{u \sqrt u  K_1(\sqrt u)}  
+\qquad(12)\]</span></span></p>
+</section>
+<section id="построение-решений-с-python" class="slide level2">
+<h2>Построение решений с python</h2>
+<div id="7fe7f689" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a><span class="im">import</span> anaflow</span>
+<span id="cb6-2"><a href=""></a><span class="im">import</span> scipy.special <span class="im">as</span> spec</span>
+<span id="cb6-3"><a href=""></a><span class="co"># пример функции реализующий расчет решения в пространстве Лапласа</span></span>
+<span id="cb6-4"><a href=""></a><span class="kw">def</span> pd_lapl_line_source(u, rd<span class="op">=</span><span class="fl">1.</span>):</span>
+<span id="cb6-5"><a href=""></a>    <span class="cf">return</span> np.divide(spec.kn(<span class="dv">0</span>, rd <span class="op">*</span> u<span class="op">**</span><span class="fl">0.5</span>) , u)</span>
+<span id="cb6-6"><a href=""></a></span>
+<span id="cb6-7"><a href=""></a><span class="co"># функция расчета безразмерного давления с использованием алгоритма Стефеста</span></span>
+<span id="cb6-8"><a href=""></a><span class="co"># для численного обратного преобразования Лапласа</span></span>
+<span id="cb6-9"><a href=""></a><span class="kw">def</span> pd_line_source_inv(td, rd<span class="op">=</span><span class="fl">1.</span>):</span>
+<span id="cb6-10"><a href=""></a>    pd_inv <span class="op">=</span> anaflow.get_lap_inv(pd_lapl_line_source, rd<span class="op">=</span>rd)</span>
+<span id="cb6-11"><a href=""></a>    <span class="cf">return</span> pd_inv(td)</span>
+<span id="cb6-12"><a href=""></a></span>
+<span id="cb6-13"><a href=""></a><span class="co"># для сравнения приведем функции из лекции 1</span></span>
+<span id="cb6-14"><a href=""></a><span class="co"># Решение линейного стока уравнения фильтрации с использованием Ei</span></span>
+<span id="cb6-15"><a href=""></a><span class="kw">def</span> pd_ei(td, rd<span class="op">=</span><span class="fl">1.</span>):</span>
+<span id="cb6-16"><a href=""></a>    <span class="cf">return</span> <span class="op">-</span><span class="fl">0.5</span> <span class="op">*</span> spec.expi(<span class="op">-</span><span class="fl">0.25</span> <span class="op">*</span> rd <span class="op">*</span> rd <span class="op">/</span> td)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="сравнение-расчета-через-преобразование-лапласа-и-с-использованием-ei" class="slide level2">
+<h2>Сравнение расчета через преобразование Лапласа и с использованием Ei</h2>
+<div id="96237bb1" class="cell" data-execution_count="16">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href=""></a><span class="co"># построим график безразмерного давления от расстояния</span></span>
+<span id="cb7-2"><a href=""></a><span class="co"># двумя способами и их разницу также</span></span>
+<span id="cb7-3"><a href=""></a>td <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb7-4"><a href=""></a>rd_arr <span class="op">=</span> np.logspace(<span class="dv">1</span>, <span class="dv">2</span> ,<span class="dv">200</span>)</span>
+<span id="cb7-5"><a href=""></a>pd_ei_arr <span class="op">=</span> pd_ei(td, rd_arr) </span>
+<span id="cb7-6"><a href=""></a>pd_lap_inv_arr <span class="op">=</span> np.squeeze([pd_line_source_inv(td, rd_i) <span class="cf">for</span> rd_i <span class="kw">in</span> rd_arr])</span>
+<span id="cb7-7"><a href=""></a></span>
+<span id="cb7-8"><a href=""></a><span class="co"># при построении используем векторный расчет</span></span>
+<span id="cb7-9"><a href=""></a>plt.rcParams[<span class="st">"figure.figsize"</span>] <span class="op">=</span> (<span class="dv">8</span>,<span class="dv">4</span>)</span>
+<span id="cb7-10"><a href=""></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>)</span>
+<span id="cb7-11"><a href=""></a></span>
+<span id="cb7-12"><a href=""></a>ax1.plot(rd_arr, pd_ei_arr)</span>
+<span id="cb7-13"><a href=""></a>ax1.plot(rd_arr, pd_lap_inv_arr)</span>
+<span id="cb7-14"><a href=""></a>ax1.set_title(<span class="st">"Решение для td = </span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(td))</span>
+<span id="cb7-15"><a href=""></a>ax1.set_xlabel(<span class="st">"rd"</span>)</span>
+<span id="cb7-16"><a href=""></a>ax1.set_ylabel(<span class="st">"pd"</span>)</span>
+<span id="cb7-17"><a href=""></a></span>
+<span id="cb7-18"><a href=""></a>ax2.plot(rd_arr, pd_ei_arr <span class="op">-</span> pd_lap_inv_arr)</span>
+<span id="cb7-19"><a href=""></a>ax2.set_title(<span class="st">"Разность решений"</span>)</span>
+<span id="cb7-20"><a href=""></a>ax2.set_xlabel(<span class="st">"rd"</span>)</span>
+<span id="cb7-21"><a href=""></a>ax2.set_ylabel(<span class="st">"pd"</span>)</span>
+<span id="cb7-22"><a href=""></a></span>
+<span id="cb7-23"><a href=""></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+
+</div>
+<img data-src="lecture_2_slides_files/figure-revealjs/cell-17-output-1.png" class="r-stretch"></section>
+<section id="решение-для-конечного-радиуса-скважины-1" class="slide level2">
+<h2>Решение для конечного радиуса скважины</h2>
+<div id="7004e9ed" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href=""></a><span class="co"># пример функции реализующий расчет решения в пространстве Лапласа</span></span>
+<span id="cb8-2"><a href=""></a><span class="kw">def</span> pd_lapl_finite_rw(u, rd<span class="op">=</span><span class="fl">1.</span>):</span>
+<span id="cb8-3"><a href=""></a>    u05 <span class="op">=</span> u<span class="op">**</span><span class="fl">0.5</span></span>
+<span id="cb8-4"><a href=""></a>    <span class="cf">return</span> np.divide(spec.kn(<span class="dv">0</span>, rd <span class="op">*</span> u05) , (u <span class="op">*</span> u05 <span class="op">*</span>  spec.kn(<span class="dv">1</span>, u05)))</span>
+<span id="cb8-5"><a href=""></a></span>
+<span id="cb8-6"><a href=""></a></span>
+<span id="cb8-7"><a href=""></a><span class="co"># функция расчета безразмерного давления с использованием алгоритма Стефеста</span></span>
+<span id="cb8-8"><a href=""></a><span class="co"># для численного обратного преобразования Лапласа</span></span>
+<span id="cb8-9"><a href=""></a><span class="kw">def</span> pd_finite_rw_inv(td, rd<span class="op">=</span><span class="fl">1.</span>):</span>
+<span id="cb8-10"><a href=""></a>    pd_inv <span class="op">=</span> anaflow.get_lap_inv(pd_lapl_finite_rw, rd<span class="op">=</span>rd)</span>
+<span id="cb8-11"><a href=""></a>    <span class="cf">return</span> pd_inv(td)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="решение-для-конечного-радиуса-скважины-2" class="slide level2">
+<h2>Решение для конечного радиуса скважины</h2>
+
+<img data-src="lecture_2_slides_files/figure-revealjs/cell-19-output-1.png" class="r-stretch"></section>
+<section id="решение-с-учетом-послепритока" class="slide level2">
+<h2>Решение с учетом послепритока</h2>
+<p>Частное решение решение с учетом скин-фактор и послепритока можно представить в виде</p>
+<p><span class="math display">\[
+\tilde{p}_{wbD}(s) = \frac{1}{s} \left[ \frac{S + s \tilde{p}_D(r_d=1,s) }{1 + s C_D (S + s \tilde{p}_D(r_d=1,s))} \right]
+\]</span></p>
+<p>где <span class="math inline">\(\tilde{p}_D(r_d=1,s)\)</span> - известное частное решение</p>
+<div id="e24d1ead" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href=""></a><span class="co"># решение линейного стока в пространстве Лапласа</span></span>
+<span id="cb9-2"><a href=""></a><span class="kw">def</span> pd_lapl_wbs(pd_lapl, S<span class="op">=</span><span class="dv">0</span>, Cd<span class="op">=</span><span class="dv">0</span>):</span>
+<span id="cb9-3"><a href=""></a>    <span class="kw">def</span> pdl(u, rd, S<span class="op">=</span><span class="dv">0</span>, Cd<span class="op">=</span><span class="dv">0</span>):</span>
+<span id="cb9-4"><a href=""></a>        upd_lapl <span class="op">=</span> u <span class="op">*</span> pd_lapl(u, rd<span class="op">=</span>rd)</span>
+<span id="cb9-5"><a href=""></a>        <span class="cf">return</span> <span class="dv">1</span> <span class="op">/</span> u <span class="op">*</span> (S <span class="op">+</span> upd_lapl) <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> u <span class="op">*</span> Cd <span class="op">*</span> (S <span class="op">+</span> upd_lapl))</span>
+<span id="cb9-6"><a href=""></a>    <span class="cf">return</span> pdl</span>
+<span id="cb9-7"><a href=""></a></span>
+<span id="cb9-8"><a href=""></a><span class="co"># построим функцию инвертирующую решение в пространстве Лапласа</span></span>
+<span id="cb9-9"><a href=""></a></span>
+<span id="cb9-10"><a href=""></a><span class="co"># функция расчета безразмерного давления с использованием алгоритма Стефеста</span></span>
+<span id="cb9-11"><a href=""></a><span class="co"># для численного обратного преобразования Лапласа</span></span>
+<span id="cb9-12"><a href=""></a><span class="kw">def</span> pd_inv(pd_lapl, td, rd, <span class="op">**</span>kwargs):</span>
+<span id="cb9-13"><a href=""></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(rd, np.ndarray):</span>
+<span id="cb9-14"><a href=""></a>        <span class="co"># если на входе массив, то вручную итерируем по всем элементам и </span></span>
+<span id="cb9-15"><a href=""></a>        <span class="co"># собираем массив массивов</span></span>
+<span id="cb9-16"><a href=""></a>        <span class="cf">return</span> np.array(<span class="bu">list</span>(<span class="bu">map</span>(<span class="kw">lambda</span> r: pd_inv(pd_lapl, td, rd<span class="op">=</span>r, <span class="op">**</span>kwargs), rd)))</span>
+<span id="cb9-17"><a href=""></a>    <span class="cf">else</span>:</span>
+<span id="cb9-18"><a href=""></a>        pd_inv_ <span class="op">=</span> anaflow.get_lap_inv(pd_lapl, rd<span class="op">=</span>rd, <span class="op">**</span>kwargs)</span>
+<span id="cb9-19"><a href=""></a>        <span class="cf">return</span> pd_inv_(td)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="график-для-послепритока" class="slide level2">
+<h2>График для послепритока</h2>
+<div id="3fdb55be" class="cell" data-execution_count="20">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-21-output-1.png"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="1eac5106" class="cell" data-execution_count="21">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-22-output-1.png"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="решение-с-постоянным-давлением-на-круговой-границе" class="slide level2">
+<h2>Решение с постоянным давлением на круговой границе</h2>
+<p><span class="math display">\[
+\displaystyle \operatorname{p_{d}}{\left(r_{d} \right)} = \frac{- I_{0}\left(r_{d} \sqrt{u}\right) K_{0}\left(r_{e} \sqrt{u}\right) + I_{0}\left(r_{e} \sqrt{u}\right) K_{0}\left(r_{d} \sqrt{u}\right)}{u^{\frac{3}{2}} \left(I_{0}\left(r_{e} \sqrt{u}\right) K_{1}\left(\sqrt{u}\right) + I_{1}\left(\sqrt{u}\right) K_{0}\left(r_{e} \sqrt{u}\right)\right)}
+\]</span></p>
+
+<img data-src="lecture_2_slides_files/figure-revealjs/cell-23-output-1.png" class="r-stretch"></section>
+<section id="решение-с-замкнутой-круговой-границей" class="slide level2">
+<h2>Решение с замкнутой круговой границей</h2>
+<p><span class="math display">\[
+\displaystyle \operatorname{p_{d}}{\left(r_{d} \right)} = \frac{I_{0}\left(r_{d} \sqrt{u}\right) K_{1}\left(r_{e} \sqrt{u}\right) + I_{1}\left(r_{e} \sqrt{u}\right) K_{0}\left(r_{d} \sqrt{u}\right)}{u^{\frac{3}{2}} \left(- I_{1}\left(\sqrt{u}\right) K_{1}\left(r_{e} \sqrt{u}\right) + I_{1}\left(r_{e} \sqrt{u}\right) K_{1}\left(\sqrt{u}\right)\right)}
+\]</span></p>
+
+
+<img data-src="lecture_2_slides_files/figure-revealjs/cell-25-output-1.png" class="r-stretch"></section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="lecture_2_slides_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="lecture_2_slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="lecture_2_slides_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="lecture_2_slides_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="lecture_2_slides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="lecture_2_slides_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="lecture_2_slides_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="lecture_2_slides_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="lecture_2_slides_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="lecture_2_slides_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="lecture_2_slides_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': true,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

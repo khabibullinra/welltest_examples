@@ -1,0 +1,23 @@
+---
+title: Лекция 3. Решения уравнения фильтрации. Интерпретация
+bibliography: refs.bib
+# указываем использовать названия глав в ссылка на рисунки, формулы, таблицы
+crossref:
+  chapters: true
+# настройки html документа
+format: 
+  html:
+    toc: true
+    toc-depth: 1
+    toc-expand: 2
+    number-sections: true
+    section-numbering: 1.1.1
+    lang: ru
+    embed-resources: true    # генерим один большой html файл    
+    code-fold: true
+    code-summary: "Показать код"
+
+---
+
+
+# Решение с постоянным забойным давлением

@@ -1,0 +1,945 @@
+---
+title: "Лекция 2. Исследования скважин и пластов"
+author: "Ринат Хабибуллин"
+format: 
+    revealjs: 
+        smaller: true
+        chalkboard: true
+---
+
+## Уравнение фильтрации
+
+
+$$ 
+    \frac{\partial ^2 p }{\partial r^2} + \frac{1}{r} \frac{\partial p}{\partial r} = \frac{\varphi \mu c_t}{0.00036 k} \frac{\partial p}{\partial t} 
+$$ {#eq-diff_eq_2}
+
+-   $k$ - проницаемость, мД
+-   $\mu$ - вязкость флюида, сП
+-   $p$ - давление, атм
+-   $r$ - расстояние, м
+-   $\rho$ - плотность флюида, кг/м$^3$
+-   $\varphi$ - пористость породы, доли единиц.
+-   $c_t$ - общая сжимаемость породы и флюида, 1/атм
+-   $t$ - время, час
+
+## Уравнение фильтрации в безразмерных переменных
+$$ 
+\frac{\partial p_D}{ \partial t_D} = \frac{1}{r_D}\left[ \frac{ \partial{}}{ \partial{r_D} }\left( r_D \dfrac{\partial p_D}{ \partial r_D} \right) \right]  
+$$ {#eq-equation_dimensionless}
+
+* $r_D$ - безразмерное расстояние от центра скважины
+* $t_D$ - безразмерное время
+* $p_D$ - безразмерное давление
+
+## Определения безразмерных переменных
+
+$$ 
+r_D = \frac{r}{r_w} 
+$$
+
+$$ 
+t_D = \frac{0.00036 kt}{\varphi \mu c_t r_w^2}
+$$
+
+$$ 
+p_D = \frac{kh}{ 18.42 q_s B \mu} \left( p_i - p_{wf} \right) 
+$$
+
+$$ 
+q_D = \frac{q}{q_{ref}} 
+$$
+
+## Безразмерные переменные в python
+
+
+```{python}
+#| echo: true
+#| code-overflow: wrap
+
+def r_from_rd_m(rd, rw_m=0.1):
+    return rd*rw_m
+
+def t_from_td_hr(td, k_mD=10, phi=0.2, mu_cP=1, ct_1atm=1e-5, rw_m=0.1):
+    return td * phi * mu_cP * ct_1atm * rw_m * rw_m / k_mD / 0.00036
+
+def p_from_pd_atma(pd, k_mD=10, h_m=10, q_sm3day=20, b_m3m3=1.2, mu_cP=1, pi_atma=250):
+    return pi_atma - pd * 18.42 * q_sm3day * b_m3m3 * mu_cP / k_mD / h_m 
+
+```
+
+пример
+
+## Безразмерные переменные в python
+
+
+```{python}
+#| echo: true
+
+def rd_from_r(r_m, rw_m=0.1):
+    return r_m/rw_m
+
+def td_from_t(t_hr, k_mD=10, phi=0.2, mu_cP=1, ct_1atm=1e-5, rw_m=0.1):
+    return  0.00036 * t_hr * k_mD / (phi * mu_cP * ct_1atm * rw_m * rw_m)
+
+def pd_from_p(p_atma, k_mD=10, h_m=10, q_sm3day=20, 
+              b_m3m3=1.2, mu_cP=1, pi_atma=250):
+    return (pi_atma - p_atma) / (18.42 * q_sm3day * b_m3m3 * mu_cP) * k_mD * h_m 
+```
+
+## Решение линейного стока
+
+-   начальное условие.
+$$
+t_D < 0, p_D = 0 
+$$ 
+
+-   граничное условие на скважине 
+$$ 
+\lim_{r_D \to 0} {r_D \frac{\partial p_D}{\partial r_D}} = -1  
+$$
+
+-  граничное условие на контуре питания
+$$ 
+r_D = \infty, p_D = 0 
+$$
+
+Решение  
+$$ 
+p_D(r_D,t_D) = - \frac{1}{2} Ei \left(- \dfrac{ r_D^2}{4t_d} \right)
+$$ {#eq-eq_solution_d}
+
+где -Ei(-x) - интегральная показательная функция.
+
+
+## Решение линейного стока в размерных переменных {.smaller}
+
+
+$$
+p\left(r,t\right)=p_i-\frac{18.42q_sB\mu}{kh}\left(-\frac{1}{2}Ei\left(-\frac{\varphi\mu c_tr^2}{0.00144kt}\right)\right) 
+$$ {#eq-ln_solution}
+
+
+-   $r_w$ - радиус скважины, м
+-   $r$ - расстояние от центра скважины до точки в пласте, м
+-   $q_s$ - дебит скважины на поверхности, в нормальных условиях м^3^/сут
+-   $\phi$ - пористость, доли единиц
+-   $\mu$ - вязкость нефти в пласте, сП
+-   $B$ - объемный коэффициент нефти, м^3^/м^3^
+-   $p_i$ - начальное давление в пласте, атм
+-   $p$ - давление на расстоянии $r$, атм
+-   $c_t$ - общая сжимаемость системы в пласте, 1/атм
+
+## Логарифмическая аппроксимация решения линейного стока
+
+
+Решение с учетом логарифмической аппроксимации в размерных переменных
+
+$$
+p\left(r,t\right)=p_i-\frac{9.21q_sB\mu}{kh}\left(ln{\frac{kt}{\varphi\mu c_tr^2}}-7.12\right)
+$$ {#eq-ei_solution_full}
+
+верно при 
+$$
+\frac{kt}{\varphi\mu c_tr^2}>70000 
+$$ {#eq-eq_sol_condition}
+
+## Решение линейного стока в python
+
+```{python}
+#| echo: true
+import scipy.special as sc
+"""
+Решение линейного стока уравнения фильтрации
+"""
+def pd_ei(td, rd):
+    """
+    Решение линейного стока уравнения фильтрации
+    rd - безразмерное расстояние
+    td - безразмерное время
+    """
+    return -1/2*sc.expi(-rd**2 / 4 / td)
+```
+
+## График
+
+
+```{python}
+"""
+Импортируем библиотеки для расчетов. 
+numpy - для работы с массивами и подготовки данных 
+matplotlib - для построения графиков
+scipy - для решения линейных уравнений
+"""
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy
+```
+
+
+```{python}
+"""
+построим графики решения линейного стока
+в безразмерных переменных
+"""
+rd_arr = np.logspace(1, 3, 100)
+td_arr = np.logspace(1, 3, 100)
+
+# при построении используем векторный расчет
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8,4))
+for td in [1000, 10000, 100000]:
+    ax1.plot(rd_arr, pd_ei(td, rd_arr), label=f"td = {td}" )
+    ax1.plot(-rd_arr, pd_ei(td, rd_arr), label=f"td = {td}" )
+ax1.set_title("Решение для td = {}".format(td))
+ax1.set_xlabel("rd")
+ax1.set_ylabel("pd")
+ax1.legend()
+
+for rd in (1, 5 , 50):
+    ax2.plot(td_arr, pd_ei(td_arr, rd), label=f"rd = {rd}" )
+ax2.set_title("Решение для rd = {}".format(rd))
+ax2.set_xlabel("td")
+ax2.set_ylabel("pd")
+ax2.legend()
+plt.show()
+```
+
+
+## Графики размерные
+
+
+```{python}
+"""
+ определим функции для перевода размерных переменных в безразмерные и обратно
+ пригодится для построения графиков и ведения расчетов
+"""
+def r_from_rd_m(rd, rw_m=0.1):
+    """
+    перевод безразмерного расстояния в размерное
+    rd -  безразмерное расстояние
+    rw_m -  радиус скважины, м
+    """
+    return rd*rw_m
+
+def rd_from_r(r_m, rw_m=0.1):
+    """
+    перевод размерного расстояния в безразмерное
+    r_m - размерное расстояние, м
+    rw_m - радиус скважины, м
+    """
+    return r_m/rw_m
+
+def t_from_td_hr(td, k_mD=10, phi=0.2, mu_cP=1, ct_1atm=1e-5, rw_m=0.1):
+    """
+    перевод безразмерного времени в размерное, результат в часах
+    td - безразмерное время
+    k_mD - проницаемость пласта, мД
+    phi - пористость, доли единиц
+    mu_cP - динамическая вязкость флюида, сП
+    ct_1atm - общая сжимаемость, 1/атм
+    rw_m - радиус скважины, м
+    """
+    return td * phi * mu_cP * ct_1atm * rw_m * rw_m / k_mD / 0.00036
+
+def td_from_t(t_hr, k_mD=10, phi=0.2, mu_cP=1, ct_1atm=1e-5, rw_m=0.1):
+    """
+    перевод размерного времени в безразмерное
+    t_hr - размерное время, час
+    k_mD - проницаемость пласта, мД
+    phi - пористость, доли единиц
+    mu_cP - динамическая вязкость флюида, сП
+    ct_1atm - общая сжимаемость, 1/атм
+    rw_m - радиус скважины, м
+    """
+    return  0.00036 * t_hr * k_mD / (phi * mu_cP * ct_1atm * rw_m * rw_m) 
+
+def p_from_pd_atma(pd, 
+                   k_mD=10, h_m=10, 
+                   q_sm3day=20, b_m3m3=1.2, mu_cP=1, pi_atma=250):
+    """
+    перевод безразмерного давления в размерное, результат 
+    в абсолютных атмосферах
+    pd - безразмерное давление
+    k_mD - проницаемость пласта, мД
+    h_m - мощность пласта, м
+    q_sm3day - дебит на поверхности, м3/сут в с.у.
+    fvf_m3m3 - объемный коэффициент нефти, м3/м3
+    mu_cP - динамическая вязкость флюида, сП
+    pi_atma - начальное давление, абсолютные атм.
+    """
+    return pi_atma - pd * 18.42 * q_sm3day * b_m3m3 * mu_cP / k_mD / h_m 
+
+def pd_from_p(p_atma, 
+              k_mD=10, h_m=10, 
+              q_sm3day=20, b_m3m3=1.2, mu_cP=1, pi_atma=250):
+    """
+    перевод размерного давления в безразмерное
+    p_atma - давление
+    k_mD - проницаемость пласта, мД
+    h_m - мощность пласта, м
+    q_sm3day - дебит на поверхности, м3/сут в с.у.
+    fvf_m3m3 - объемный коэффициент нефти, м3/м3
+    mu_cP - динамическая вязкость флюида, сП
+    pi_atma - начальное давление, абсолютные атм.
+    """
+    return (pi_atma - p_atma) / (18.42*q_sm3day*b_m3m3*mu_cP) * k_mD * h_m 
+```
+
+:::: {.columns}
+::: {.column width="70%"}
+```{python}
+"""
+Построим графики распределения давления и изменения давления
+в размерных координатах
+"""
+# исходные данные для построения графиков
+h_m=10 
+q_sm3day=20 
+b_m3m3=1.2 
+mu_cP=1 
+pi_atma=250
+rw_m=0.1
+k_mD=10, 
+phi=0.2
+ct_1atm=1e-5
+
+r_arr = np.logspace(0.1, 3, 100)
+rd_arr = rd_from_r(r_arr, rw_m=rw_m)
+t_arr = np.linspace(1, 100, 100)
+td_arr = td_from_t(t_arr, 
+                   k_mD=k_mD, 
+                   phi=phi, 
+                   mu_cP=mu_cP, 
+                   ct_1atm=ct_1atm, 
+                   rw_m=rw_m)
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8,4))
+
+for td in td_from_t(np.array([1, 10, 50]), 
+                    k_mD=k_mD, 
+                    phi=phi, 
+                    mu_cP=mu_cP, 
+                    ct_1atm=ct_1atm, 
+                    rw_m=rw_m):
+    ax1.plot(r_arr, 
+             p_from_pd_atma(pd=pd_ei(td,rd_arr), 
+                            h_m=h_m, 
+                            q_sm3day=q_sm3day, 
+                            b_m3m3=b_m3m3, 
+                            mu_cP=mu_cP, 
+                            pi_atma=pi_atma), 
+             label=f"t = {t_from_td_hr(td, k_mD=k_mD, phi=phi, mu_cP=mu_cP, ct_1atm=ct_1atm, rw_m=rw_m)[0]:.2f} час")
+    ax1.plot(-r_arr, 
+             p_from_pd_atma(pd=pd_ei(td,rd_arr), 
+                            h_m=h_m, 
+                            q_sm3day=q_sm3day, 
+                            b_m3m3=b_m3m3, 
+                            mu_cP=mu_cP, 
+                            pi_atma=pi_atma), 
+             label=f"t = {t_from_td_hr(td, k_mD=k_mD, phi=phi, mu_cP=mu_cP, ct_1atm=ct_1atm, rw_m=rw_m)[0]:.2f} час")
+ax1.set_title("Воронка депрессии")
+ax1.set_xlabel("r, m")
+ax1.set_ylabel("p, atm")
+ax1.legend()
+
+for rd in rd_from_r(np.array([rw_m, 10, 50])):
+    ax2.plot(t_arr, 
+             p_from_pd_atma(pd=pd_ei(td_arr, rd), 
+                            h_m=h_m, 
+                            q_sm3day=q_sm3day, 
+                            b_m3m3=b_m3m3, 
+                            mu_cP=mu_cP, 
+                            pi_atma=pi_atma),
+             label=f"r = {r_from_rd_m(rd, rw_m=rw_m)}" )
+ax2.set_title("Изменение давления на расстоянии")
+ax2.set_xlabel("t, час")
+ax2.set_ylabel("p, atm")
+ax2.legend()
+
+plt.show()
+```
+:::
+
+::: {.column width="30%"}
+```{.python}
+h_m=10 
+q_sm3day=20 
+b_m3m3=1.2 
+mu_cP=1 
+pi_atma=250
+rw_m=0.1
+k_mD=10, 
+phi=0.2
+ct_1atm=1e-5
+```
+:::
+
+::::
+
+## Сравнение решения и логарифмической аппроксимации
+
+
+```{python}
+import sympy as sp
+# объявим символьные переменные
+r_d, p_d, t_d, gamma = sp.symbols('r_d p_d t_d gamma')
+r, p, t, q, b, mu, phi = sp.symbols('r p t q b mu phi')
+ct, k, h, p_i, s, r_w = sp.symbols('ct k h p_i s r_w')
+
+eq1 = sp.Eq(p_d, -1/2*sp.Ei(-r_d**2/4 / t_d))
+# зададим исходное уравнение
+eq = sp.Eq(p_d, -1/2*sp.ln(r_d**2/4 / t_d) -1/2*gamma)
+eq = sp.simplify(sp.expand(eq.subs(gamma, 0.57721566)))
+
+pd_ei_ = sp.lambdify([t_d, r_d],eq1.rhs, modules=["scipy","numpy"]) 
+pd_ei_ln_ = sp.lambdify([t_d, r_d],eq.rhs, modules=["scipy","numpy"]) 
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8,4))
+
+rd_arr = np.logspace(0,2,100)
+for td_ in [1, 10, 100, 1000, 10000]:
+    ax1.plot(rd_arr, pd_ei_(td_, rd_arr))
+    ax1.plot(rd_arr, pd_ei_ln_(td_, rd_arr))
+
+rd_arr = np.logspace(0,2,100)
+for td_ in [1, 10, 100, 1000, 10000]:
+    ax2.plot(rd_arr, pd_ei_(td_, rd_arr))
+    ax2.plot(rd_arr, pd_ei_ln_(td_, rd_arr))
+ax2.set_xscale('log')
+
+```
+
+## Суперпозиция. Восстановление давления  {.smaller}
+
+$$
+P_{bu.D}(t_D, t_{pD}, r_D) = P_D(t_D) - P_D(t_D-t_{pD}, r_D) \cdot \mathcal{H}(t_D-t_{pD})
+$$ 
+
+
+
+функция Хевисайда
+
+$$ 
+\mathcal{H} = \begin{cases}0 & x < 0\\1 & x = 0\\1 & x > 0\end{cases}
+$$ 
+
+## Функция для восстановления давления python
+
+
+```{python}
+#| echo: true
+def pd_build_up(td, td_p, rd):
+    """
+    расчет давления для запуска и последующей остановки скважины
+    td - время после запуска
+    td_p - время безразмерное - которое скважина работала до остановки
+    rd - расстояния от скважины
+    """
+    # применение функции Хевисайда здесь делает расчет корректным
+    # для входных векторов td
+    return pd_ei(td, rd) - np.heaviside(td-td_p,1) * pd_ei(td-td_p, rd)
+```
+
+
+## График для восстановления давления 
+
+
+```{python}
+t_arr = np.logspace(-10, 2, 1000)
+t_prod_hr = 24
+k = 10   # проницаемость
+q = 30   # дебит
+
+# переведем размерный массив времени в безразмерные величины
+# некоторые параметры можно было бы пропустить и оставить значения по умолчанию
+# но для полноты приведем их в явном виде
+
+td_arr = td_from_t(t_arr, 
+                   k_mD=k, phi=0.2, mu_cP=1, ct_1atm=1e-05, rw_m=0.1)
+td_prod = td_from_t(t_prod_hr, 
+                    k_mD=k, phi=0.2, mu_cP=1, ct_1atm=1e-05, rw_m=0.1)
+
+# для заданного массива безразмерных времен рассчитаем безразмерные давления
+pd_arr = pd_build_up(td_arr, td_prod, rd=1)
+
+# построение графика
+plt.rcParams["figure.figsize"] = (8,3)
+
+plt.plot(td_arr, pd_arr)
+
+plt.xlabel('td')
+plt.ylabel('pd')
+plt.title('Решение в безразмерных координатах')
+plt.show()
+```
+
+
+```{python}
+# переведем безразмерные координаты в размерные
+p_arr = p_from_pd_atma(pd_arr, 
+                       k_mD=k, q_sm3day=q, h_m=10, b_m3m3=1.2, mu_cP=1, pi_atma=250)
+
+plt.rcParams["figure.figsize"] = (8,3)
+plt.plot(t_arr, p_arr)
+plt.xlabel('t, hr')
+plt.ylabel('p, atma')
+plt.title('Решение в размерных координатах')
+plt.show()
+```
+
+## Графики распределения давления в пласте
+
+
+```{python}
+r_arr = np.logspace(1, 3, 100)
+t_arr = np.logspace(-1, 2, 10)
+t_arr[0] = 0.001
+t_prod = 100
+
+tv, rv = np.meshgrid(td_from_t(t_arr),rd_from_r(r_arr))
+pd_arr =pd_ei(tv, rd=rv)
+pd_arr_bu =pd_ei(tv + td_from_t(t_prod), rd=rv) - pd_ei(tv, rd=rv)
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=[9,4])
+fig.suptitle('Изменение давления в пласте при запуске и остановке скважины')
+ax1.plot(r_arr,
+         p_from_pd_atma(pd_arr, 
+                        k_mD=k, q_sm3day=q, h_m=10, b_m3m3=1.2, mu_cP=1, 
+                        pi_atma=250))
+ax1.plot(r_arr,
+         p_from_pd_atma(pd_arr_bu, 
+                        k_mD=k, q_sm3day=q, h_m=10, b_m3m3=1.2, mu_cP=1, 
+                        pi_atma=250))
+ax1.set_label(t_arr)
+ax1.set_xlabel('r, m')
+ax1.set_ylabel('$p_{wf}, atma$')
+ax2.plot(r_arr,
+         p_from_pd_atma(pd_arr, 
+                        k_mD=k, q_sm3day=q, h_m=10, b_m3m3=1.2, mu_cP=1, 
+                        pi_atma=250))
+ax2.plot(r_arr,
+         p_from_pd_atma(pd_arr_bu, 
+                        k_mD=k, q_sm3day=q, h_m=10, b_m3m3=1.2, mu_cP=1, 
+                        pi_atma=250))
+
+ax2.set_xscale('log')
+ax2.set_xlabel('r, m')
+ax2.set_ylabel('$p_{wf}, atma$')
+plt.show()
+```
+
+## Радиус влияния скважины
+
+$$
+r_{eD} = \sqrt {2.2458 t_D}
+$$ {#eq-r_ed}
+
+
+```{python}
+# Решение линейного стока уравнения фильтрации
+def pd_ei(td, rd):
+    """
+    Решение линейного стока уравнения фильтрации
+    - rd - безразмерное расстояние
+    - td - безразмерное время
+    """
+    return -1/2*sc.expi(-rd**2 / 4 / td)
+
+
+def pd_ss(rd, red):
+    """
+    стационарное решение в безразмерных переменных
+    - rd - безразмерное расстояние
+    - red - безразмерное расстояние до границы
+    """
+    return np.log(red/rd)
+```
+
+
+```{python}
+# зададим точки расстояний для отрисовки графика
+rdl = np.logspace(-1, 3 , 100)
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=[9,4])
+# построим первый график в обычных координатах
+for td in [10, 100, 1000]:
+    ax1.plot(rdl, pd_ei(td, rdl))
+    
+    red = (td*2.2458)**0.5
+    ax1.plot(rdl, pd_ss(rdl, red))
+
+# построим второй график в полулогарифмических координатах
+for td in [10, 100, 1000]:
+    ax2.plot(rdl, pd_ei(td, rdl))
+    
+    red = (td*2.2458)**0.5
+    ax2.plot(rdl, pd_ss(rdl, red))
+plt.xscale('log')
+plt.show()
+```
+
+# Решения в пространстве Лапласа
+
+## Решение
+
+
+Рассматривается уравнение фильтрации в безразмерных переменных 
+
+$$ 
+\frac{\partial p_D}{ \partial t_D} = \frac{1}{r_D}\left[ \frac{ \partial{}}{ \partial{r_D} }\left( r_D \dfrac{\partial p_D}{ \partial r_D} \right) \right]  
+$$ {#eq-equation_dimensionless}
+
+
+Решение такого уравнение может быть получено с использованием [преобразования Лапласа](https://ru.wikipedia.org/wiki/%D0%9F%D1%80%D0%B5%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_%D0%9B%D0%B0%D0%BF%D0%BB%D0%B0%D1%81%D0%B0). 
+
+
+$$ 
+L \left [ f(t) \right] = \tilde{f}(u) = \int_{0}^{\infty}f(t)e^{-ut}dt 
+$$
+
+где $u$ параметр пространства Лапласа соответствующий времени.
+
+Тогда уравнение в пространстве Лапласа преобразуется к виду:
+
+$$ 
+u \tilde{p}_D  =  \dfrac{1}{r_D} \left[\dfrac{d}{d r_D} \left(r_D \dfrac{d{\tilde{p}_D}}{d r_D} \right) \right] 
+$$ {#eq-bessel}
+
+## Общее решение
+
+
+Тогда уравнение в пространстве Лапласа преобразуется к виду:
+
+$$ 
+u \tilde{p}_D  =  \dfrac{1}{r_D} \left[\dfrac{d}{d r_D} \left(r_D \dfrac{d{\tilde{p}_D}}{d r_D} \right) \right] 
+$$ 
+
+Уравнение (-@eq-bessel) известно как [модифицированное уравнение Бесселя](https://ru.wikipedia.org/wiki/%D0%9C%D0%BE%D0%B4%D0%B8%D1%84%D0%B8%D1%86%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5_%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8_%D0%91%D0%B5%D1%81%D1%81%D0%B5%D0%BB%D1%8F). Общее решение этого уравнения можно записать в виде 
+
+$$ 
+\tilde{p}_D(u, r_D) = A(u) K_0(r_D \sqrt u) + B(u) I_0(r_D \sqrt u) 
+$$ {#eq-lapl_general_solution}
+
+где 
+
+- $u$ - переменная пространства Лапласа, соответствующая времени
+- $\tilde{p}_D(u, r_D)$ - изображение давления в пространстве Лапласа
+- $K_0, I_0$ - модифицированные функции Бесселя нулевого порядка (могут быть вычислены, например, с использованием реализации в библиотке `scipy.special`)
+- $A(u), B(u)$ - произвольные функции, которые могут быть определены при задании начальных и граничных условий
+
+## Решение линейного стока
+
+
+Решение для бесконечно малого радиуса скважины в пространстве Лапласа будет иметь вид
+
+$$ 
+\tilde{p}_D(u) = \frac{1}{u} K_0 \left( r_D \sqrt u  \right)
+$$ {#eq-line_source_lapl_solution}
+
+где 
+
+$K_0$, $K_1$ - [модифицированные функции Бесселя](https://ru.wikipedia.org/wiki/%D0%9C%D0%BE%D0%B4%D0%B8%D1%84%D0%B8%D1%86%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5_%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8_%D0%91%D0%B5%D1%81%D1%81%D0%B5%D0%BB%D1%8F)
+
+## Решение для конечного радиуса скважины
+
+
+$$ 
+\tilde{p}_D(u) = \frac{K_0 \left( r_D \sqrt u  \right)}{u \sqrt u  K_1(\sqrt u)}  
+$$ {#eq-lapl_sol_finite_rw}
+
+## Построение решений с python
+
+
+```{python}
+#| echo: true
+import anaflow
+import scipy.special as spec
+# пример функции реализующий расчет решения в пространстве Лапласа
+def pd_lapl_line_source(u, rd=1.):
+    return np.divide(spec.kn(0, rd * u**0.5) , u)
+
+# функция расчета безразмерного давления с использованием алгоритма Стефеста
+# для численного обратного преобразования Лапласа
+def pd_line_source_inv(td, rd=1.):
+    pd_inv = anaflow.get_lap_inv(pd_lapl_line_source, rd=rd)
+    return pd_inv(td)
+
+# для сравнения приведем функции из лекции 1
+# Решение линейного стока уравнения фильтрации с использованием Ei
+def pd_ei(td, rd=1.):
+    return -0.5 * spec.expi(-0.25 * rd * rd / td)
+
+```
+
+## Сравнение расчета через преобразование Лапласа и с использованием Ei 
+
+
+```{python}
+#| code-fold: true
+#| echo: true
+# построим график безразмерного давления от расстояния
+# двумя способами и их разницу также
+td = 100
+rd_arr = np.logspace(1, 2 ,200)
+pd_ei_arr = pd_ei(td, rd_arr) 
+pd_lap_inv_arr = np.squeeze([pd_line_source_inv(td, rd_i) for rd_i in rd_arr])
+
+# при построении используем векторный расчет
+plt.rcParams["figure.figsize"] = (8,4)
+fig, (ax1, ax2) = plt.subplots(1,2)
+
+ax1.plot(rd_arr, pd_ei_arr)
+ax1.plot(rd_arr, pd_lap_inv_arr)
+ax1.set_title("Решение для td = {}".format(td))
+ax1.set_xlabel("rd")
+ax1.set_ylabel("pd")
+
+ax2.plot(rd_arr, pd_ei_arr - pd_lap_inv_arr)
+ax2.set_title("Разность решений")
+ax2.set_xlabel("rd")
+ax2.set_ylabel("pd")
+
+plt.show()
+```
+
+## Решение для конечного радиуса скважины
+
+
+```{python}
+#| echo: true
+# пример функции реализующий расчет решения в пространстве Лапласа
+def pd_lapl_finite_rw(u, rd=1.):
+    u05 = u**0.5
+    return np.divide(spec.kn(0, rd * u05) , (u * u05 *  spec.kn(1, u05)))
+
+
+# функция расчета безразмерного давления с использованием алгоритма Стефеста
+# для численного обратного преобразования Лапласа
+def pd_finite_rw_inv(td, rd=1.):
+    pd_inv = anaflow.get_lap_inv(pd_lapl_finite_rw, rd=rd)
+    return pd_inv(td)
+```
+
+##  Решение для конечного радиуса скважины
+
+
+```{python}
+# построим график безразмерного давления от расстояния в безразмерных переменных
+# двумя способами и их разницу также
+td_arr = np.logspace(-4, 5 ,100)
+rd = 1  # забойное давление
+
+pd_finite_rw_inv_arr = pd_finite_rw_inv(td_arr, rd)
+pd_line_source_inv_arr = pd_line_source_inv(td_arr, rd) 
+
+# при построении используем векторный расчет
+plt.rcParams["figure.figsize"] = (8,4)
+fig, (ax1, ax2) = plt.subplots(1,2)
+ax1.plot(t_from_td_hr(td_arr), p_from_pd_atma(pd_finite_rw_inv_arr) )
+ax1.plot(t_from_td_hr(td_arr), p_from_pd_atma(pd_line_source_inv_arr) )
+ax1.set_title("Сравнение решений")
+ax1.set_xscale('log')
+ax1.set_xlabel("t, час")
+ax1.set_ylabel("p забойное, атм")
+
+ax2.plot(t_from_td_hr(td_arr), p_from_pd_atma(pd_line_source_inv_arr) - 
+                               p_from_pd_atma(pd_finite_rw_inv_arr))
+ax2.set_title("Разность расчетов")
+ax2.set_xscale('log')
+ax2.set_xlabel("t, час")
+ax2.set_ylabel(r"$\Delta p$, атм")
+ax2.set_yscale('log')
+plt.tight_layout()
+plt.show()
+```
+
+## Решение с учетом послепритока
+
+
+Частное решение решение с учетом скин-фактор и послепритока можно представить в виде
+
+$$
+\tilde{p}_{wbD}(s) = \frac{1}{s} \left[ \frac{S + s \tilde{p}_D(r_d=1,s) }{1 + s C_D (S + s \tilde{p}_D(r_d=1,s))} \right]
+$$
+
+где $\tilde{p}_D(r_d=1,s)$ - известное частное решение
+
+
+```{python}
+#| echo: true
+# решение линейного стока в пространстве Лапласа
+def pd_lapl_wbs(pd_lapl, S=0, Cd=0):
+    def pdl(u, rd, S=0, Cd=0):
+        upd_lapl = u * pd_lapl(u, rd=rd)
+        return 1 / u * (S + upd_lapl) / (1 + u * Cd * (S + upd_lapl))
+    return pdl
+
+# построим функцию инвертирующую решение в пространстве Лапласа
+
+# функция расчета безразмерного давления с использованием алгоритма Стефеста
+# для численного обратного преобразования Лапласа
+def pd_inv(pd_lapl, td, rd, **kwargs):
+    if isinstance(rd, np.ndarray):
+        # если на входе массив, то вручную итерируем по всем элементам и 
+        # собираем массив массивов
+        return np.array(list(map(lambda r: pd_inv(pd_lapl, td, rd=r, **kwargs), rd)))
+    else:
+        pd_inv_ = anaflow.get_lap_inv(pd_lapl, rd=rd, **kwargs)
+        return pd_inv_(td)
+
+```
+
+## График для послепритока
+```{python}
+t_d = np.arange(1, 1e8, 1e6)
+r_d = 1
+S = 0
+C_d = 100000 
+p_d_1 = pd_inv(pd_lapl_finite_rw, td=t_d, rd=r_d)
+
+
+fig, ax = plt.subplots(1,1)
+
+clist = np.arange(1,10,1)
+for ci in clist:
+    p_d_2 = pd_inv(pd_lapl_wbs(pd_lapl_finite_rw), td=t_d, rd=r_d, S=S, Cd=ci*C_d)
+    plt.plot(t_d, p_d_2)
+
+#ax.set_xscale('log')
+plt.plot(t_d, p_d_1)
+plt.show()
+```
+
+```{python}
+t_d = np.logspace(1, 10)
+r_d = 1
+S = 0
+C_d = 10000 
+p_d_1 = pd_inv(pd_lapl_finite_rw, td=t_d, rd=r_d)
+
+fig, ax = plt.subplots(1,1)
+
+clist = np.arange(1,100,10)
+for ci in clist:
+    p_d_2 = pd_inv(pd_lapl_wbs(pd_lapl_finite_rw), td=t_d, rd=r_d, S=S, Cd=ci*C_d)
+    plt.plot(t_d, p_d_2)
+
+ax.set_xscale('log')
+plt.plot(t_d, p_d_1)
+plt.show()
+```
+
+## Решение с постоянным давлением на круговой границе
+
+$$
+\displaystyle \operatorname{p_{d}}{\left(r_{d} \right)} = \frac{- I_{0}\left(r_{d} \sqrt{u}\right) K_{0}\left(r_{e} \sqrt{u}\right) + I_{0}\left(r_{e} \sqrt{u}\right) K_{0}\left(r_{d} \sqrt{u}\right)}{u^{\frac{3}{2}} \left(I_{0}\left(r_{e} \sqrt{u}\right) K_{1}\left(\sqrt{u}\right) + I_{1}\left(\sqrt{u}\right) K_{0}\left(r_{e} \sqrt{u}\right)\right)} 
+$$
+
+
+```{python}
+
+# определим переменные с которыми будем работать 
+
+r_d = sp.symbols('r_d', real=True, positive=True)
+p_d = sp.symbols('p_d', cls=sp.Function, real=True, positive=True)
+u = sp.symbols('u',real=True, positive=True)
+C1, C2 = sp.symbols('C1 C2')
+
+# определим уравнение фильтрации в пространстве Лапласа
+diff_eq = sp.Eq(u * p_d(r_d),
+                1 / r_d * (sp.diff(r_d * sp.diff(p_d(r_d), r_d) , r_d)) )
+# зададим в явном виде решение с использованием K_0 и I_0
+A, B = sp.symbols('A B')
+soln2 = sp.Eq(p_d(r_d) , A * sp.besselk(0, r_d * sp.sqrt(u)) + B * sp.besseli(0, r_d * sp.sqrt(u)))
+
+r_e = sp.symbols('r_e', positive=True)
+eq1 = sp.Eq(soln2.subs(r_d, r_e).rhs,0)
+eq2 = sp.Eq(r_d * soln2.rhs.diff(r_d), -1/u).subs(r_d, 1)
+sol_AB = sp.solve([eq1,eq2], [A,B])
+sol_re_const_p = soln2.subs(A, sol_AB[A]).subs(B, sol_AB[B]).simplify()  
+
+# преобразование sympy выражения в lambda функцию с использованием numpy
+soln_re_const_p_numpy = sp.lambdify([u, r_d, r_e], sol_re_const_p.rhs, 
+                                     modules = ['numpy', 'scipy'])
+
+# после преобразования lambda функцию можно использовать 
+# для проведения расчетов как обычныую функцию
+
+# определим функцию для расчета обратного преобразования Лапласа
+# отдельная функция удобно чтобы передавать r_d второй параметр
+def soln_re_const_p_inv_lapl_numpy(t_d=1000, r_d=1, r_e=100):
+    sol_lap = anaflow.get_lap_inv(soln_re_const_p_numpy,  r_d=r_d, r_e=r_e)
+    return sol_lap(t_d)
+
+# зададим диапазоны изменения параметров для построения графиков
+td_arr = np.logspace(1,5,100)
+rd_arr = np.logspace(1,2,100)
+re=100
+# построим графики
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=[15,5])
+for ri in np.linspace(1,100,10):
+    ax1.plot(td_arr, soln_re_const_p_inv_lapl_numpy(td_arr, r_d=ri, r_e=re), label = f'$r_d={ri:.0f}$')
+for ti in np.linspace(1e2, 1e4,10):
+    ax2.plot(rd_arr, np.squeeze( [soln_re_const_p_inv_lapl_numpy(ti, r_d=ri, r_e=re) for ri in rd_arr ] ), label = f'$t_d={ti:.0f}$')
+# наведем немного красоты
+ax1.set_xlabel('$t_d$')
+ax1.set_ylabel('$p_d$')
+ax1.legend()
+ax2.set_xlabel('$r_d$')
+ax2.set_ylabel('$p_d$')
+ax2.legend()
+plt.show()
+```
+
+
+## Решение с замкнутой круговой границей
+
+$$
+\displaystyle \operatorname{p_{d}}{\left(r_{d} \right)} = \frac{I_{0}\left(r_{d} \sqrt{u}\right) K_{1}\left(r_{e} \sqrt{u}\right) + I_{1}\left(r_{e} \sqrt{u}\right) K_{0}\left(r_{d} \sqrt{u}\right)}{u^{\frac{3}{2}} \left(- I_{1}\left(\sqrt{u}\right) K_{1}\left(r_{e} \sqrt{u}\right) + I_{1}\left(r_{e} \sqrt{u}\right) K_{1}\left(\sqrt{u}\right)\right)} 
+$$
+
+
+```{python}
+
+r_e = sp.symbols('r_e', positive=True)
+eq1 = sp.Eq(soln2.rhs.diff(r_d).subs(r_d, r_e),0)
+eq2 = sp.Eq(r_d * soln2.rhs.diff(r_d), -1/u).subs(r_d, 1)
+sol_AB = sp.solve([eq1,eq2], [A,B])
+sol_re_close = soln2.subs(A, sol_AB[A]).subs(B, sol_AB[B]).simplify()  
+
+
+# преобразование sympy выражения в lambda функцию с использованием numpy
+soln_re_close_numpy = sp.lambdify([u, r_d, r_e], sol_re_close.rhs, 
+                                  modules = ['numpy', 'scipy'])
+
+# после преобразования lambda функцию можно использовать 
+# для проведения расчетов как обычныую функцию
+
+# определим функцию для расчета обратного преобразования Лапласа
+# отдельная функция удобно чтобы передавать r_d второй параметр
+def soln_re_close_inv_lapl_numpy(t_d=1000, r_d=1, r_e=100):
+    sol_lap = anaflow.get_lap_inv(soln_re_close_numpy,  r_d=r_d, r_e=r_e)
+    return sol_lap(t_d)
+```
+
+
+```{python}
+# зададим диапазоны изменения параметров для построения графиков
+td_arr = np.logspace(1,5,100)
+rd_arr = np.logspace(1,2,100)
+re=100
+# построим графики
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=[15,5])
+for ri in np.linspace(1,100,10):
+    ax1.plot(td_arr, soln_re_close_inv_lapl_numpy(td_arr, r_d=ri, r_e=re), label = f'$r_d={ri:.0f}$')
+for ti in np.linspace(1e2, 1e4,10):
+    ax2.plot(rd_arr, np.squeeze( [soln_re_close_inv_lapl_numpy(ti, r_d=ri, r_e=re) for ri in rd_arr ] ), label = f'$t_d={ti:.0f}$')
+# наведем немного красоты
+ax1.set_xlabel('$t_d$')
+ax1.set_ylabel('$p_d$')
+ax1.legend()
+ax2.set_xlabel('$r_d$')
+ax2.set_ylabel('$p_d$')
+ax2.legend()
+plt.show()
+```

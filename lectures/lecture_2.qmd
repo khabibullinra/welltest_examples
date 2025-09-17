@@ -19,7 +19,7 @@ format:
 
 ---
 
-версия 0.1 от 16.09.2025
+версия 0.2 от 17.09.2025
 
 Хабибуллин Ринат
 
@@ -31,6 +31,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.special as spec
 import anaflow
+import sympy as sp
+import mpmath as mp
 ```
 
 # Уравнение фильтрации и его решения в пространстве Лапласа 
@@ -59,7 +61,7 @@ $$
 t_D = \frac{0.00036 kt}{\phi \mu c_t r_w^2} 
 $$ {#eq-def_dimensionless_td}
 $$ 
-p_D = \frac{kh}{ 18.41 q_s B \mu} \left( p_i - p \right)
+p_D = \frac{kh}{ 18.42 q_s B \mu} \left( p_i - p \right)
 $$ {#eq-def_dimensionless_pd}
 
 где в свою очередь 
@@ -187,7 +189,7 @@ $$ {#eq-lapl_boundary_cond_well}
 Граничное условие на скважине (-@eq-line_source_boundary_cond_well) можно записать в размерном виде используя определение (-@eq-def_dimensionless_pd) и сравнить его с законом Дарси в радиальной форме $q_{res} = \dfrac{kh}{18.42 \mu} r \dfrac{dP}{dr}$.
 
 $$
-\lim_{r \to r_{w}} \left[ r \dfrac{ \partial p(r, t)}{\partial r} \right] = 18.41 \dfrac{qB\mu}{kh} 
+\lim_{r \to r_{w}} \left[ r \dfrac{ \partial p(r, t)}{\partial r} \right] = 18.42 \dfrac{qB\mu}{kh} 
 $$ 
 
 Здесь надо учесть, что $q_{res}$ это дебит из пласта при соответствующих далении и температуре, а $q$ это дебит на поверхности приведенный к стандартным условиям. Они отличаются на объемный коэффициент $B$.
@@ -242,7 +244,7 @@ $$
 
 $$ 
 \tilde{p}_D(u) = \frac{K_0 \left( r_D \sqrt u  \right)}{u \sqrt u  K_1(\sqrt u)}  
-$$
+$$ {#eq-lapl_sol_finite_rw}
 
 
 при $r_{wD} = 0$, используя свойства модифицированной функции Бесселя $\lim_{s \to 0} sK_1(s) = 1$ (смотри рисунок -@fig-bessel_func) получим  $A(u) = \dfrac{1}{u}$
@@ -400,7 +402,7 @@ def p_from_pd_atma(pd, k_mD=10, h_m=10, q_sm3day=20, b_m3m3=1.2, mu_cP=1, pi_atm
     mu_cP - динамическая вязкость флюида, сП
     pi_atma - начальное давление, абсолютные атм.
     """
-    return pi_atma - pd * 18.41 * q_sm3day * b_m3m3 * mu_cP / k_mD / h_m 
+    return pi_atma - pd * 18.42 * q_sm3day * b_m3m3 * mu_cP / k_mD / h_m 
 
 def pd_from_p(p_atma, k_mD=10, h_m=10, q_sm3day=20, b_m3m3=1.2, mu_cP=1, pi_atma=250):
     """
@@ -733,16 +735,16 @@ plt.show()
 
 Решение в размерных переменных можно записать как
 $$
-p\left(r,t\right)=p_i-\frac{18.41q_sB\mu}{kh}\left(-\frac{1}{2} Ei \left(-\frac{\varphi\mu c_tr^2}{0.00144kt}\right)+S\right) 
+p\left(r,t\right)=p_i-\frac{18.42q_sB\mu}{kh}\left(-\frac{1}{2} Ei \left(-\frac{\varphi\mu c_tr^2}{0.00144kt}\right)+S\right) 
 $$
 
 Приведем несколько простых арифметических преобразований (чтобы не запутаться с коэффициентами)
 $$
-p\left(r,t\right)=p_i-\frac{18.41q_sB\mu}{kh}\left(-\frac{1}{2} \ln \left(\frac{\varphi\mu c_tr^2}{0.00144kt}\right) -\frac{1}{2}\gamma + S\right) 
+p\left(r,t\right)=p_i-\frac{18.42q_sB\mu}{kh}\left(-\frac{1}{2} \ln \left(\frac{\varphi\mu c_tr^2}{0.00144kt}\right) -\frac{1}{2}\gamma + S\right) 
 $$
 
 $$
-p\left(r,t\right)=p_i-\frac{18.41q_sB\mu}{kh}\left(\frac{1}{2} \ln \left(\frac{0.00144kt}{\varphi\mu c_tr^2}\right) -\frac{1}{2}\gamma + S\right) 
+p\left(r,t\right)=p_i-\frac{18.42q_sB\mu}{kh}\left(\frac{1}{2} \ln \left(\frac{0.00144kt}{\varphi\mu c_tr^2}\right) -\frac{1}{2}\gamma + S\right) 
 $$
 
 $$
@@ -1046,20 +1048,30 @@ $$
 
 Рассматривается уравнение фильтрации в безразмерных переменных 
 
-$$ \frac{\partial p_D}{ \partial t_D} = \frac{1}{r_D}\left[ \frac{ \partial{}}{ \partial{r_D} }\left( r_D \dfrac{\partial p_D}{ \partial r_D} \right) \right]  $$
+$$ 
+\frac{\partial p_D}{ \partial t_D} = \frac{1}{r_D}\left[ \frac{ \partial{}}{ \partial{r_D} }\left( r_D \dfrac{\partial p_D}{ \partial r_D} \right) \right]  
+$$
 
 вводятся следующие безразмерные переменные
+
 * $r_D$ - безразмерное расстояние от центра скважины
 * $t_D$ - безразмерное время
 * $p_D$ - безразмерное давление
 
 Соответствующие определения безразмерных переменных
 
-$$ r_D = \frac{r}{r_w} $$
-$$ t_D = \frac{0.00036 kt}{\phi \mu c_t r_w^2}$$
-$$ p_D = \frac{kh}{ 18.41 q B \mu} \left( p_i - p \right) $$
+$$ 
+r_D = \frac{r}{r_w} 
+$$
+$$ 
+t_D = \frac{0.00036 kt}{\phi \mu c_t r_w^2}
+$$
+$$ 
+p_D = \frac{kh}{ 18.42 q B \mu} \left( p_i - p \right) 
+$$
 
 где в свою очередь 
+
 * $q$ - дебит скважины на поверхности, приведенный к нормальным условиям, м3/сут
 * $\phi$ - пористость, доли единиц
 * $\mu$ - вязкость нефти в пласте, сП
@@ -1074,12 +1086,16 @@ $$ p_D = \frac{kh}{ 18.41 q B \mu} \left( p_i - p \right) $$
 
 дополнительно вводим
 
-$$ q_D = \frac{ q_{sf} }{qB} $$
+$$ 
+q_D = \frac{ q_{sf} }{qB} 
+$$
 
 * $q_D$ - безразмерный дебит на поверхности. Нормириуется на произвольный дебит $q$
 * $q_{sf}$ - дебит на поверхности. Может меняться для задачи постоянного дебита из пласта
 
-$$ C_D = 0.159 \dfrac{C}{h\phi \mu c_t r_w^2}$$
+$$ 
+C_D = 0.159 \dfrac{C}{h\phi \mu c_t r_w^2}
+$$
 
 * $C_D$ - безразрмерный коэффициент влияния скважины
 
@@ -1254,4 +1270,676 @@ plt.plot(t_d, p_d_1)
 plt.show()
 ```
 
+# Уравнение фильтрации и его решения - построение с использованием python и sympy
 
+## Уравнение фильтрации 
+
+Рассматривается уравнение фильтрации в безразмерных переменных 
+
+$$ 
+\frac{\partial p_D}{ \partial t_D} = \frac{1}{r_D}\left[ \frac{ \partial{}}{ \partial{r_D} }\left( r_D \dfrac{\partial p_D}{ \partial r_D} \right) \right]  
+$$
+
+где введены следующие безразмерные переменные
+* $r_D$ - безразмерное расстояние от центра скважины
+* $t_D$ - безразмерное время
+* $p_D$ - безразмерное давление
+
+Соответствующие определения безразмерных переменных
+
+$$ 
+r_D = \frac{r}{r_w}
+$$
+$$
+t_D = \frac{0.00036 kt}{\phi \mu c_t r_w^2}
+$$
+
+$$
+p_D = \frac{kh}{ 18.42 q_s B \mu} \left( p_i - p \right) 
+$$
+
+где в свою очередь 
+
+* $q_s$ - дебит скважины на поверхности, приведенный к нормальным условиям, м3/сут
+* $\phi$ - пористость, доли единиц
+* $\mu$ - вязкость нефти в пласте, сП
+* $B$ - объемный коэффициент нефти, м3/м3
+* $p_i$ - начальное давление в пласте, атм
+* $p$ - давление забойное, атм
+* $c_t$ - общая сжимаемость системы в пласте, 1/атм
+* $k$ - проницаемость, мД
+* $t$ -  время, час
+* $r$ - расстояние от центра скважины, м
+* $r_w$ - радиус скважины, м
+
+Решение такого уравнение может быть получено с использованием [преобразования Лапласа](https://ru.wikipedia.org/wiki/%D0%9F%D1%80%D0%B5%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_%D0%9B%D0%B0%D0%BF%D0%BB%D0%B0%D1%81%D0%B0)
+
+$$ 
+L \left [ f(t) \right] = \tilde{f}(u) = \int_{0}^{\infty}f(t)e^{-ut}dt 
+$$
+
+где $u$ параметр пространства Лапласа соответствующий времени.
+
+Тогда уравнение в пространстве Лапласа преобразуется к виду:
+
+$$ 
+u \tilde{p}_D  =  \dfrac{1}{r_D} \left[\dfrac{d}{d r_D} \left(r_D \dfrac{d{\tilde{p}_D}}{d r_D} \right) \right] 
+$$ {#eq-lapl_sol_2}
+
+Уравнение (-@eq-lapl_sol_2) известно как [модифицированное уравнение Бесселя](https://ru.wikipedia.org/wiki/%D0%9C%D0%BE%D0%B4%D0%B8%D1%84%D0%B8%D1%86%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5_%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8_%D0%91%D0%B5%D1%81%D1%81%D0%B5%D0%BB%D1%8F)
+где 
+
+* $u$ - переменная пространства Лапласа, соответствующая времени
+* $\tilde{p}_D(u, r_D)$ - изображение давления в пространстве Лапласа
+
+С уравнением (-@eq-lapl_sol_2) можно начать работать с использованием системы компьютерной алгебры [`sympy`](https://www.sympy.org/en/index.html). 
+
+
+```{python}
+#| code-fold: false
+# определим переменные с которыми будем работать 
+
+r_d = sp.symbols('r_d', real=True, positive=True)
+p_d = sp.symbols('p_d', cls=sp.Function, real=True, positive=True)
+u = sp.symbols('u',real=True, positive=True)
+C1, C2 = sp.symbols('C1 C2')
+
+# определим уравнение фильтрации в пространстве Лапласа
+diff_eq = sp.Eq(u * p_d(r_d),
+                1 / r_d * (sp.diff(r_d * sp.diff(p_d(r_d), r_d) , r_d)) )
+diff_eq
+```
+
+##  Общее решение модифицированного уравнения Бесселя
+
+
+```{python}
+#| code-fold: false
+# попробуем решить уравнение 
+soln = sp.dsolve(diff_eq, p_d(r_d))
+soln
+```
+
+```{python}
+#| code-fold: false
+
+# проверим, что решение полученное dsolve удовлетворяет уравнению
+sp.checkodesol(diff_eq, soln)
+```
+
+Уравнение Бесселя легко решается, 
+$$
+\displaystyle \operatorname{p_{d}}{\left(r_{d} \right)} = C_{1} I_{0}\left(r_{d} \sqrt{u}\right) + C_{2} Y_{0}\left(i r_{d} \sqrt{u}\right)
+$$ {#eq-bessel_sol}
+
+хотя решение (-@eq-bessel_sol) по виду и немного отличается от того, что обычно приводится в книгах. Вместо мофицированной функции Бесселя второго рода $K_0(x)$ решение выражается через функцию Бесселя второго рода $Y_0(ix)$ для мнимого арумента.
+
+[Известны выражения](https://en.wikipedia.org/wiki/Bessel_function#Modified_Bessel_functions:_I%CE%B1,_K%CE%B1) связывающие функции Бесселя первого $J_\alpha(iz)$ и второго рода $Y_\alpha(iz)$ для мнимых аргументов с модифицированными функциями Бесселя первого $I_\alpha(z)$  и второго рода $K_\alpha(z)$.
+
+
+$$ 
+J_\alpha(iz) = e^{\frac{\alpha\pi i}{2}} I_\alpha(z)
+$$
+$$ 
+Y_\alpha(iz) = e^{\frac{(\alpha+1)\pi i}{2}}I_\alpha(z) - \frac{2}{\pi}e^{-\frac{\alpha\pi i}{2}}K_\alpha(z) 
+$$ {#eq-eq23}
+
+преобразуем (-@eq-eq23)
+
+$$ 
+Y_0(iz) = e^{\frac{\pi i}{2}}I_0(z) - \dfrac{2}{\pi}K_0(z)
+$$
+
+Учитывая эти выражения можно убедиться что выражение вида 
+
+$$ 
+\tilde{p}_D(u, r_D) = A(u) K_0(r_D \sqrt u) + B(u) I_0(r_D \sqrt u) 
+$$  {#eq-eq25}
+
+которое можно найти в книгах также будет являться решение уравнения фильтрации, что можно проверить командой `sympy.checkodesol`
+
+
+```{python}
+#| code-fold: false
+
+# зададим в явном виде решение с использованием K_0 и I_0
+A, B = sp.symbols('A B')
+soln2 = sp.Eq(p_d(r_d) , A * sp.besselk(0, r_d * sp.sqrt(u)) + B * sp.besseli(0, r_d * sp.sqrt(u)))
+soln2
+```
+
+```{python}
+#| code-fold: false
+
+# проверим, что это решение также удовлетворяет исходному уравнению
+sp.checkodesol(diff_eq, soln2)
+```
+
+```{python}
+#| code-fold: false
+```
+
+Дальше покажем как можно работать с решением (-@eq-eq25) для построения частных решений.
+
+## Частное решение для бесконечного пласта и конечного радиуса скважины.
+
+
+Частное решение строится за счет поиска параметров $A$ и $B$ для уравнения (2.5) так, чтобы они удовлетворяли граничным условиям. 
+
+1. Граничное условия на бесконечности 
+
+$$
+\lim_{r_D \to \infty} p_D(r_D, t_D) = 0 
+$$
+
+в пространстве Лапласа  преобразуется в следующее
+
+$$
+\lim_{r_D \to \infty} \tilde{p}_D(r_D, u) = 0
+$$
+
+2. Граничное условие на скважине
+
+$$
+\lim_{r_D \to r_{wD}} \left[ r_D \dfrac{ \partial p_D(r_D, t_D)}{\partial r_D} \right] = -1 
+$$
+
+в пространстве Лапласа  с учетом выражения (-@eq-lapl_const) преобразуется к
+
+$$
+\lim_{r_D \to r_{wD}} \left[ r_D \dfrac{ d \tilde{p}_D}{d r_D} \right] = -\dfrac{1}{u}
+$$ 
+
+Условие на бесконечности трудно записать в `sympy` в явном виде. Но можно проверить пределы выражения (2.5) при разных значениях параметров  $A$ и $B$
+
+
+```{python}
+#| code-fold: false
+sp.limit(soln2.rhs, r_d, sp.oo)
+```
+
+Предел при призвольных  $A$ и $B$ не определен.
+
+Положим $A=0$. Это делается командой `.subs(A, 0)` для исследуемого выражения
+
+```{python}
+#| code-fold: false
+
+
+```
+
+```{python}
+#| code-fold: false
+
+sp.limit(soln2.rhs.subs(A, 0), r_d, sp.oo)
+```
+
+Получаем, что этот предел также не определен. Положим $B=0$.
+
+```{python}
+#| code-fold: false
+
+sp.limit(soln2.rhs.subs(B, 0), r_d, sp.oo)
+```
+
+Получаем, что при $B=0$  выражение $\displaystyle \lim_{r_{d} \to \infty}\left(A K_{0}\left(r_{d} \sqrt{u}\right) + B I_{0}\left(r_{d} \sqrt{u}\right)\right) = 0$ 
+
+Откуда можно сделать вывод, что для приведенных граничных условий $B=0$.
+
+
+```{python}
+#| code-fold: false
+
+soln3 = soln2.subs(B, 0)
+soln3
+```
+
+Найдем констранту $A$ из второго граничного условия 
+
+$$
+\lim_{r_D \to r_{wD}} \left[ r_D \dfrac{ d \tilde{p}_D}{d r_D} \right] = -\dfrac{1}{u} 
+$$ 
+
+
+```{python}
+#| code-fold: false
+
+bc2 = sp.Eq(r_d * soln3.rhs.diff(r_d), -1/u)
+bc2
+```
+
+
+```{python}
+#| code-fold: false
+
+r_wd = sp.symbols('r_wd', real=True, positive=True)
+bc2_sol = sp.solve(bc2.subs(r_d, r_wd), A)
+bc2_sol[0]
+```
+
+```{python}
+#| code-fold: false
+
+soln4 = soln3.subs(A, bc2_sol[0])
+soln4
+```
+
+При $r_{wd} = 1$ получим
+
+```{python}
+#| code-fold: false
+
+soln5 = soln4.subs(r_wd, 1)
+soln5
+```
+
+Получили решение аналогичное решению (-@eq-lapl_sol_finite_rw). При этом часть преобразований при получении решений была сделана с использованием sympy.
+
+$$
+\displaystyle \operatorname{p_{d}}{\left(r_{d} \right)} = \frac{K_{0}\left(r_{d} \sqrt{u}\right)}{u^{\frac{3}{2}} K_{1}\left(\sqrt{u}\right)}  
+$$
+
+## Построение численных решений на основе аналитического  с использованием `mpmath` 
+
+Полученное решение можно использовать для отображения. Оно легко копируется в формате LaTeX и встравляется в блоки описания. Его можно использовать для дальнейших аналитических преобразований. Его можно также использовать для построения численных решений. 
+
+Покажем как решение можно построить с использованием mpmath и реализации численного обратного преобразования mpmath
+
+
+
+```{python}
+#| code-fold: false
+
+# преобразование sympy выражения в lambda функцию с использованием mpmath
+soln5_mpmath = sp.lambdify([u, r_d], soln5.rhs, modules = ['mpmath'])
+
+# после преобразования lambda функцию можно использовать 
+# для проведения расчетов как обычныую функцию
+
+# пример расчета для одного значения, чтобы убедиться, что все работает
+soln5_mpmath(u=1, r_d=1)
+```
+
+```{python}
+#| code-fold: false
+#| 
+# определим функцию для расчета обратного преобразования Лапласа
+# отдельная функция удобна чтобы передавать r_d второй параметр
+def soln5_inv_lapl(t_d=1000, r_d=1):
+    sol_lap = lambda u: soln5_mpmath(u=u, r_d=r_d)
+    return mp.invertlaplace(sol_lap, t_d)
+```
+
+```{python}
+#| code-fold: false
+
+# пример расчета безразмерного давления с использованием mpmath
+soln5_inv_lapl(t_d=1000, r_d=1)
+```
+
+
+```{python}
+#| code-fold: false
+# нарисуем график зависимости безразмерного давления от безразмерного времени
+# поскольку считает относительно медленно ограничим количество точек для расчета
+mp.plot(soln5_inv_lapl,[1,100], points=20)
+```
+
+
+```{python}
+#| code-fold: false
+# нарисуем график зависимости безразмерного давления от безразмерного расстояния
+# поскольку считает относительно медленно ограничим количество точек для расчета
+td=1000
+mp.plot(lambda rd: soln5_inv_lapl(td,rd),[1,100], points=20)
+```
+
+## Построение численных решений на основе аналитического  с использованием `numpy` и `scipy`
+
+Использованием `mpmath` удобно для проверки расчетов, так как эта библиотека позволяет выбрать разные методы расчета и задать нужную точность. Но расчеты при этом проводятся медленно. Для более быстрых расчетов можно использовать расчетные функции `numpy` и `scipy`, а для обратного преобразования Лапласа библиотеку `anaflow`
+
+
+```{python}
+#| code-fold: false
+# преобразование sympy выражения в lambda функцию с использованием numpy
+soln5_numpy = sp.lambdify([u, r_d], soln5.rhs, 
+                           modules = ['numpy', 'scipy'])
+
+# после преобразования lambda функцию можно использовать 
+# для проведения расчетов как обычныую функцию
+
+# пример расчета для одного значения, чтобы убедиться, что все работает
+soln5_numpy(u=1, r_d=1)
+```
+
+```{python}
+#| code-fold: false
+
+# определим функцию для расчета обратного преобразования Лапласа
+# отдельная функция удобно чтобы передавать r_d второй параметр
+def soln5_inv_lapl_numpy(t_d=1000, r_d=1):
+    sol_lap = anaflow.get_lap_inv(soln5_numpy,  r_d=r_d)
+    return sol_lap(t_d)
+```
+
+```{python}
+#| code-fold: false
+
+# пример расчета для одного значения, чтобы убедиться, что все работает
+soln5_inv_lapl_numpy(1000)
+```
+
+Построим графики с использованием сгенерированного решения. В отличии от `mpmath` решения считает быстрее, поэтому можно построить сразу много графиков.
+
+```{python}
+#| code-fold: true
+
+# зададим диапазоны изменения параметров для построения графиков
+td_arr = np.logspace(1,5,100)
+rd_arr = np.logspace(1,3,100)
+
+# построим графики
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=[15,5])
+for ri in np.linspace(1,200,10):
+    ax1.plot(td_arr, soln5_inv_lapl_numpy(td_arr, r_d=ri), label = f'$r_d={ri:.0f}$')
+for ti in np.linspace(1e4, 1e7,10):
+    ax2.plot(rd_arr, np.squeeze( [soln5_inv_lapl_numpy(ti, r_d=ri) for ri in rd_arr ] ), label = f'$t_d={ti:.0f}$')
+# наведем немного красоты
+ax1.set_xlabel('$t_d$')
+ax1.set_ylabel('$p_d$')
+ax1.legend()
+ax2.set_xlabel('$r_d$')
+ax2.set_ylabel('$p_d$')
+ax2.legend()
+plt.show()
+```
+
+## Частное решение для конечного круглого пласта с постоянным давлением на контуре и конечного радиуса скважины. 
+
+Частное решение строится за счет поиска параметров $A$ и $B$ для уравнения (-@eq-eq25) так, чтобы они удовлетворяли граничным условиям. 
+
+1. Граничное условия на внешнем контуре с постоянным давлением 
+
+$$ 
+p_D(r_e, t_D) = 0
+$$
+
+в пространстве Лапласа преобразуется в следующее
+
+$$ 
+\tilde{p}_D(r_e, u) = 0 
+$$
+
+2. Граничное условие на скважине
+
+$$
+\lim_{r_D \to r_{wD}} \left[ r_D \dfrac{ \partial p_D(r_D, t_D)}{\partial r_D} \right] = -1 
+$$
+
+в пространстве Лапласа  преобразуется к
+
+$$
+\lim_{r_D \to r_{wD}} \left[ r_D \dfrac{ d \tilde{p}_D}{d r_D} \right] = -\dfrac{1}{u} 
+$$ 
+
+
+
+```{python}
+#| code-fold: false
+soln2
+```
+
+```{python}
+#| code-fold: false
+r_e = sp.symbols('r_e', positive=True)
+eq1 = sp.Eq(soln2.subs(r_d, r_e).rhs,0)
+eq1
+```
+
+```{python}
+#| code-fold: false
+eq2 = sp.Eq(r_d * soln2.rhs.diff(r_d), -1/u).subs(r_d, 1)
+eq2
+```
+
+```{python}
+#| code-fold: false
+sol_AB = sp.solve([eq1,eq2], [A,B])
+display(sol_AB[A])
+display(sol_AB[B])
+```
+
+```{python}
+#| code-fold: false
+sol_re_const_p = soln2.subs(A, sol_AB[A]).subs(B, sol_AB[B]).simplify()  
+sol_re_const_p
+```
+
+Таким образом получено решение для постоянного давления на круговой границе вокруг скважины 
+$$
+\displaystyle \operatorname{p_{d}}{\left(r_{d} \right)} = \frac{- I_{0}\left(r_{d} \sqrt{u}\right) K_{0}\left(r_{e} \sqrt{u}\right) + I_{0}\left(r_{e} \sqrt{u}\right) K_{0}\left(r_{d} \sqrt{u}\right)}{u^{\frac{3}{2}} \left(I_{0}\left(r_{e} \sqrt{u}\right) K_{1}\left(\sqrt{u}\right) + I_{1}\left(\sqrt{u}\right) K_{0}\left(r_{e} \sqrt{u}\right)\right)} 
+$$
+
+Ипользуя подход показанный выше можно построить графики зависимости безразмерного давления от времени и расстояния для этого решения с использованием numpy и scipy функций
+
+
+```{python}
+#| code-fold: false
+# преобразование sympy выражения в lambda функцию с использованием numpy
+soln_re_const_p_numpy = sp.lambdify([u, r_d, r_e], sol_re_const_p.rhs, 
+                                     modules = ['numpy', 'scipy'])
+
+# после преобразования lambda функцию можно использовать 
+# для проведения расчетов как обычныую функцию
+
+# определим функцию для расчета обратного преобразования Лапласа
+# отдельная функция удобно чтобы передавать r_d второй параметр
+def soln_re_const_p_inv_lapl_numpy(t_d=1000, r_d=1, r_e=100):
+    sol_lap = anaflow.get_lap_inv(soln_re_const_p_numpy,  r_d=r_d, r_e=r_e)
+    return sol_lap(t_d)
+
+```
+
+```{python}
+
+# зададим диапазоны изменения параметров для построения графиков
+td_arr = np.logspace(1,5,100)
+rd_arr = np.logspace(1,2,100)
+re=100
+# построим графики
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=[15,5])
+for ri in np.linspace(1,100,10):
+    ax1.plot(td_arr, soln_re_const_p_inv_lapl_numpy(td_arr, r_d=ri, r_e=re), label = f'$r_d={ri:.0f}$')
+for ti in np.linspace(1e2, 1e4,10):
+    ax2.plot(rd_arr, np.squeeze( [soln_re_const_p_inv_lapl_numpy(ti, r_d=ri, r_e=re) for ri in rd_arr ] ), label = f'$t_d={ti:.0f}$')
+# наведем немного красоты
+ax1.set_xlabel('$t_d$')
+ax1.set_ylabel('$p_d$')
+ax1.legend()
+ax2.set_xlabel('$r_d$')
+ax2.set_ylabel('$p_d$')
+ax2.legend()
+plt.show()
+```
+
+### Построение решения с использованием `sympy.dsolve`
+
+Отметим, что в некоторых случаях можно построить частные решения для ОДУ напряму с использованием `sympy`
+
+Вспомним с каким уравнением мы работаем
+
+
+```{python}
+#| code-fold: false
+
+diff_eq
+
+```
+
+Построим снова общее решение, чтобы убедиться, что на текущем этапе все работает
+
+```{python}
+#| code-fold: false
+soln = sp.dsolve(diff_eq, p_d(r_d))
+soln
+```
+
+Построим частное решение сразу задав в `sympy.dsolve` граничные условия на искомую функцию
+
+```{python}
+#| code-fold: false
+
+soln_sympy = sp.dsolve(diff_eq, p_d(r_d), 
+                       ics={p_d(r_d).subs(r_d, r_e):0, 
+                            p_d(r_d).diff(r_d).subs(r_d,1):-1/u}).simplify()
+soln_sympy
+
+```
+
+Решение построено, хотя оно выражается через $Y_0$ вместо $K_0$  и в нем в явном виде присутствует $i$ мнимая единица. 
+
+Это решение также можно использовать для проведения расчетов и построения графиков. Для того, чтобы подавить предупреждения об игнорировании мнимой части - при проведении обратного преобразования Лапласа оставим только реальную часть в явном виде.
+
+Также ограничим диапазон отображения графика зависимости давления от времени - чтобы не показывать неверные значения получаемых в ходе расчета для малых времен.
+
+
+```{python}
+#| code-fold: false
+# преобразование sympy выражения в lambda функцию с использованием numpy
+soln_re_const_p_numpy = sp.lambdify([u, r_d, r_e], soln_sympy.rhs, 
+                                    modules = ['numpy', 'scipy'])
+
+# после преобразования lambda функцию можно использовать 
+# для проведения расчетов как обычныую функцию
+
+# определим функцию для расчета обратного преобразования Лапласа
+# отдельная функция удобно чтобы передавать r_d второй параметр
+def soln_re_const_p_inv_lapl_numpy(t_d=1000, r_d=1, r_e=100):
+    sol_lap = anaflow.get_lap_inv(soln_re_const_p_numpy,  r_d=r_d, r_e=r_e)
+    return sol_lap(t_d).real
+```
+
+```{python}
+# зададим диапазоны изменения параметров для построения графиков
+td_arr = np.logspace(1,5,100)
+rd_arr = np.logspace(1,2,100)
+re=100
+# построим графики
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=[15,5])
+for ri in np.linspace(1,100,10):
+    ax1.plot(td_arr, soln_re_const_p_inv_lapl_numpy(td_arr, r_d=ri, r_e=re), label = f'$r_d={ri:.0f}$')
+for ti in np.linspace(1e2, 1e4,10):
+    ax2.plot(rd_arr, np.squeeze( [soln_re_const_p_inv_lapl_numpy(ti, r_d=ri, r_e=re) for ri in rd_arr ] ), label = f'$t_d={ti:.0f}$')
+# наведем немного красоты
+ax1.set_xlabel('$t_d$')
+ax1.set_ylabel('$p_d$')
+ax1.set_ylim(0,5)
+ax1.legend()
+ax2.set_xlabel('$r_d$')
+ax2.set_ylabel('$p_d$')
+ax2.legend()
+plt.show()
+```
+
+Графики построились, хотя и пришлось подавлять предупреждения об игнорировании мнимой части и для одного из значений расстояния на расчет развалился. Первый вариант построения решения с использованием $K_0$ выглядит надежнее.
+
+## Частное решение для конечного круглого пласта с замкнутой границей и конечного радиуса скважины.
+
+Частное решение строится за счет поиска параметров $A$ и $B$ для уравнения (-@eq-eq25) так, чтобы они удовлетворяли граничным условиям. 
+
+1. Граничное условия на внешнем контуре с замкнутой границей
+
+$$
+\left( \frac{d p_D}{d r_d}\right)_{r_d=r_e} = 0 
+$$
+
+в пространстве Лапласа  преобразуется в следующее
+
+$$
+\left( \frac{ \tilde{p}_D(r_d, u)}{d r_d}\right)_{r_d=r_e} = 0
+$$
+
+2. Граничное условие на скважине
+
+$$
+\lim_{r_D \to r_{wD}} \left[ r_D \dfrac{ \partial p_D(r_D, t_D)}{\partial r_D} \right] = -1 
+$$
+
+в пространстве Лапласа  с учетом выражения  преобразуется к
+
+$$
+\lim_{r_D \to r_{wD}} \left[ r_D \dfrac{ d \tilde{p}_D}{d r_D} \right] = -\dfrac{1}{u} 
+$$ 
+
+
+```{python}
+#| code-fold: false
+r_e = sp.symbols('r_e', positive=True)
+eq1 = sp.Eq(soln2.rhs.diff(r_d).subs(r_d, r_e),0)
+eq1
+```
+
+```{python}
+#| code-fold: false
+eq2 = sp.Eq(r_d * soln2.rhs.diff(r_d), -1/u).subs(r_d, 1)
+eq2
+```
+
+```{python}
+#| code-fold: false
+sol_AB = sp.solve([eq1,eq2], [A,B])
+display(sol_AB[A])
+display(sol_AB[B])
+```
+
+```{python}
+#| code-fold: false
+sol_re_close = soln2.subs(A, sol_AB[A]).subs(B, sol_AB[B]).simplify()  
+sol_re_close
+```
+
+Таким образом получено решение для замкнутой круговой границы вокруг скважины 
+$$
+\displaystyle \operatorname{p_{d}}{\left(r_{d} \right)} = \frac{I_{0}\left(r_{d} \sqrt{u}\right) K_{1}\left(r_{e} \sqrt{u}\right) + I_{1}\left(r_{e} \sqrt{u}\right) K_{0}\left(r_{d} \sqrt{u}\right)}{u^{\frac{3}{2}} \left(- I_{1}\left(\sqrt{u}\right) K_{1}\left(r_{e} \sqrt{u}\right) + I_{1}\left(r_{e} \sqrt{u}\right) K_{1}\left(\sqrt{u}\right)\right)} 
+$$
+
+Ипользуя подход показанный выше можно построить графики зависимости безразмерного давления от времени и расстояния для этого решения с использованием numpy и scipy функций
+
+```{python}
+#| code-fold: false
+# преобразование sympy выражения в lambda функцию с использованием numpy
+soln_re_close_numpy = sp.lambdify([u, r_d, r_e], sol_re_close.rhs, 
+                                  modules = ['numpy', 'scipy'])
+
+# после преобразования lambda функцию можно использовать 
+# для проведения расчетов как обычныую функцию
+
+# определим функцию для расчета обратного преобразования Лапласа
+# отдельная функция удобно чтобы передавать r_d второй параметр
+def soln_re_close_inv_lapl_numpy(t_d=1000, r_d=1, r_e=100):
+    sol_lap = anaflow.get_lap_inv(soln_re_close_numpy,  r_d=r_d, r_e=r_e)
+    return sol_lap(t_d)
+```
+
+
+```{python}
+
+# зададим диапазоны изменения параметров для построения графиков
+td_arr = np.logspace(1,5,100)
+rd_arr = np.logspace(1,2,100)
+re=100
+# построим графики
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=[15,5])
+for ri in np.linspace(1,100,10):
+    ax1.plot(td_arr, soln_re_close_inv_lapl_numpy(td_arr, r_d=ri, r_e=re), label = f'$r_d={ri:.0f}$')
+for ti in np.linspace(1e2, 1e4,10):
+    ax2.plot(rd_arr, np.squeeze( [soln_re_close_inv_lapl_numpy(ti, r_d=ri, r_e=re) for ri in rd_arr ] ), label = f'$t_d={ti:.0f}$')
+# наведем немного красоты
+ax1.set_xlabel('$t_d$')
+ax1.set_ylabel('$p_d$')
+ax1.legend()
+ax2.set_xlabel('$r_d$')
+ax2.set_ylabel('$p_d$')
+ax2.legend()
+plt.show()
+```

@@ -4,32 +4,34 @@ bibliography: refs.bib
 crossref:
   chapters: true
 format: 
-  docx:
-    toc: true
-    number-sections: true
-    highlight-style: github
-  #html:
-  #  grid:
-  #      margin-width: 400px
+  #docx:
   #  toc: true
-  #  toc-depth: 1
-  #  toc-expand: 2
   #  number-sections: true
-  #  section-numbering: 1.1.1
-  #  lang: ru
-  #  embed-resources: true    
-  #  code-fold: true
-  #  code-summary: "Показать код"
-  pdf:
+  #  highlight-style: github
+  html:
+    grid:
+        margin-width: 400px
     toc: true
+    toc-depth: 1
+    toc-expand: 2
     number-sections: true
     section-numbering: 1.1.1
     lang: ru
-    mainfont: Times New Roman
-    sansfont: Comic Sans MS
-    monofont: Courier New
-    monofontoptions: 
-       - Scale=0.8
+    embed-resources: true    
+    code-fold: true
+    code-summary: "Показать код"
+    code-block-bg: true
+    code-block-border-left: "#31BAE9"
+  #pdf:
+  #  toc: true
+  #  number-sections: true
+  #  section-numbering: 1.1.1
+  #  lang: ru
+  #  mainfont: Times New Roman
+  #  sansfont: Comic Sans MS
+  #  monofont: Courier New
+  #  monofontoptions: 
+  #     - Scale=0.8
   #typst:
   #  toc: true
   #  toc-depth: 2
@@ -45,6 +47,10 @@ format:
 версия 0.5 от 15.09.2025
 
 Хабибуллин Ринат
+
+```{python}
+print('hello')
+```
 
 # Введение в дисциплину. Моделирование при исследовании скважин и пластов
 
