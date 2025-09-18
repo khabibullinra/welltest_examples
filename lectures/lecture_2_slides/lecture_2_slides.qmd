@@ -5,6 +5,7 @@ format:
     revealjs: 
         smaller: true
         chalkboard: true
+        #embed-resources: true
 ---
 
 ## Уравнение фильтрации

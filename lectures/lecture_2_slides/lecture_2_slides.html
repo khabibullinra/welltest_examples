@@ -250,7 +250,7 @@ q_D = \frac{q}{q_{ref}}
 </section>
 <section id="безразмерные-переменные-в-python" class="slide level2">
 <h2>Безразмерные переменные в python</h2>
-<div id="60af1a85" class="cell" data-execution_count="1">
+<div id="a6e56d36" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python code-overflow-wrap number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="kw">def</span> r_from_rd_m(rd, rw_m<span class="op">=</span><span class="fl">0.1</span>):</span>
 <span id="cb1-2"><a href=""></a>    <span class="cf">return</span> rd<span class="op">*</span>rw_m</span>
 <span id="cb1-3"><a href=""></a></span>
@@ -264,7 +264,7 @@ q_D = \frac{q}{q_{ref}}
 </section>
 <section id="безразмерные-переменные-в-python-1" class="slide level2">
 <h2>Безразмерные переменные в python</h2>
-<div id="bbfb221a" class="cell" data-execution_count="2">
+<div id="3b4403e8" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a><span class="kw">def</span> rd_from_r(r_m, rw_m<span class="op">=</span><span class="fl">0.1</span>):</span>
 <span id="cb2-2"><a href=""></a>    <span class="cf">return</span> r_m<span class="op">/</span>rw_m</span>
 <span id="cb2-3"><a href=""></a></span>
@@ -324,7 +324,7 @@ p\left(r,t\right)=p_i-\frac{9.21q_sB\mu}{kh}\left(ln{\frac{kt}{\varphi\mu c_tr^2
 </section>
 <section id="решение-линейного-стока-в-python" class="slide level2">
 <h2>Решение линейного стока в python</h2>
-<div id="78a5e839" class="cell" data-execution_count="3">
+<div id="243d5b37" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="im">import</span> scipy.special <span class="im">as</span> sc</span>
 <span id="cb3-2"><a href=""></a><span class="co">"""</span></span>
 <span id="cb3-3"><a href=""></a><span class="co">Решение линейного стока уравнения фильтрации</span></span>
@@ -340,17 +340,25 @@ p\left(r,t\right)=p_i-\frac{9.21q_sB\mu}{kh}\left(ln{\frac{kt}{\varphi\mu c_tr^2
 </section>
 <section id="график" class="slide level2">
 <h2>График</h2>
-
-<img data-src="lecture_2_slides_files/figure-revealjs/cell-6-output-1.png" class="r-stretch"></section>
+<div id="efa03c60" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-6-output-1.png" width="668" height="376"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 <section id="графики-размерные" class="slide level2">
 <h2>Графики размерные</h2>
 <div class="columns">
 <div class="column" style="width:70%;">
-<div id="1e290d91" class="cell" data-execution_count="7">
+<div id="3b542063" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-8-output-1.png"></p>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-8-output-1.png" width="686" height="376"></p>
 </figure>
 </div>
 </div>
@@ -369,8 +377,16 @@ p\left(r,t\right)=p_i-\frac{9.21q_sB\mu}{kh}\left(ln{\frac{kt}{\varphi\mu c_tr^2
 </section>
 <section id="сравнение-решения-и-логарифмической-аппроксимации" class="slide level2">
 <h2>Сравнение решения и логарифмической аппроксимации</h2>
-
-<img data-src="lecture_2_slides_files/figure-revealjs/cell-9-output-1.png" class="r-stretch"></section>
+<div id="1028b1db" class="cell" data-execution_count="8">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-9-output-1.png" width="643" height="338"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 <section id="суперпозиция.-восстановление-давления" class="slide level2 smaller">
 <h2>Суперпозиция. Восстановление давления</h2>
 <p><span class="math display">\[
@@ -383,7 +399,7 @@ P_{bu.D}(t_D, t_{pD}, r_D) = P_D(t_D) - P_D(t_D-t_{pD}, r_D) \cdot \mathcal{H}(t
 </section>
 <section id="функция-для-восстановления-давления-python" class="slide level2">
 <h2>Функция для восстановления давления python</h2>
-<div id="a7fd3946" class="cell" data-execution_count="9">
+<div id="a2059f2d" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="kw">def</span> pd_build_up(td, td_p, rd):</span>
 <span id="cb5-2"><a href=""></a>    <span class="co">"""</span></span>
 <span id="cb5-3"><a href=""></a><span class="co">    расчет давления для запуска и последующей остановки скважины</span></span>
@@ -398,20 +414,20 @@ P_{bu.D}(t_D, t_{pD}, r_D) = P_D(t_D) - P_D(t_D-t_{pD}, r_D) \cdot \mathcal{H}(t
 </section>
 <section id="график-для-восстановления-давления" class="slide level2">
 <h2>График для восстановления давления</h2>
-<div id="7fad4fff" class="cell" data-execution_count="10">
+<div id="4a35856e" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-11-output-1.png"></p>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-11-output-1.png" width="651" height="302"></p>
 </figure>
 </div>
 </div>
 </div>
-<div id="8220d1ae" class="cell" data-execution_count="11">
+<div id="a71ab113" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-12-output-1.png"></p>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-12-output-1.png" width="668" height="302"></p>
 </figure>
 </div>
 </div>
@@ -419,15 +435,31 @@ P_{bu.D}(t_D, t_{pD}, r_D) = P_D(t_D) - P_D(t_D-t_{pD}, r_D) \cdot \mathcal{H}(t
 </section>
 <section id="графики-распределения-давления-в-пласте" class="slide level2">
 <h2>Графики распределения давления в пласте</h2>
-
-<img data-src="lecture_2_slides_files/figure-revealjs/cell-13-output-1.png" class="r-stretch"></section>
+<div id="aca94398" class="cell" data-execution_count="12">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-13-output-1.png" width="743" height="395"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 <section id="радиус-влияния-скважины" class="slide level2">
 <h2>Радиус влияния скважины</h2>
 <p><span id="eq-r_ed"><span class="math display">\[
 r_{eD} = \sqrt {2.2458 t_D}
 \qquad(7)\]</span></span></p>
-
-<img data-src="lecture_2_slides_files/figure-revealjs/cell-15-output-1.png" class="r-stretch"></section>
+<div id="132528c2" class="cell" data-execution_count="14">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-15-output-1.png" width="718" height="338"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 <section>
 <section id="решения-в-пространстве-лапласа" class="title-slide slide level1 center">
 <h1>Решения в пространстве Лапласа</h1>
@@ -484,7 +516,7 @@ u \tilde{p}_D  =  \dfrac{1}{r_D} \left[\dfrac{d}{d r_D} \left(r_D \dfrac{d{\tild
 </section>
 <section id="построение-решений-с-python" class="slide level2">
 <h2>Построение решений с python</h2>
-<div id="7fe7f689" class="cell" data-execution_count="15">
+<div id="b8593679" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a><span class="im">import</span> anaflow</span>
 <span id="cb6-2"><a href=""></a><span class="im">import</span> scipy.special <span class="im">as</span> spec</span>
 <span id="cb6-3"><a href=""></a><span class="co"># пример функции реализующий расчет решения в пространстве Лапласа</span></span>
@@ -505,7 +537,7 @@ u \tilde{p}_D  =  \dfrac{1}{r_D} \left[\dfrac{d}{d r_D} \left(r_D \dfrac{d{\tild
 </section>
 <section id="сравнение-расчета-через-преобразование-лапласа-и-с-использованием-ei" class="slide level2">
 <h2>Сравнение расчета через преобразование Лапласа и с использованием Ei</h2>
-<div id="96237bb1" class="cell" data-execution_count="16">
+<div id="56054dfb" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href=""></a><span class="co"># построим график безразмерного давления от расстояния</span></span>
@@ -532,12 +564,18 @@ u \tilde{p}_D  =  \dfrac{1}{r_D} \left[\dfrac{d}{d r_D} \left(r_D \dfrac{d{\tild
 <span id="cb7-22"><a href=""></a></span>
 <span id="cb7-23"><a href=""></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-17-output-1.png" width="664" height="376"></p>
+</figure>
 </div>
-<img data-src="lecture_2_slides_files/figure-revealjs/cell-17-output-1.png" class="r-stretch"></section>
+</div>
+</div>
+</section>
 <section id="решение-для-конечного-радиуса-скважины-1" class="slide level2">
 <h2>Решение для конечного радиуса скважины</h2>
-<div id="7004e9ed" class="cell" data-execution_count="17">
+<div id="e6411b6c" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href=""></a><span class="co"># пример функции реализующий расчет решения в пространстве Лапласа</span></span>
 <span id="cb8-2"><a href=""></a><span class="kw">def</span> pd_lapl_finite_rw(u, rd<span class="op">=</span><span class="fl">1.</span>):</span>
 <span id="cb8-3"><a href=""></a>    u05 <span class="op">=</span> u<span class="op">**</span><span class="fl">0.5</span></span>
@@ -553,8 +591,16 @@ u \tilde{p}_D  =  \dfrac{1}{r_D} \left[\dfrac{d}{d r_D} \left(r_D \dfrac{d{\tild
 </section>
 <section id="решение-для-конечного-радиуса-скважины-2" class="slide level2">
 <h2>Решение для конечного радиуса скважины</h2>
-
-<img data-src="lecture_2_slides_files/figure-revealjs/cell-19-output-1.png" class="r-stretch"></section>
+<div id="f0486a2c" class="cell" data-execution_count="18">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-19-output-1.png" width="758" height="372"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 <section id="решение-с-учетом-послепритока" class="slide level2">
 <h2>Решение с учетом послепритока</h2>
 <p>Частное решение решение с учетом скин-фактор и послепритока можно представить в виде</p>
@@ -562,7 +608,7 @@ u \tilde{p}_D  =  \dfrac{1}{r_D} \left[\dfrac{d}{d r_D} \left(r_D \dfrac{d{\tild
 \tilde{p}_{wbD}(s) = \frac{1}{s} \left[ \frac{S + s \tilde{p}_D(r_d=1,s) }{1 + s C_D (S + s \tilde{p}_D(r_d=1,s))} \right]
 \]</span></p>
 <p>где <span class="math inline">\(\tilde{p}_D(r_d=1,s)\)</span> - известное частное решение</p>
-<div id="e24d1ead" class="cell" data-execution_count="19">
+<div id="7963084b" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href=""></a><span class="co"># решение линейного стока в пространстве Лапласа</span></span>
 <span id="cb9-2"><a href=""></a><span class="kw">def</span> pd_lapl_wbs(pd_lapl, S<span class="op">=</span><span class="dv">0</span>, Cd<span class="op">=</span><span class="dv">0</span>):</span>
 <span id="cb9-3"><a href=""></a>    <span class="kw">def</span> pdl(u, rd, S<span class="op">=</span><span class="dv">0</span>, Cd<span class="op">=</span><span class="dv">0</span>):</span>
@@ -586,20 +632,20 @@ u \tilde{p}_D  =  \dfrac{1}{r_D} \left[\dfrac{d}{d r_D} \left(r_D \dfrac{d{\tild
 </section>
 <section id="график-для-послепритока" class="slide level2">
 <h2>График для послепритока</h2>
-<div id="3fdb55be" class="cell" data-execution_count="20">
+<div id="08592fce" class="cell" data-execution_count="20">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-21-output-1.png"></p>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-21-output-1.png" width="641" height="357"></p>
 </figure>
 </div>
 </div>
 </div>
-<div id="1eac5106" class="cell" data-execution_count="21">
+<div id="392d64a1" class="cell" data-execution_count="21">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-22-output-1.png"></p>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-22-output-1.png" width="641" height="338"></p>
 </figure>
 </div>
 </div>
@@ -610,16 +656,32 @@ u \tilde{p}_D  =  \dfrac{1}{r_D} \left[\dfrac{d}{d r_D} \left(r_D \dfrac{d{\tild
 <p><span class="math display">\[
 \displaystyle \operatorname{p_{d}}{\left(r_{d} \right)} = \frac{- I_{0}\left(r_{d} \sqrt{u}\right) K_{0}\left(r_{e} \sqrt{u}\right) + I_{0}\left(r_{e} \sqrt{u}\right) K_{0}\left(r_{d} \sqrt{u}\right)}{u^{\frac{3}{2}} \left(I_{0}\left(r_{e} \sqrt{u}\right) K_{1}\left(\sqrt{u}\right) + I_{1}\left(\sqrt{u}\right) K_{0}\left(r_{e} \sqrt{u}\right)\right)}
 \]</span></p>
-
-<img data-src="lecture_2_slides_files/figure-revealjs/cell-23-output-1.png" class="r-stretch"></section>
+<div id="078896cf" class="cell" data-execution_count="22">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-23-output-1.png" width="1171" height="430"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 <section id="решение-с-замкнутой-круговой-границей" class="slide level2">
 <h2>Решение с замкнутой круговой границей</h2>
 <p><span class="math display">\[
 \displaystyle \operatorname{p_{d}}{\left(r_{d} \right)} = \frac{I_{0}\left(r_{d} \sqrt{u}\right) K_{1}\left(r_{e} \sqrt{u}\right) + I_{1}\left(r_{e} \sqrt{u}\right) K_{0}\left(r_{d} \sqrt{u}\right)}{u^{\frac{3}{2}} \left(- I_{1}\left(\sqrt{u}\right) K_{1}\left(r_{e} \sqrt{u}\right) + I_{1}\left(r_{e} \sqrt{u}\right) K_{1}\left(\sqrt{u}\right)\right)}
 \]</span></p>
+<div id="56d8d51c" class="cell" data-execution_count="24">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="lecture_2_slides_files/figure-revealjs/cell-25-output-1.png" width="1180" height="434"></p>
+</figure>
+</div>
+</div>
+</div>
 
-
-<img data-src="lecture_2_slides_files/figure-revealjs/cell-25-output-1.png" class="r-stretch"></section></section>
+</section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
