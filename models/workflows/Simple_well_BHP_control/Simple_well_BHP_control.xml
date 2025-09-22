@@ -32,7 +32,7 @@ Simple_well_BHP_control_variables = {
 "POROSITY" : 0.15,
 "SKIN" : 3,
 "FRACTURE" : False,
-"WELL_STEP_CONTROL" : False
+"WELL_STEP_CONTROL" : True
 }
 
 def Simple_well_BHP_control (variables = Simple_well_BHP_control_variables):
@@ -573,7 +573,36 @@ v0.2
         end_wf_item (index = 40)
 
 
-        begin_wf_item (index = 41, name = "Create Well P_1")
+        begin_wf_item (index = 41)
+        strategy_create (strategy_name="strategy",
+              overwrite=True)
+        end_wf_item (index = 41)
+
+
+        begin_wf_item (index = 42)
+        timestep_add (schedule_strategy_name=typed_object_name (obj_name="strategy",
+              obj_type="gt_schedule_rules_data"),
+              first_date=datetime (year=2020,
+              month=1,
+              day=1,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0),
+              last_date=datetime (year=2020,
+              month=1,
+              day=10,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0),
+              step_length="Custom",
+              custom_step_length=1,
+              custom_step_type="Hour")
+        end_wf_item (index = 42)
+
+
+        begin_wf_item (index = 43, name = "Create Well P_1")
         wells_create (well_name="P_1",
               remove_existing_main_branch=True,
               branch_num=0,
@@ -585,38 +614,33 @@ v0.2
               minute=0,
               second=0,
               microsecond=0),
-              table=None,
+              table=typed_object_name (obj_name="Well Structure",
+              obj_type="gt_wells_events_data"),
               perforations_table=[{"state" : "Perforation", "from" : 1500, "to" : 1530, "diameter" : 0.168, "skin" : 0, "mult" : 1, "d_factor" : 0, "depth_type" : "MD"}])
-        end_wf_item (index = 41)
-
-
-        begin_wf_item (index = 42)
-        strategy_create (strategy_name="strategy",
-              overwrite=True)
-        end_wf_item (index = 42)
+        end_wf_item (index = 43)
 
 
 
     end_wf_item (index = 39)
 
 
-    begin_wf_item (index = 44, name = "Создаем ГДМ модель из подготовленных артефактов")
+    begin_wf_item (index = 45, name = "Создаем ГДМ модель из подготовленных артефактов")
     workflow_folder ()
     if True:
         pass
 
 
 
-        begin_wf_item (index = 45, name = "Название модели по умолчанию DynamicModel")
+        begin_wf_item (index = 46, name = "Название модели по умолчанию DynamicModel")
         comment_text ("""
 
 
 
 """)
-        end_wf_item (index = 45)
+        end_wf_item (index = 46)
 
 
-        begin_wf_item (index = 46)
+        begin_wf_item (index = 47)
         static_mapping (cases=typed_object_name (obj_name="DynamicModel",
               obj_type="Model_ex"),
               grid=typed_object_name (obj_name="Simple_grid",
@@ -631,36 +655,26 @@ v0.2
               obj_type="Grid3dProperty"), "constant" : None, "porosity" : "matrix"}, {"is_checked" : True, "description" : "ID_ACTNUM", "keyword" : "ACTNUM", "component" : None, "property" : typed_object_name (obj_name="actnum",
               obj_type="Grid3dProperty"), "constant" : None, "porosity" : "matrix"}, {"is_checked" : True, "description" : "ID_NTG", "keyword" : "NTG", "component" : None, "property" : typed_object_name (obj_name="ntg",
               obj_type="Grid3dProperty"), "constant" : None, "porosity" : "both"}])
-        end_wf_item (index = 46)
-
-
-        begin_wf_item (index = 47)
-        fluids_mapping (cases=typed_object_name (obj_name="DynamicModel",
-              obj_type="Model_ex"),
-              group="PVT",
-              type="blackoil pvt",
-              action="replace",
-              fluids_table=[{"region" : 1, "property" : "SimpleBO (PVT Data)"}])
         end_wf_item (index = 47)
 
 
         begin_wf_item (index = 48)
         fluids_mapping (cases=typed_object_name (obj_name="DynamicModel",
               obj_type="Model_ex"),
-              group="KRP",
-              type="rp_project",
+              group="PVT",
+              type="blackoil pvt",
               action="replace",
-              fluids_table=[{"region" : 1, "property" : "RP_Curves (RP Project)"}])
+              fluids_table=[{"region" : 1, "property" : "SimpleBO (PVT Data)"}])
         end_wf_item (index = 48)
 
 
         begin_wf_item (index = 49)
         fluids_mapping (cases=typed_object_name (obj_name="DynamicModel",
               obj_type="Model_ex"),
-              group="Initial",
-              type="equil_v2",
+              group="KRP",
+              type="rp_project",
               action="replace",
-              fluids_table=[{"region" : 1, "property" : "Equilibration data specification 1"}])
+              fluids_table=[{"region" : 1, "property" : "RP_Curves (RP Project)"}])
         end_wf_item (index = 49)
 
 
@@ -668,28 +682,29 @@ v0.2
         fluids_mapping (cases=typed_object_name (obj_name="DynamicModel",
               obj_type="Model_ex"),
               group="Initial",
-              type="pbvd",
+              type="equil_v2",
               action="replace",
-              fluids_table=[{"region" : 1, "property" : "PBVD"}])
+              fluids_table=[{"region" : 1, "property" : "Equilibration data specification 1"}])
         end_wf_item (index = 50)
 
 
         begin_wf_item (index = 51)
         fluids_mapping (cases=typed_object_name (obj_name="DynamicModel",
               obj_type="Model_ex"),
-              group="Rock",
-              type="rock",
+              group="Initial",
+              type="pbvd",
               action="replace",
-              fluids_table=[{"region" : 1, "property" : "Rock compressibility 1"}])
+              fluids_table=[{"region" : 1, "property" : "PBVD"}])
         end_wf_item (index = 51)
 
 
         begin_wf_item (index = 52)
-        project_manager_mapping (cases=typed_object_name (obj_name="DynamicModel",
+        fluids_mapping (cases=typed_object_name (obj_name="DynamicModel",
               obj_type="Model_ex"),
-              project_type="vfp_project",
+              group="Rock",
+              type="rock",
               action="replace",
-              projects_table=[{"name" : "P_1"}])
+              fluids_table=[{"region" : 1, "property" : "Rock compressibility 1"}])
         end_wf_item (index = 52)
 
 
@@ -1062,7 +1077,7 @@ v0.2
 
 
 
-    end_wf_item (index = 44)
+    end_wf_item (index = 45)
 
 
     begin_wf_item (index = 59, name = "Зададим управление скважиной")
@@ -1072,37 +1087,14 @@ v0.2
 
 
 
-        begin_wf_item (index = 60)
-        timestep_add (schedule_strategy_name=typed_object_name (obj_name="strategy",
-              obj_type="gt_schedule_rules_data"),
-              first_date=datetime (year=2020,
-              month=1,
-              day=1,
-              hour=0,
-              minute=0,
-              second=0,
-              microsecond=0),
-              last_date=datetime (year=2021,
-              month=1,
-              day=1,
-              hour=0,
-              minute=0,
-              second=0,
-              microsecond=0),
-              step_length="One Week",
-              custom_step_length=1,
-              custom_step_type="Second")
-        end_wf_item (index = 60)
-
-
-        begin_wf_item (index = 61, name = "Зададим параметры управления скважиной")
+        begin_wf_item (index = 60, name = "Зададим параметры управления скважиной")
         comment_text ("""
 Запустим скважину с контролем по устьевому давлению
 """)
-        end_wf_item (index = 61)
+        end_wf_item (index = 60)
 
 
-        begin_wf_item (index = 62)
+        begin_wf_item (index = 61)
         schedule_rule_add_prod_well_limits_forecast (schedule_strategy=typed_object_name (obj_name="strategy",
               obj_type="gt_schedule_rules_data"),
               date=datetime (year=2020,
@@ -1114,11 +1106,11 @@ v0.2
               microsecond=0),
               use_rule_name=True,
               rule_name="Well Production Limits (Forecast)",
-              params_table=[{"well" : "P_1", "well_status" : "open", "control_mode" : "BHP", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : None, "lincom_rate" : None, "resv_rate" : None, "bhp" : 65, "thp" : None, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
-        end_wf_item (index = 62)
+              params_table=[{"well" : "P_1", "well_status" : "stop", "control_mode" : "LRAT", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : 10, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : None, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
+        end_wf_item (index = 61)
 
 
-        begin_wf_item (index = 63)
+        begin_wf_item (index = 62)
         schedule_rule_add_several_user_keywords (schedule_strategy=typed_object_name (obj_name="strategy",
               obj_type="gt_schedule_rules_data"),
               date=datetime (year=2020,
@@ -1132,15 +1124,15 @@ v0.2
               rule_name="Пользовательские кл. слова",
               user_keywords="\nWTEST\n \'P_1\' 0 \'P\' /\n",
               variables=variables)
-        end_wf_item (index = 63)
+        end_wf_item (index = 62)
 
 
         if FRACTURE:
             if_statement_contents ()
+            begin_wf_item (index = 63)
+
+
             begin_wf_item (index = 64)
-
-
-            begin_wf_item (index = 65)
             run_project_workflow (project_type = "gt_project",
                   project_name = "",
                   workflow = "Workflow_create_frac",
@@ -1148,18 +1140,18 @@ v0.2
                   variables_object = {
 
             })
-            end_wf_item (index = 65)
-
-
             end_wf_item (index = 64)
+
+
+            end_wf_item (index = 63)
 
 
         if WELL_STEP_CONTROL:
             if_statement_contents ()
+            begin_wf_item (index = 66)
+
+
             begin_wf_item (index = 67)
-
-
-            begin_wf_item (index = 68)
             run_project_workflow (project_type = "gt_project",
                   project_name = "",
                   workflow = "Welltest_THP",
@@ -1167,10 +1159,10 @@ v0.2
                   variables_object = {
 
             })
-            end_wf_item (index = 68)
-
-
             end_wf_item (index = 67)
+
+
+            end_wf_item (index = 66)
 
 
 
@@ -1178,7 +1170,7 @@ v0.2
 
 
     if False:
-        begin_wf_item (index = 71, name = "Simulation running")
+        begin_wf_item (index = 70, name = "Simulation running")
         workflow_folder ()
         if True:
             pass
@@ -1186,7 +1178,7 @@ v0.2
 
 
             if False:
-                begin_wf_item (index = 72)
+                begin_wf_item (index = 71)
                 open_or_reload_dynamic_model (use_model=True,
                       model=typed_object_name (obj_name="DynamicModel",
                       obj_type="Model_ex"),
@@ -1195,18 +1187,18 @@ v0.2
                       graphs_result_mode_for_requested_maps="tnav_graph",
                       graphs_result_mode_for_maps_off="tnav_graph",
                       overwrite_existing_result=True)
-                end_wf_item (index = 72)
+                end_wf_item (index = 71)
 
 
             if False:
-                begin_wf_item (index = 73)
+                begin_wf_item (index = 72)
                 run_dynamic_model_calculations (is_go_to_step=False,
                       go_to_step_number=-1)
-                end_wf_item (index = 73)
+                end_wf_item (index = 72)
 
 
 
-        end_wf_item (index = 71)
+        end_wf_item (index = 70)
 
 
 </n>
@@ -1214,52 +1206,52 @@ v0.2
      <n name="guid" />
      <a name="data" size="16">
       <an name="0">
-       <n name="v">129</n>
+       <n name="v">83</n>
       </an>
       <an name="1">
-       <n name="v">240</n>
+       <n name="v">50</n>
       </an>
       <an name="2">
-       <n name="v">89</n>
+       <n name="v">218</n>
       </an>
       <an name="3">
-       <n name="v">13</n>
+       <n name="v">186</n>
       </an>
       <an name="4">
-       <n name="v">93</n>
+       <n name="v">63</n>
       </an>
       <an name="5">
-       <n name="v">67</n>
+       <n name="v">97</n>
       </an>
       <an name="6">
-       <n name="v">231</n>
+       <n name="v">118</n>
       </an>
       <an name="7">
-       <n name="v">103</n>
+       <n name="v">120</n>
       </an>
       <an name="8">
-       <n name="v">99</n>
+       <n name="v">97</n>
       </an>
       <an name="9">
-       <n name="v">15</n>
+       <n name="v">48</n>
       </an>
       <an name="10">
-       <n name="v">183</n>
+       <n name="v">72</n>
       </an>
       <an name="11">
-       <n name="v">173</n>
+       <n name="v">179</n>
       </an>
       <an name="12">
-       <n name="v">42</n>
+       <n name="v">201</n>
       </an>
       <an name="13">
-       <n name="v">173</n>
+       <n name="v">34</n>
       </an>
       <an name="14">
-       <n name="v">175</n>
+       <n name="v">73</n>
       </an>
       <an name="15">
-       <n name="v">160</n>
+       <n name="v">37</n>
       </an>
      </a>
      <n name="type_original">gt_workflow</n>
@@ -1398,52 +1390,52 @@ def create_pvt_black_oil (variables = create_pvt_black_oil_variables):
      <n name="guid" />
      <a name="data" size="16">
       <an name="0">
-       <n name="v">84</n>
+       <n name="v">217</n>
       </an>
       <an name="1">
-       <n name="v">35</n>
+       <n name="v">165</n>
       </an>
       <an name="2">
-       <n name="v">39</n>
+       <n name="v">222</n>
       </an>
       <an name="3">
-       <n name="v">56</n>
+       <n name="v">48</n>
       </an>
       <an name="4">
-       <n name="v">255</n>
+       <n name="v">148</n>
       </an>
       <an name="5">
-       <n name="v">178</n>
+       <n name="v">255</n>
       </an>
       <an name="6">
-       <n name="v">69</n>
+       <n name="v">224</n>
       </an>
       <an name="7">
-       <n name="v">125</n>
+       <n name="v">63</n>
       </an>
       <an name="8">
-       <n name="v">87</n>
+       <n name="v">143</n>
       </an>
       <an name="9">
-       <n name="v">173</n>
+       <n name="v">85</n>
       </an>
       <an name="10">
-       <n name="v">212</n>
+       <n name="v">105</n>
       </an>
       <an name="11">
-       <n name="v">163</n>
+       <n name="v">180</n>
       </an>
       <an name="12">
-       <n name="v">54</n>
+       <n name="v">139</n>
       </an>
       <an name="13">
-       <n name="v">72</n>
+       <n name="v">12</n>
       </an>
       <an name="14">
-       <n name="v">34</n>
+       <n name="v">173</n>
       </an>
       <an name="15">
-       <n name="v">228</n>
+       <n name="v">203</n>
       </an>
      </a>
      <n name="type_original">gt_workflow</n>
@@ -1593,52 +1585,52 @@ def Workflow_create_frac (variables = Workflow_create_frac_variables):
      <n name="guid" />
      <a name="data" size="16">
       <an name="0">
-       <n name="v">195</n>
+       <n name="v">148</n>
       </an>
       <an name="1">
-       <n name="v">130</n>
+       <n name="v">206</n>
       </an>
       <an name="2">
-       <n name="v">166</n>
+       <n name="v">52</n>
       </an>
       <an name="3">
-       <n name="v">152</n>
+       <n name="v">2</n>
       </an>
       <an name="4">
-       <n name="v">53</n>
+       <n name="v">39</n>
       </an>
       <an name="5">
-       <n name="v">30</n>
+       <n name="v">198</n>
       </an>
       <an name="6">
-       <n name="v">71</n>
+       <n name="v">200</n>
       </an>
       <an name="7">
-       <n name="v">244</n>
+       <n name="v">224</n>
       </an>
       <an name="8">
-       <n name="v">177</n>
+       <n name="v">59</n>
       </an>
       <an name="9">
-       <n name="v">229</n>
+       <n name="v">41</n>
       </an>
       <an name="10">
-       <n name="v">127</n>
+       <n name="v">66</n>
       </an>
       <an name="11">
-       <n name="v">254</n>
+       <n name="v">154</n>
       </an>
       <an name="12">
-       <n name="v">189</n>
+       <n name="v">48</n>
       </an>
       <an name="13">
-       <n name="v">134</n>
+       <n name="v">173</n>
       </an>
       <an name="14">
-       <n name="v">61</n>
+       <n name="v">135</n>
       </an>
       <an name="15">
-       <n name="v">50</n>
+       <n name="v">97</n>
       </an>
      </a>
      <n name="type_original">gt_workflow</n>
@@ -1685,14 +1677,14 @@ def Welltest_THP (variables = Welltest_THP_variables):
           obj_type="gt_schedule_rules_data"),
           date=datetime (year=2020,
           month=1,
-          day=1,
+          day=2,
           hour=0,
           minute=0,
           second=0,
           microsecond=0),
           use_rule_name=True,
-          rule_name="Well Production Limits (Forecast)",
-          params_table=[{"well" : "P_1", "well_status" : "open", "control_mode" : "THP", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : None, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : 10, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
+          rule_name="Well Production Limits (Forecast) 1",
+          params_table=[{"well" : "P_1", "well_status" : "open", "control_mode" : "LRAT", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : 5, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : 10, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
     end_wf_item (index = 1)
 
 
@@ -1700,15 +1692,15 @@ def Welltest_THP (variables = Welltest_THP_variables):
     schedule_rule_add_prod_well_limits_forecast (schedule_strategy=typed_object_name (obj_name="strategy",
           obj_type="gt_schedule_rules_data"),
           date=datetime (year=2020,
-          month=2,
-          day=5,
+          month=1,
+          day=3,
           hour=0,
           minute=0,
           second=0,
           microsecond=0),
           use_rule_name=True,
           rule_name="Well Production Limits (Forecast) 2",
-          params_table=[{"well" : "P_1", "well_status" : "open", "control_mode" : "THP", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : None, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : 5, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
+          params_table=[{"well" : "P_1", "well_status" : "open", "control_mode" : "LRAT", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : 10, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : 10, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
     end_wf_item (index = 2)
 
 
@@ -1716,7 +1708,7 @@ def Welltest_THP (variables = Welltest_THP_variables):
     schedule_rule_add_prod_well_limits_forecast (schedule_strategy=typed_object_name (obj_name="strategy",
           obj_type="gt_schedule_rules_data"),
           date=datetime (year=2020,
-          month=3,
+          month=1,
           day=4,
           hour=0,
           minute=0,
@@ -1724,7 +1716,7 @@ def Welltest_THP (variables = Welltest_THP_variables):
           microsecond=0),
           use_rule_name=True,
           rule_name="Well Production Limits (Forecast) 3",
-          params_table=[{"well" : "P_1", "well_status" : "open", "control_mode" : "THP", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : None, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : 1, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
+          params_table=[{"well" : "P_1", "well_status" : "open", "control_mode" : "LRAT", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : 15, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : 10, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
     end_wf_item (index = 3)
 
 
@@ -1732,15 +1724,15 @@ def Welltest_THP (variables = Welltest_THP_variables):
     schedule_rule_add_prod_well_limits_forecast (schedule_strategy=typed_object_name (obj_name="strategy",
           obj_type="gt_schedule_rules_data"),
           date=datetime (year=2020,
-          month=4,
-          day=1,
+          month=1,
+          day=5,
           hour=0,
           minute=0,
           second=0,
           microsecond=0),
           use_rule_name=True,
           rule_name="Well Production Limits (Forecast) 4",
-          params_table=[{"well" : "P_1", "well_status" : "open", "control_mode" : "THP", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : None, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : 5, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
+          params_table=[{"well" : "P_1", "well_status" : "open", "control_mode" : "LRAT", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : 20, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : 10, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
     end_wf_item (index = 4)
 
 
@@ -1748,96 +1740,16 @@ def Welltest_THP (variables = Welltest_THP_variables):
     schedule_rule_add_prod_well_limits_forecast (schedule_strategy=typed_object_name (obj_name="strategy",
           obj_type="gt_schedule_rules_data"),
           date=datetime (year=2020,
-          month=5,
-          day=6,
-          hour=0,
-          minute=0,
-          second=0,
-          microsecond=0),
-          use_rule_name=True,
-          rule_name="Well Production Limits (Forecast) 5",
-          params_table=[{"well" : "P_1", "well_status" : "open", "control_mode" : "THP", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : None, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : 10, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
-    end_wf_item (index = 5)
-
-
-    begin_wf_item (index = 6)
-    schedule_rule_add_prod_well_limits_forecast (schedule_strategy=typed_object_name (obj_name="strategy",
-          obj_type="gt_schedule_rules_data"),
-          date=datetime (year=2020,
-          month=6,
-          day=3,
-          hour=0,
-          minute=0,
-          second=0,
-          microsecond=0),
-          use_rule_name=True,
-          rule_name="Well Production Limits (Forecast) 6",
-          params_table=[{"well" : "P_1", "well_status" : "open", "control_mode" : "THP", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : None, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : 15, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
-    end_wf_item (index = 6)
-
-
-    begin_wf_item (index = 7)
-    schedule_rule_add_prod_well_limits_forecast (schedule_strategy=typed_object_name (obj_name="strategy",
-          obj_type="gt_schedule_rules_data"),
-          date=datetime (year=2020,
-          month=7,
-          day=1,
-          hour=0,
-          minute=0,
-          second=0,
-          microsecond=0),
-          use_rule_name=True,
-          rule_name="Well Production Limits (Forecast) 7",
-          params_table=[{"well" : "P_1", "well_status" : "open", "control_mode" : "THP", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : None, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : 20, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
-    end_wf_item (index = 7)
-
-
-    begin_wf_item (index = 8)
-    schedule_rule_add_prod_well_limits_forecast (schedule_strategy=typed_object_name (obj_name="strategy",
-          obj_type="gt_schedule_rules_data"),
-          date=datetime (year=2020,
-          month=8,
-          day=5,
-          hour=0,
-          minute=0,
-          second=0,
-          microsecond=0),
-          use_rule_name=True,
-          rule_name="Well Production Limits (Forecast) 8",
-          params_table=[{"well" : "P_1", "well_status" : "open", "control_mode" : "THP", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : None, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : 25, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
-    end_wf_item (index = 8)
-
-
-    begin_wf_item (index = 9)
-    schedule_rule_add_prod_well_limits_forecast (schedule_strategy=typed_object_name (obj_name="strategy",
-          obj_type="gt_schedule_rules_data"),
-          date=datetime (year=2020,
-          month=9,
-          day=2,
-          hour=0,
-          minute=0,
-          second=0,
-          microsecond=0),
-          use_rule_name=True,
-          rule_name="Well Production Limits (Forecast) 9",
-          params_table=[{"well" : "P_1", "well_status" : "open", "control_mode" : "THP", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : None, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : 30, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
-    end_wf_item (index = 9)
-
-
-    begin_wf_item (index = 10)
-    schedule_rule_add_prod_well_limits_forecast (schedule_strategy=typed_object_name (obj_name="strategy",
-          obj_type="gt_schedule_rules_data"),
-          date=datetime (year=2020,
-          month=10,
+          month=1,
           day=7,
           hour=0,
           minute=0,
           second=0,
           microsecond=0),
           use_rule_name=True,
-          rule_name="Well Production Limits (Forecast) 10",
-          params_table=[{"well" : "P_1", "well_status" : "open", "control_mode" : "THP", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : None, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : 35, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
-    end_wf_item (index = 10)
+          rule_name="Well Production Limits (Forecast) 5",
+          params_table=[{"well" : "P_1", "well_status" : "stop", "control_mode" : "LRAT", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : 20, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : 10, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
+    end_wf_item (index = 5)
 
 
 </n>
@@ -1845,52 +1757,52 @@ def Welltest_THP (variables = Welltest_THP_variables):
      <n name="guid" />
      <a name="data" size="16">
       <an name="0">
-       <n name="v">223</n>
+       <n name="v">211</n>
       </an>
       <an name="1">
-       <n name="v">128</n>
+       <n name="v">100</n>
       </an>
       <an name="2">
-       <n name="v">70</n>
+       <n name="v">141</n>
       </an>
       <an name="3">
-       <n name="v">90</n>
+       <n name="v">237</n>
       </an>
       <an name="4">
-       <n name="v">138</n>
+       <n name="v">252</n>
       </an>
       <an name="5">
-       <n name="v">169</n>
+       <n name="v">218</n>
       </an>
       <an name="6">
-       <n name="v">181</n>
+       <n name="v">184</n>
       </an>
       <an name="7">
-       <n name="v">120</n>
+       <n name="v">124</n>
       </an>
       <an name="8">
-       <n name="v">38</n>
+       <n name="v">83</n>
       </an>
       <an name="9">
-       <n name="v">203</n>
+       <n name="v">211</n>
       </an>
       <an name="10">
-       <n name="v">78</n>
+       <n name="v">99</n>
       </an>
       <an name="11">
-       <n name="v">56</n>
+       <n name="v">106</n>
       </an>
       <an name="12">
-       <n name="v">60</n>
+       <n name="v">38</n>
       </an>
       <an name="13">
-       <n name="v">82</n>
+       <n name="v">58</n>
       </an>
       <an name="14">
-       <n name="v">201</n>
+       <n name="v">61</n>
       </an>
       <an name="15">
-       <n name="v">143</n>
+       <n name="v">57</n>
       </an>
      </a>
      <n name="type_original">gt_workflow</n>
