@@ -23,6 +23,7 @@ env/
 *.pdf
 mypy.ini
 lecture_2_slides_files/
+lecture_3_slides_files/
 lecture_1_files/
 *.docx
 *.html
