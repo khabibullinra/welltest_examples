@@ -2,6 +2,7 @@ numpy
 scipy
 sympy
 matplotlib
+ipympl
 mpmath
 scipy
 pandas

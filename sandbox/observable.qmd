@@ -1,0 +1,103 @@
+Пробуем сделать html с простым интерактивным графиком. 
+В перспективе может получиться что то прикольное, хотя возможно придется побольше узнать про js.
+
+```{ojs}
+data = FileAttachment("penguins.csv").csv({ typed: true })
+```
+
+```{ojs}
+//| echo: false
+viewof bill_length_min = Inputs.range(
+  [32, 50], 
+  {value: 35, step: 1, label: "Bill length (min):"}
+)
+viewof islands = Inputs.checkbox(
+  ["Torgersen", "Biscoe", "Dream"], 
+  { value: ["Torgersen", "Biscoe"], 
+    label: "Islands:"
+  }
+)
+```
+
+```{ojs}
+//| echo: false
+filtered = data.filter(function(penguin) {
+  return bill_length_min < penguin.bill_length_mm &&
+         islands.includes(penguin.island);
+})
+```
+
+```{ojs}
+//| echo: false
+Plot.rectY(filtered, 
+  Plot.binX(
+    {y: "count"}, 
+    {x: "body_mass_g", fill: "species", thresholds: 20}
+  ))
+  .plot({
+    facet: {
+      data: filtered,
+      x: "sex",
+      y: "species",
+      marginRight: 80
+    },
+    marks: [
+      Plot.frame(),
+    ]
+  }
+)
+```
+
+
+```{ojs}
+// Define an interactive slider for frequency
+viewof frequency = Inputs.range([0.1, 5], {
+  value: 1,
+  step: 0.1,
+  label: "Frequency",
+});
+
+// Plot the sine wave using the 'frequency' from the slider
+Plot.plot({
+  marks: [
+    Plot.line(
+      Array.from({ length: 100 }, (_, i) => ({
+        x: i / 10,
+        y: Math.sin(frequency * (i / 10)), // 'frequency' is used here
+      })),
+      { x: "x", y: "y", stroke: "blue" }
+    ),
+  ],
+});
+```
+
+Попробуем сделать интерактивный график с воронкой депрессии.
+
+```{python}
+import numpy as np
+
+x = np.linspace(1,10,10)
+y = x**2
+
+ojs_define(tst = {'x':x.tolist(), 'y':y.tolist()})
+
+
+```
+
+```{ojs}
+
+
+// Plot the sine wave using the 'frequency' from the slider
+Plot.plot({
+  title: "y = x² (Python-generated data)",
+  width: 600,
+  height: 400,
+  grid: true,
+  marks: [
+    Plot.line(
+      transpose(tst), {x: "x", y: "y" }
+    ),
+  ],
+});
+
+```
