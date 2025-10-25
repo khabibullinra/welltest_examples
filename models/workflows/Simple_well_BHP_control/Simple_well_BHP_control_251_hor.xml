@@ -1,0 +1,1676 @@
+<?xml version="1.0"?>
+<root>
+ <n name="worker_version">3</n>
+ <a name="workflows_as_text" size="3">
+  <an name="0">
+   <g name="value">
+    <n name="module_type">gt_project</n>
+    <n name="project_name" />
+    <n name="is_independent">false</n>
+    <n name="wf_name">Simple_well_BHP_control_251_hor</n>
+    <n name="wf_as_string">#  Этот файл был сгенерирован тНавигатор v25.1-4095-g521a62b63834.
+#  Copyright (C) Интегрированные разработки для моделирования 2005-2025.
+#  Все права защищены.
+
+# This file is MACHINE GENERATED! Do not edit.
+
+#api_version=v0_0_207b
+
+from __main__.tnav.workflow import *
+from tnav_debug_utilities import *
+from datetime import datetime, timedelta
+
+
+declare_workflow (workflow_name="Simple_well_BHP_control_251_hor",
+      variables=[{"name" : "CIRCLE", "type" : "py_expr", "min" : 0, "max" : 0, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "BOUNDARY_CONST_PRESSURE", "type" : "py_expr", "min" : 0, "max" : 0, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "PERM", "type" : "real", "min" : 0, "max" : 100, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "POROSITY", "type" : "real", "min" : 0, "max" : 1, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "SKIN", "type" : "real", "min" : 0, "max" : 10, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "WELL_STEP_CONTROL", "type" : "py_expr", "min" : 0, "max" : 0, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "RES_SIZE", "type" : "real", "min" : 0, "max" : 2000, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "COUNTS_XY", "type" : "integer", "min" : 0, "max" : 101, "values" : [], "distribution_type" : "Discrete", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "COUNTS_Z", "type" : "integer", "min" : 0, "max" : 10, "values" : [], "distribution_type" : "Discrete", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "RES_H", "type" : "real", "min" : 0, "max" : 100, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "RES_TOP", "type" : "real", "min" : 0, "max" : 2500, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "PERF_TOP", "type" : "real", "min" : 0, "max" : 2000, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "PERF_LEN", "type" : "real", "min" : 0, "max" : 1000, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "HOR_H_MULT", "type" : "real", "min" : 0, "max" : 1, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}])
+
+
+Simple_well_BHP_control_251_hor_variables = {
+"CIRCLE" : True,
+"BOUNDARY_CONST_PRESSURE" : True,
+"PERM" : 5,
+"POROSITY" : 0.15,
+"SKIN" : 3,
+"WELL_STEP_CONTROL" : True,
+"RES_SIZE" : 500,
+"COUNTS_XY" : 61,
+"COUNTS_Z" : 10,
+"RES_H" : 30,
+"RES_TOP" : 2000,
+"PERF_TOP" : 1500,
+"PERF_LEN" : 300,
+"HOR_H_MULT" : 0.2
+}
+
+def Simple_well_BHP_control_251_hor (variables = Simple_well_BHP_control_251_hor_variables):
+    pass
+    check_launch_method ()
+
+    CIRCLE = variables["CIRCLE"]
+    BOUNDARY_CONST_PRESSURE = variables["BOUNDARY_CONST_PRESSURE"]
+    PERM = variables["PERM"]
+    POROSITY = variables["POROSITY"]
+    SKIN = variables["SKIN"]
+    WELL_STEP_CONTROL = variables["WELL_STEP_CONTROL"]
+    RES_SIZE = variables["RES_SIZE"]
+    COUNTS_XY = variables["COUNTS_XY"]
+    COUNTS_Z = variables["COUNTS_Z"]
+    RES_H = variables["RES_H"]
+    RES_TOP = variables["RES_TOP"]
+    PERF_TOP = variables["PERF_TOP"]
+    PERF_LEN = variables["PERF_LEN"]
+    HOR_H_MULT = variables["HOR_H_MULT"]
+
+    begin_user_imports ()
+    end_user_imports ()
+
+    begin_wf_item (index = 1, name = "Создание интегрированной модели  ГДМ + скважина")
+    comment_text ("""
+Данный workflow создает простую гидродинамическую модель с прямоугольной сеткой и одной добывающей скважиной. 
+Все параметры модели создаются с нуля при помощи данного workflow.
+Скважина запускается с контролем по устьевому давлению (модель фонтанирующей скважины)
+
+Логика работы в дизайнере моделей - гидродинамическая модель (которую можно запускать на расчет) собирается из набора артефактов (искуственно созданных объектов - сетки, PVT, параметров инициализации, скважин и стратерии управления). Можно создать несколько вариантов артефактов, но далее только один может быть привязан к рабочей гидродинамической модели. Можно создавать несколько вариантов гидродинамических моделей с разными артефактами. ГДМ можно запускать внутри дизайнера моделей, а можно экспортировать в data файл, который может быть запущен на расчет без дизайнера моделей. 
+
+Развитый механизм создания вариантов артефактов и моделей усложняет интерфейс, но к нему можно привыкнуть, если понять его логику.
+
+v0.2 
+- можно задавать постоянное давление на границе
+- можно имитировать круглый пласт
+- проницаемость, пористость, скин вынесены в переменные
+- можно задавать трещину ГРП
+""")
+    end_wf_item (index = 1)
+
+
+    begin_wf_item (index = 2, name = "Готовим сетку для ГДМ")
+    workflow_folder ()
+    if True:
+        pass
+
+
+
+        begin_wf_item (index = 3, name = "Создаем сетку модели")
+        comment_text ("""
+Создаем простую квадратную сетку для модели.
+
+Если необходимо поменяйте в этом разделе размеры модели и/или количество ячеек
+""")
+        end_wf_item (index = 3)
+
+
+        begin_wf_item (index = 4)
+        grid_3d_create_simple (mesh=typed_object_name (obj_name="Simple_grid",
+              obj_type="Grid3d"),
+              partition_type="uniform",
+              min_z=arithmetic (expression="res_top",
+              variables=variables),
+              max_z=arithmetic (expression="res_top+res_h",
+              variables=variables),
+              z_sample_object=absolute_object_name (name=None,
+              typed_names=None),
+              grid_adjust_mode="counts",
+              n_blocks_by_z=arithmetic (expression="counts_z",
+              variables=variables),
+              step_z=3,
+              start_depth=2000,
+              depth_table=[],
+              dip_angle=False,
+              azimuth=0,
+              dip=0,
+              grid_2d_settings=Grid2DSettings (grid_2d_settings_shown=True,
+              autodetect_box=False,
+              min_x=0,
+              min_y=0,
+              length_x=arithmetic (expression="res_size",
+              variables=variables),
+              length_y=arithmetic (expression="res_size",
+              variables=variables),
+              margin_x=0,
+              margin_y=0,
+              consider_blank_nodes=False,
+              autodetect_angle=False,
+              angle=0,
+              autodetect_grid=False,
+              grid_adjust_mode="counts",
+              step_x=0,
+              step_y=0,
+              counts_x=arithmetic (expression="counts_xy",
+              variables=variables),
+              counts_y=arithmetic (expression="counts_xy",
+              variables=variables),
+              sample_object=absolute_object_name (name=None,
+              typed_names=None),
+              autodetect_during_wf_calculation=True))
+        end_wf_item (index = 4)
+
+
+        begin_wf_item (index = 5, name = "Зададим граничные условия и форму границы")
+        comment_text ("""
+В зависимости от переменных CIRCLE и BOUNDARY_CONST_PRESSURE задается форма границы - круговая или квадратная и условие на границе.
+
+Условие постоянства давления на границе имитируется за счет увеличения объема граничных ячеек коэффициентом песчанистости.
+""")
+        end_wf_item (index = 5)
+
+
+        if CIRCLE:
+            if_statement_contents ()
+            begin_wf_item (index = 6)
+
+
+            begin_wf_item (index = 7, name = "Арифметика активные ячейки")
+            grid_property_calculator (mesh=typed_object_name (obj_name="Simple_grid",
+                  obj_type="Grid3d"),
+                  result_grid_property=typed_object_name (obj_name="actnum",
+                  obj_type="Grid3dProperty"),
+                  discrete_output_new="continuous",
+                  use_filter=False,
+                  user_cut_for_filter=typed_object_name (obj_name="Property1",
+                  obj_type="Grid3dProperty"),
+                  filter_comparator=Comparator (rule="not_equals",
+                  value=0),
+                  use_timestep=False,
+                  timestep=datetime (year=2025,
+                  month=9,
+                  day=25,
+                  hour=0,
+                  minute=0,
+                  second=0,
+                  microsecond=0),
+                  formula="if sqrt ( (X - (max(X)+DX/2) /2)^2 +(Y - (max(Y)+DY/2) /2)^2 ) &lt; max(X) /2    then 1 \nelse 0\nendif",
+                  variables=variables)
+            end_wf_item (index = 7)
+
+
+            if BOUNDARY_CONST_PRESSURE:
+                if_statement_contents ()
+                begin_wf_item (index = 8)
+
+
+                begin_wf_item (index = 9, name = "Арифметика песчанистость")
+                grid_property_calculator (mesh=typed_object_name (obj_name="Simple_grid",
+                      obj_type="Grid3d"),
+                      result_grid_property=typed_object_name (obj_name="ntg",
+                      obj_type="Grid3dProperty"),
+                      discrete_output_new="continuous",
+                      use_filter=False,
+                      user_cut_for_filter=typed_object_name (obj_name="Property1",
+                      obj_type="Grid3dProperty"),
+                      filter_comparator=Comparator (rule="not_equals",
+                      value=0),
+                      use_timestep=False,
+                      timestep=datetime (year=2025,
+                      month=9,
+                      day=25,
+                      hour=0,
+                      minute=0,
+                      second=0,
+                      microsecond=0),
+                      formula="if sqrt ( (X - (max(X)+DX/2) /2)^2 +(Y - (max(Y)+DY/2) /2)^2 ) &lt; max(X) /2 - DX   then 1 \nelseif sqrt ( (X - (max(X)+DX/2) /2)^2 +(Y - (max(Y)+DY/2) /2)^2 )  &lt; max(X) /2    then 10000000 \nelse 0\nendif",
+                      variables=variables)
+                end_wf_item (index = 9)
+
+
+                end_wf_item (index = 8)
+
+
+            else:
+                pass
+                begin_wf_item (index = 11)
+
+
+                begin_wf_item (index = 12, name = "Арифметика песчанистость")
+                grid_property_calculator (mesh=typed_object_name (obj_name="Simple_grid",
+                      obj_type="Grid3d"),
+                      result_grid_property=typed_object_name (obj_name="ntg",
+                      obj_type="Grid3dProperty"),
+                      discrete_output_new="continuous",
+                      use_filter=False,
+                      user_cut_for_filter=typed_object_name (obj_name="Property1",
+                      obj_type="Grid3dProperty"),
+                      filter_comparator=Comparator (rule="not_equals",
+                      value=0),
+                      use_timestep=False,
+                      timestep=datetime (year=2025,
+                      month=9,
+                      day=25,
+                      hour=0,
+                      minute=0,
+                      second=0,
+                      microsecond=0),
+                      formula="if sqrt ( (X - (max(X)+DX/2) /2)^2 +(Y - (max(Y)+DY/2) /2)^2 ) &lt; max(X) /2 - DX   then 1 \nelseif sqrt ( (X - (max(X)+DX/2) /2)^2 +(Y - (max(Y)+DY/2) /2)^2 )  &lt; max(X) /2    then 1\nelse 0\nendif",
+                      variables=variables)
+                end_wf_item (index = 12)
+
+
+                end_wf_item (index = 11)
+
+
+            end_wf_item (index = 6)
+
+
+        else:
+            pass
+            begin_wf_item (index = 15)
+
+
+            begin_wf_item (index = 16, name = "Арифметика активные ячейки")
+            grid_property_calculator (mesh=typed_object_name (obj_name="Simple_grid",
+                  obj_type="Grid3d"),
+                  result_grid_property=typed_object_name (obj_name="actnum",
+                  obj_type="Grid3dProperty"),
+                  discrete_output_new="continuous",
+                  use_filter=False,
+                  user_cut_for_filter=typed_object_name (obj_name="Property1",
+                  obj_type="Grid3dProperty"),
+                  filter_comparator=Comparator (rule="not_equals",
+                  value=0),
+                  use_timestep=False,
+                  timestep=datetime (year=2025,
+                  month=9,
+                  day=25,
+                  hour=0,
+                  minute=0,
+                  second=0,
+                  microsecond=0),
+                  formula="1",
+                  variables=variables)
+            end_wf_item (index = 16)
+
+
+            if BOUNDARY_CONST_PRESSURE:
+                if_statement_contents ()
+                begin_wf_item (index = 17)
+
+
+                begin_wf_item (index = 18, name = "Арифметика песчанистость")
+                grid_property_calculator (mesh=typed_object_name (obj_name="Simple_grid",
+                      obj_type="Grid3d"),
+                      result_grid_property=typed_object_name (obj_name="ntg",
+                      obj_type="Grid3dProperty"),
+                      discrete_output_new="continuous",
+                      use_filter=False,
+                      user_cut_for_filter=typed_object_name (obj_name="Property1",
+                      obj_type="Grid3dProperty"),
+                      filter_comparator=Comparator (rule="not_equals",
+                      value=0),
+                      use_timestep=False,
+                      timestep=datetime (year=2025,
+                      month=9,
+                      day=25,
+                      hour=0,
+                      minute=0,
+                      second=0,
+                      microsecond=0),
+                      formula="if (i &gt;1) &amp; (i&lt;NX) &amp; (j &gt;1) &amp; (j&lt;NY)   then 1 \nelse 1e6\nendif",
+                      variables=variables)
+                end_wf_item (index = 18)
+
+
+                end_wf_item (index = 17)
+
+
+            else:
+                pass
+                begin_wf_item (index = 20)
+
+
+                begin_wf_item (index = 21, name = "Арифметика песчанистость")
+                grid_property_calculator (mesh=typed_object_name (obj_name="Simple_grid",
+                      obj_type="Grid3d"),
+                      result_grid_property=typed_object_name (obj_name="ntg",
+                      obj_type="Grid3dProperty"),
+                      discrete_output_new="continuous",
+                      use_filter=False,
+                      user_cut_for_filter=typed_object_name (obj_name="Property1",
+                      obj_type="Grid3dProperty"),
+                      filter_comparator=Comparator (rule="not_equals",
+                      value=0),
+                      use_timestep=False,
+                      timestep=datetime (year=2025,
+                      month=9,
+                      day=25,
+                      hour=0,
+                      minute=0,
+                      second=0,
+                      microsecond=0),
+                      formula="1",
+                      variables=variables)
+                end_wf_item (index = 21)
+
+
+                end_wf_item (index = 20)
+
+
+            end_wf_item (index = 15)
+
+
+        begin_wf_item (index = 24, name = "Зададим фильтрационные параметры сетки")
+        comment_text ("""
+
+
+
+""")
+        end_wf_item (index = 24)
+
+
+        begin_wf_item (index = 25, name = "Арифметика пористость")
+        grid_property_calculator (mesh=typed_object_name (obj_name="Simple_grid",
+              obj_type="Grid3d"),
+              result_grid_property=typed_object_name (obj_name="PORO",
+              obj_type="Grid3dProperty"),
+              discrete_output_new="continuous",
+              use_filter=False,
+              user_cut_for_filter=typed_object_name (obj_name="Property1",
+              obj_type="Grid3dProperty"),
+              filter_comparator=Comparator (rule="not_equals",
+              value=0),
+              use_timestep=False,
+              timestep=datetime (year=2025,
+              month=9,
+              day=25,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0),
+              formula=resolve_variables_in_string (string_with_variables="@POROSITY@",
+              variables=variables),
+              variables=variables)
+        end_wf_item (index = 25)
+
+
+        begin_wf_item (index = 26, name = "Арифметика проницаемость по Х")
+        grid_property_calculator (mesh=typed_object_name (obj_name="Simple_grid",
+              obj_type="Grid3d"),
+              result_grid_property=typed_object_name (obj_name="PERMX",
+              obj_type="Grid3dProperty"),
+              discrete_output_new="continuous",
+              use_filter=False,
+              user_cut_for_filter=typed_object_name (obj_name="Property1",
+              obj_type="Grid3dProperty"),
+              filter_comparator=Comparator (rule="not_equals",
+              value=0),
+              use_timestep=False,
+              timestep=datetime (year=2025,
+              month=9,
+              day=25,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0),
+              formula=resolve_variables_in_string (string_with_variables="@PERM@",
+              variables=variables),
+              variables=variables)
+        end_wf_item (index = 26)
+
+
+        begin_wf_item (index = 27, name = "Арифметика проницаемость по Y")
+        grid_property_calculator (mesh=typed_object_name (obj_name="Simple_grid",
+              obj_type="Grid3d"),
+              result_grid_property=typed_object_name (obj_name="PERMY",
+              obj_type="Grid3dProperty"),
+              discrete_output_new="continuous",
+              use_filter=False,
+              user_cut_for_filter=typed_object_name (obj_name="Property1",
+              obj_type="Grid3dProperty"),
+              filter_comparator=Comparator (rule="not_equals",
+              value=0),
+              use_timestep=False,
+              timestep=datetime (year=2025,
+              month=9,
+              day=25,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0),
+              formula="PERMX",
+              variables=variables)
+        end_wf_item (index = 27)
+
+
+        begin_wf_item (index = 28, name = "Арифметика проницаемость по Z")
+        grid_property_calculator (mesh=typed_object_name (obj_name="Simple_grid",
+              obj_type="Grid3d"),
+              result_grid_property=typed_object_name (obj_name="PERMZ",
+              obj_type="Grid3dProperty"),
+              discrete_output_new="continuous",
+              use_filter=False,
+              user_cut_for_filter=typed_object_name (obj_name="Property1",
+              obj_type="Grid3dProperty"),
+              filter_comparator=Comparator (rule="not_equals",
+              value=0),
+              use_timestep=False,
+              timestep=datetime (year=2025,
+              month=9,
+              day=25,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0),
+              formula="PERMX/10",
+              variables=variables)
+        end_wf_item (index = 28)
+
+
+
+    end_wf_item (index = 2)
+
+
+    begin_wf_item (index = 30, name = "Готовим PVT ОФП и начальные условия", collapsed = True)
+    workflow_folder ()
+    if True:
+        pass
+
+
+
+        begin_wf_item (index = 31, name = "Задаем PVT свойства флюидов")
+        comment_text ("""
+Свойства флюидов задаются через корреляции используя PVT дизайнер
+
+для этого запускается  workflow  PVT дизайнера
+
+сначала создаем PVT таблицы со значениями по умолчанию потом из workflow PVT дизайнера меняет ранее созданные значения
+""")
+        end_wf_item (index = 31)
+
+
+        begin_wf_item (index = 32)
+        pvt_create_by_default (name="SimpleBO",
+              clear_tables=True)
+        end_wf_item (index = 32)
+
+
+        begin_wf_item (index = 33)
+        run_project_workflow (project_type = "pvt_project",
+              project_name = "PVT Data",
+              workflow = "create_pvt_black_oil",
+              variable_types = {},
+              variables_object = {
+
+        })
+        end_wf_item (index = 33)
+
+
+        begin_wf_item (index = 34)
+        rp_create_by_corey (correlation_type="Corey",
+              rp_phases="oil_and_gas",
+              clear_tables=True,
+              wo_params_tables=[{"table_name" : "RP_Curves", "S_PL" : 0.3, "S_PU" : 1, "S_PCR" : 0.3, "S_OPCR" : 0.3, "k_rOLP" : 1, "k_rORP" : arithmetic (expression="*",
+              variables=variables), "k_rPR" : arithmetic (expression="*",
+              variables=variables), "k_rPU" : 1, "p_cOP" : 0.75, "N_OP" : 4, "N_P" : 4, "N_pcap" : 4, "S_pc" : 1, "T_P" : 0, "E_P" : 0, "T_OP" : 0, "E_OP" : 0}],
+              go_params_tables=[{"table_name" : "RP_Curves", "S_PL" : 0, "S_PU" : 0.7, "S_PCR" : 0, "S_OPCR" : 0.3, "k_rOLP" : 1, "k_rORP" : arithmetic (expression="*",
+              variables=variables), "k_rPR" : arithmetic (expression="*",
+              variables=variables), "k_rPU" : 1, "p_cOP" : 0, "N_OP" : 4, "N_P" : 4, "N_pcap" : 1.5, "S_pc" : -1, "T_P" : 0, "E_P" : 0, "T_OP" : 0, "E_OP" : 0}],
+              wg_params_tables=[{"table_name" : "Table", "S_PL" : 0.05, "S_PU" : 0.95, "S_PCR" : 0.15, "S_OPCR" : 0.3, "k_rOLP" : 0.9, "k_rORP" : 0.7, "k_rPR" : 0.4, "k_rPU" : 0.55, "p_cOP" : 0.11, "N_OP" : 2, "N_P" : 2, "N_pcap" : 2, "S_pc" : 0.2, "T_P" : 0, "E_P" : 0, "T_OP" : 0, "E_OP" : 0}])
+        end_wf_item (index = 34)
+
+
+        begin_wf_item (index = 35)
+        adjust_equil_table (table_name="Equilibration data specification 1",
+              datum_depth=1530,
+              datum_pressure=150,
+              woc_depth=2000,
+              woc_capillary_pressure=0,
+              goc_depth=0,
+              goc_capillary_pressure=0,
+              live_black_oil=1,
+              wet_gas=0,
+              accuracy=None,
+              compos_init_type=None,
+              compos_press_type_on_contact=None)
+        end_wf_item (index = 35)
+
+
+        begin_wf_item (index = 36)
+        props_adjust_table (property_name="PBVD",
+              property_folder="PBVD",
+              property_type="pbvd",
+              values=[[1500, 100], [1530, 100]],
+              mode="create",
+              overwrite=True)
+        end_wf_item (index = 36)
+
+
+        begin_wf_item (index = 37)
+        adjust_props_rock (property_name="Rock compressibility 1",
+              property_folder="Rock compressibility",
+              values=[[150, 0.00005]],
+              mode="adjust",
+              overwrite=False)
+        end_wf_item (index = 37)
+
+
+
+    end_wf_item (index = 30)
+
+
+    begin_wf_item (index = 39, name = "Готовим модель скважины")
+    workflow_folder ()
+    if True:
+        pass
+
+
+
+        begin_wf_item (index = 40, name = "Создаем скважину в дизайнере модели")
+        comment_text ("""
+Здесь создаем модель скважины.
+
+Модель скважины приходится создавать два раза и устанавливать связь между ними. Первая модель в дизайнере моделей (скважина в ГДМ), вторая модель скважины в дизайнере скважин (позволяет проводить детальный расчет скважины)
+
+При импорте workflow автоматически создастся модель скважины в дизайнере скважин (потому что мы пытаемся запустить workflow модели дизайнера скважины)
+
+""")
+        end_wf_item (index = 40)
+
+
+        begin_wf_item (index = 41)
+        strategy_create (strategy_name="strategy",
+              overwrite=True)
+        end_wf_item (index = 41)
+
+
+        begin_wf_item (index = 42)
+        timestep_add (schedule_strategy_name=typed_object_name (obj_name="strategy",
+              obj_type="gt_schedule_rules_data"),
+              first_date=datetime (year=2020,
+              month=1,
+              day=1,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0),
+              last_date=datetime (year=2021,
+              month=1,
+              day=1,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0),
+              step_length="One Week",
+              custom_step_length=1,
+              custom_step_type="Second")
+        end_wf_item (index = 42)
+
+
+        if False:
+            begin_wf_item (index = 43, name = "Create Well P_1")
+            wells_create (well_name="P_1",
+                  remove_existing_main_branch=True,
+                  branch_num=0,
+                  trajectory_table=[{"md" : 0, "x" : arithmetic (expression="res_size/2-PERF_LEN/2",
+                  variables=variables), "y" : arithmetic (expression="res_size/2",
+                  variables=variables), "z" : 0}, {"md" : arithmetic (expression="res_top+res_h*hor_h_mult",
+                  variables=variables), "x" : arithmetic (expression="res_size/2-PERF_LEN/2",
+                  variables=variables), "y" : arithmetic (expression="res_size/2",
+                  variables=variables), "z" : arithmetic (expression="res_top+res_h*hor_h_mult",
+                  variables=variables)}, {"md" : arithmetic (expression="res_top+res_h*hor_h_mult+perf_len",
+                  variables=variables), "x" : arithmetic (expression="res_size/2+PERF_LEN/2",
+                  variables=variables), "y" : arithmetic (expression="res_size/2",
+                  variables=variables), "z" : arithmetic (expression="res_top+res_h*hor_h_mult",
+                  variables=variables)}],
+                  date=datetime (year=2020,
+                  month=1,
+                  day=1,
+                  hour=0,
+                  minute=0,
+                  second=0,
+                  microsecond=0),
+                  table=typed_object_name (obj_name="Well Structure",
+                  obj_type="gt_wells_events_data"),
+                  perforations_table=[{"state" : "Perforation", "from" : 0, "to" : 2000, "diameter" : 0.168, "skin" : 0, "mult" : 1, "d_factor" : 0, "depth_type" : "MD"}])
+            end_wf_item (index = 43)
+
+
+        begin_wf_item (index = 44, is_custom_code = True, name = "Создание скважины кодом")
+        # рнт
+        # Так как конструкция Create well не позволяет задать скин из переменной сделаем это кодом
+        # заметим, что все переменные сидят в словаре variables
+        # также зададим интервал перфорации из переменных, пригодится для горизонтальных скважин
+
+        PERF_TOP = RES_TOP + RES_H * HOR_H_MULT
+        print(PERF_TOP)
+        print(variables)
+
+        wells_create (well_name="P_1",
+              remove_existing_main_branch=True,
+              branch_num=0,
+              trajectory_table=[{"md" : 0, 
+                                 "x" : arithmetic (expression="res_size/2-PERF_LEN/2", variables=variables), 
+                                 "y" : arithmetic (expression="res_size/2", variables=variables), 
+                                 "z" : 0}, 
+                                {"md" : arithmetic (expression="res_top+res_h*hor_h_mult", variables=variables), 
+                                 "x" : arithmetic (expression="res_size/2-PERF_LEN/2", variables=variables), 
+                                 "y" : arithmetic (expression="res_size/2", variables=variables), 
+                                 "z" : arithmetic (expression="res_top+res_h*hor_h_mult", variables=variables)}, 
+                                {"md" : arithmetic (expression="res_top+res_h*hor_h_mult+perf_len", variables=variables), 
+                                 "x" : arithmetic (expression="res_size/2+PERF_LEN/2", variables=variables), 
+                                 "y" : arithmetic (expression="res_size/2", variables=variables), 
+                                 "z" : arithmetic (expression="res_top+res_h*hor_h_mult", variables=variables)}],
+              date=datetime (year=2020, month=1, day=1, hour=0, minute=0, second=0, microsecond=0),
+              table=typed_object_name (obj_name="Well Structure",
+                                               obj_type="gt_wells_events_data"),
+                                               perforations_table=[{"state" : "Perforation", 
+                                                                    "from" : PERF_TOP, 
+                                                                     "to" : PERF_TOP + PERF_LEN, 
+                                                                     "diameter" : 0.168, 
+                                                                     "skin" : variables['SKIN'], 
+                                                                     "mult" : 1, 
+                                                                     "d_factor" : 0, 
+                                                                     "depth_type" : "MD"}])
+
+
+        end_wf_item (index = 44)
+
+
+
+    end_wf_item (index = 39)
+
+
+    begin_wf_item (index = 46, name = "Создаем ГДМ модель из подготовленных артефактов")
+    workflow_folder ()
+    if True:
+        pass
+
+
+
+        begin_wf_item (index = 47, name = "Название модели по умолчанию DynamicModel")
+        comment_text ("""
+
+
+
+""")
+        end_wf_item (index = 47)
+
+
+        begin_wf_item (index = 48)
+        static_mapping (cases=typed_object_name (obj_name="DynamicModel",
+              obj_type="Model_ex"),
+              grid=typed_object_name (obj_name="Simple_grid",
+              obj_type="Grid3d"),
+              set_grid=True,
+              action="replace",
+              porosity_type="singleporo",
+              static_table=[{"is_checked" : True, "description" : "ID_PERMX", "keyword" : "PERMX", "component" : None, "property" : typed_object_name (obj_name="PERMX",
+              obj_type="Grid3dProperty"), "constant" : None, "porosity" : "matrix"}, {"is_checked" : True, "description" : "ID_PORO", "keyword" : "PORO", "component" : None, "property" : typed_object_name (obj_name="PORO",
+              obj_type="Grid3dProperty"), "constant" : None, "porosity" : "matrix"}, {"is_checked" : True, "description" : "ID_PERMZ", "keyword" : "PERMZ", "component" : None, "property" : typed_object_name (obj_name="PERMZ",
+              obj_type="Grid3dProperty"), "constant" : None, "porosity" : "matrix"}, {"is_checked" : True, "description" : "ID_PERMY", "keyword" : "PERMY", "component" : None, "property" : typed_object_name (obj_name="PERMY",
+              obj_type="Grid3dProperty"), "constant" : None, "porosity" : "matrix"}, {"is_checked" : True, "description" : "ID_ACTNUM", "keyword" : "ACTNUM", "component" : None, "property" : typed_object_name (obj_name="actnum",
+              obj_type="Grid3dProperty"), "constant" : None, "porosity" : "matrix"}, {"is_checked" : True, "description" : "ID_NTG", "keyword" : "NTG", "component" : None, "property" : typed_object_name (obj_name="ntg",
+              obj_type="Grid3dProperty"), "constant" : None, "porosity" : "both"}])
+        end_wf_item (index = 48)
+
+
+        begin_wf_item (index = 49)
+        fluids_mapping (cases=typed_object_name (obj_name="DynamicModel",
+              obj_type="Model_ex"),
+              group="PVT",
+              type="blackoil pvt",
+              action="replace",
+              fluids_table=[{"region" : 1, "property" : "SimpleBO (PVT Data)"}])
+        end_wf_item (index = 49)
+
+
+        begin_wf_item (index = 50)
+        fluids_mapping (cases=typed_object_name (obj_name="DynamicModel",
+              obj_type="Model_ex"),
+              group="KRP",
+              type="rp_project",
+              action="replace",
+              fluids_table=[{"region" : 1, "property" : "RP_Curves (RP Project)"}])
+        end_wf_item (index = 50)
+
+
+        begin_wf_item (index = 51)
+        fluids_mapping (cases=typed_object_name (obj_name="DynamicModel",
+              obj_type="Model_ex"),
+              group="Initial",
+              type="equil_v2",
+              action="replace",
+              fluids_table=[{"region" : 1, "property" : "Equilibration data specification 1"}])
+        end_wf_item (index = 51)
+
+
+        begin_wf_item (index = 52)
+        fluids_mapping (cases=typed_object_name (obj_name="DynamicModel",
+              obj_type="Model_ex"),
+              group="Initial",
+              type="pbvd",
+              action="replace",
+              fluids_table=[{"region" : 1, "property" : "PBVD"}])
+        end_wf_item (index = 52)
+
+
+        begin_wf_item (index = 53)
+        fluids_mapping (cases=typed_object_name (obj_name="DynamicModel",
+              obj_type="Model_ex"),
+              group="Rock",
+              type="rock",
+              action="replace",
+              fluids_table=[{"region" : 1, "property" : "Rock compressibility 1"}])
+        end_wf_item (index = 53)
+
+
+        begin_wf_item (index = 54)
+        schedule_mapping (cases=typed_object_name (obj_name="DynamicModel",
+              obj_type="Model_ex"),
+              action="replace",
+              schedule_table=[{"strategy" : typed_object_name (obj_name="strategy",
+              obj_type="gt_schedule_rules_data")}])
+        end_wf_item (index = 54)
+
+
+        begin_wf_item (index = 55)
+        create_default_graphs (cases=typed_object_name (obj_name="DynamicModel",
+              obj_type="Model_ex"))
+        end_wf_item (index = 55)
+
+
+        begin_wf_item (index = 56)
+        results_writing_mapping (cases=typed_object_name (obj_name="DynamicModel",
+              obj_type="Model_ex"),
+              settings="ecl_properties",
+              action="replace",
+              writing_frequency="all_steps",
+              period_table=[],
+              custom_steps=[{"is_checked" : True, "date" : datetime (year=2020,
+              month=1,
+              day=1,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=1,
+              day=8,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=1,
+              day=15,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=1,
+              day=22,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=1,
+              day=29,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=2,
+              day=5,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=2,
+              day=12,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=2,
+              day=19,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=2,
+              day=26,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=3,
+              day=4,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=3,
+              day=11,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=3,
+              day=18,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=3,
+              day=25,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=4,
+              day=1,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=4,
+              day=8,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=4,
+              day=15,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=4,
+              day=22,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=4,
+              day=29,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=5,
+              day=6,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=5,
+              day=13,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=5,
+              day=20,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=5,
+              day=27,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=6,
+              day=3,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=6,
+              day=10,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=6,
+              day=17,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=6,
+              day=24,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=7,
+              day=1,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=7,
+              day=8,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=7,
+              day=15,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=7,
+              day=22,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=7,
+              day=29,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=8,
+              day=5,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=8,
+              day=12,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=8,
+              day=19,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=8,
+              day=26,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=9,
+              day=2,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=9,
+              day=9,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=9,
+              day=16,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=9,
+              day=23,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=9,
+              day=30,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=10,
+              day=7,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=10,
+              day=14,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=10,
+              day=21,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=10,
+              day=28,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=11,
+              day=4,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=11,
+              day=11,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=11,
+              day=18,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=11,
+              day=25,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=12,
+              day=2,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=12,
+              day=9,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=12,
+              day=16,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=12,
+              day=23,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : False, "date" : datetime (year=2020,
+              month=12,
+              day=30,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}, {"is_checked" : True, "date" : datetime (year=2021,
+              month=1,
+              day=1,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0)}])
+        end_wf_item (index = 56)
+
+
+        begin_wf_item (index = 57)
+        dynamic_model_set_write_results_mode (src_model=typed_object_name (obj_name="DynamicModel",
+              obj_type="Model_ex"),
+              all_graphs=False,
+              restart_steps=False,
+              requested_props=True,
+              requested_graphs=True)
+        end_wf_item (index = 57)
+
+
+        begin_wf_item (index = 58)
+        add_graphs (cases=typed_object_name (obj_name="DynamicModel",
+              obj_type="Model_ex"),
+              action="add",
+              table=[{"mnemonic" : "AAQR"}, {"mnemonic" : "FLPR"}, {"mnemonic" : "WLPR"}, {"mnemonic" : "FLPRH"}, {"mnemonic" : "WLPRH"}, {"mnemonic" : "WLIR"}])
+        end_wf_item (index = 58)
+
+
+        begin_wf_item (index = 59)
+        results_writing_add_properties (cases=typed_object_name (obj_name="DynamicModel",
+              obj_type="Model_ex"),
+              e1_e3_binary_export=False,
+              initial_output=False,
+              action="add",
+              table=[{"mnemonic" : "RPTRST_PERMX"}, {"mnemonic" : "RPTRST_PERMY"}, {"mnemonic" : "RPTRST_PERMZ"}])
+        end_wf_item (index = 59)
+
+
+
+    end_wf_item (index = 46)
+
+
+    begin_wf_item (index = 61, name = "Зададим управление скважиной")
+    workflow_folder ()
+    if True:
+        pass
+
+
+
+        begin_wf_item (index = 62, name = "Зададим параметры управления скважиной")
+        comment_text ("""
+Запустим скважину с контролем по устьевому давлению
+""")
+        end_wf_item (index = 62)
+
+
+        begin_wf_item (index = 63)
+        schedule_rule_add_prod_well_limits_forecast (schedule_strategy=typed_object_name (obj_name="strategy",
+              obj_type="gt_schedule_rules_data"),
+              date=datetime (year=2020,
+              month=1,
+              day=1,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0),
+              use_rule_name=True,
+              rule_name="Well Production Limits (Forecast)",
+              params_table=[{"well" : "P_1", "well_status" : "open", "control_mode" : "BHP", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : None, "lincom_rate" : None, "resv_rate" : None, "bhp" : 50, "thp" : None, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
+        end_wf_item (index = 63)
+
+
+        begin_wf_item (index = 64)
+        schedule_rule_add_several_user_keywords (schedule_strategy=typed_object_name (obj_name="strategy",
+              obj_type="gt_schedule_rules_data"),
+              date=datetime (year=2020,
+              month=1,
+              day=1,
+              hour=0,
+              minute=0,
+              second=0,
+              microsecond=0),
+              use_rule_name=True,
+              rule_name="Пользовательские кл. слова",
+              user_keywords="\nWTEST\n \'P_1\' 0 \'P\' /\n",
+              variables=variables)
+        end_wf_item (index = 64)
+
+
+        if WELL_STEP_CONTROL:
+            if_statement_contents ()
+            begin_wf_item (index = 65)
+
+
+            begin_wf_item (index = 66)
+            run_project_workflow (project_type = "gt_project",
+                  project_name = "",
+                  workflow = "Welltest_rates",
+                  variable_types = {},
+                  variables_object = {
+
+            })
+            end_wf_item (index = 66)
+
+
+            end_wf_item (index = 65)
+
+
+
+    end_wf_item (index = 61)
+
+
+    if False:
+        begin_wf_item (index = 69, name = "Simulation running")
+        workflow_folder ()
+        if True:
+            pass
+
+
+
+            if False:
+                begin_wf_item (index = 70)
+                open_or_reload_dynamic_model (use_model=True,
+                      model=typed_object_name (obj_name="DynamicModel",
+                      obj_type="Model_ex"),
+                      result_name="DynamicModel",
+                      maps_result_mode="tnav_map",
+                      graphs_result_mode_for_requested_maps="tnav_graph",
+                      graphs_result_mode_for_maps_off="tnav_graph",
+                      overwrite_existing_result=True)
+                end_wf_item (index = 70)
+
+
+            if False:
+                begin_wf_item (index = 71)
+                run_dynamic_model_calculations (is_go_to_step=False,
+                      go_to_step_number=-1)
+                end_wf_item (index = 71)
+
+
+
+        end_wf_item (index = 69)
+
+
+</n>
+    <g name="guid">
+     <n name="guid" />
+     <a name="data" size="16">
+      <an name="0">
+       <n name="v">136</n>
+      </an>
+      <an name="1">
+       <n name="v">19</n>
+      </an>
+      <an name="2">
+       <n name="v">94</n>
+      </an>
+      <an name="3">
+       <n name="v">58</n>
+      </an>
+      <an name="4">
+       <n name="v">142</n>
+      </an>
+      <an name="5">
+       <n name="v">244</n>
+      </an>
+      <an name="6">
+       <n name="v">110</n>
+      </an>
+      <an name="7">
+       <n name="v">135</n>
+      </an>
+      <an name="8">
+       <n name="v">182</n>
+      </an>
+      <an name="9">
+       <n name="v">128</n>
+      </an>
+      <an name="10">
+       <n name="v">73</n>
+      </an>
+      <an name="11">
+       <n name="v">123</n>
+      </an>
+      <an name="12">
+       <n name="v">145</n>
+      </an>
+      <an name="13">
+       <n name="v">151</n>
+      </an>
+      <an name="14">
+       <n name="v">24</n>
+      </an>
+      <an name="15">
+       <n name="v">202</n>
+      </an>
+     </a>
+     <n name="type_original">gt_workflow</n>
+    </g>
+   </g>
+  </an>
+  <an name="1">
+   <g name="value">
+    <n name="module_type">pvt_project</n>
+    <n name="project_name">PVT Data</n>
+    <n name="is_independent">false</n>
+    <n name="wf_name">create_pvt_black_oil</n>
+    <n name="wf_as_string">#  Этот файл был сгенерирован тНавигатор v25.1-4095-g521a62b63834.
+#  Copyright (C) Интегрированные разработки для моделирования 2005-2025.
+#  Все права защищены.
+
+# This file is MACHINE GENERATED! Do not edit.
+
+#api_version=v0_0_207b
+
+from __main__.tnav.workflow import *
+from tnav_debug_utilities import *
+from datetime import datetime, timedelta
+
+
+declare_workflow (workflow_name="create_pvt_black_oil",
+      variables=[])
+
+
+create_pvt_black_oil_variables = {
+
+}
+
+def create_pvt_black_oil (variables = create_pvt_black_oil_variables):
+    pass
+    check_launch_method ()
+
+
+    begin_user_imports ()
+    end_user_imports ()
+
+    begin_wf_item (index = 1, name = "Задаем свойства нефти, газа и воды")
+    comment_text ("""
+Необходимо проследить, чтобы свойства нефти и газа были взаимно согласованы
+""")
+    end_wf_item (index = 1)
+
+
+    begin_wf_item (index = 2)
+    pvt_blackoil_adjust_oil_correlation (name="SimpleBO",
+          count=20,
+          min=10.1325,
+          max=350,
+          oil_table_type="PVTO",
+          is_rsconst=False,
+          oil_fvf_sat="standing",
+          oil_fvf_undersat="standing",
+          dead_oil_visc="standing",
+          live_oil_visc_sat="standing",
+          live_oil_visc_undersat="standing",
+          rs="standing",
+          temperature=80,
+          gamma_o=0.86,
+          gamma_o_type="specific",
+          gamma_g=0.8,
+          gamma_g_type="specific",
+          rs_pbub=250,
+          rs_pbub_type="p_bub",
+          c0=0.0001,
+          C=1,
+          a=0.0239,
+          b=0.01638,
+          vasquez_c1=0.000467,
+          vasquez_c2=0.000011,
+          vasquez_c3=1.337e-9,
+          shift_rs=0,
+          mult_mu_o=1,
+          shift_mu_o=0,
+          mult_mu_o_undersat=1,
+          mult_B_o=1,
+          shift_B_o=0,
+          mult_B_o_undersat=1)
+    end_wf_item (index = 2)
+
+
+    begin_wf_item (index = 3)
+    pvt_blackoil_adjust_gas_correlation (name="SimpleBO",
+          count=20,
+          min=10.1325,
+          max=350,
+          gas_table_type="PVDG",
+          is_rvconst=False,
+          viscosity="lee_et_all",
+          gas_fvf="standing_v2",
+          rv_corr="ovalle",
+          temperature=80,
+          gamma_o=0.9,
+          gamma_o_type="specific",
+          gamma_g=0.8,
+          gamma_g_type="specific",
+          rv=0,
+          p_dew=0,
+          z_factor=0.9,
+          mult_mu_g=1,
+          shift_mu_g=0,
+          mult_B_g=1,
+          shift_B_g=0,
+          mult_rv=1,
+          shift_rv=0)
+    end_wf_item (index = 3)
+
+
+    begin_wf_item (index = 4)
+    pvt_blackoil_adjust_water_correlation (name="SimpleBO",
+          count=20,
+          min=10.1325,
+          max=350,
+          is_salt_water=False,
+          salt="NaCl",
+          ref_water_pressure=0,
+          recompute_viscosity=False,
+          temperature=0,
+          ref_temperature=0,
+          pvtw_table=[{"pressure" : 1.01325, "fvf" : 1, "compressibility" : 0.000039476930668640514, "viscosity" : 0.3, "viscosibility" : 0, "density" : 999.014}],
+          pvtwsalt_table=[])
+    end_wf_item (index = 4)
+
+
+</n>
+    <g name="guid">
+     <n name="guid" />
+     <a name="data" size="16">
+      <an name="0">
+       <n name="v">153</n>
+      </an>
+      <an name="1">
+       <n name="v">181</n>
+      </an>
+      <an name="2">
+       <n name="v">223</n>
+      </an>
+      <an name="3">
+       <n name="v">29</n>
+      </an>
+      <an name="4">
+       <n name="v">6</n>
+      </an>
+      <an name="5">
+       <n name="v">53</n>
+      </an>
+      <an name="6">
+       <n name="v">217</n>
+      </an>
+      <an name="7">
+       <n name="v">18</n>
+      </an>
+      <an name="8">
+       <n name="v">91</n>
+      </an>
+      <an name="9">
+       <n name="v">62</n>
+      </an>
+      <an name="10">
+       <n name="v">107</n>
+      </an>
+      <an name="11">
+       <n name="v">76</n>
+      </an>
+      <an name="12">
+       <n name="v">109</n>
+      </an>
+      <an name="13">
+       <n name="v">209</n>
+      </an>
+      <an name="14">
+       <n name="v">206</n>
+      </an>
+      <an name="15">
+       <n name="v">82</n>
+      </an>
+     </a>
+     <n name="type_original">gt_workflow</n>
+    </g>
+   </g>
+  </an>
+  <an name="2">
+   <g name="value">
+    <n name="module_type">gt_project</n>
+    <n name="project_name" />
+    <n name="is_independent">false</n>
+    <n name="wf_name">Welltest_rates</n>
+    <n name="wf_as_string">#  Этот файл был сгенерирован тНавигатор v25.1-4095-g521a62b63834.
+#  Copyright (C) Интегрированные разработки для моделирования 2005-2025.
+#  Все права защищены.
+
+# This file is MACHINE GENERATED! Do not edit.
+
+#api_version=v0_0_207b
+
+from __main__.tnav.workflow import *
+from tnav_debug_utilities import *
+from datetime import datetime, timedelta
+
+
+declare_workflow (workflow_name="Welltest_rates",
+      variables=[])
+
+
+Welltest_rates_variables = {
+
+}
+
+def Welltest_rates (variables = Welltest_rates_variables):
+    pass
+    check_launch_method ()
+
+
+    begin_user_imports ()
+    end_user_imports ()
+
+    begin_wf_item (index = 1)
+    strategy_create (strategy_name="strategy",
+          overwrite=True)
+    end_wf_item (index = 1)
+
+
+    begin_wf_item (index = 2)
+    schedule_mapping (cases=typed_object_name (obj_name="DynamicModel",
+          obj_type="Model_ex"),
+          action="replace",
+          schedule_table=[{"strategy" : typed_object_name (obj_name="strategy",
+          obj_type="gt_schedule_rules_data")}])
+    end_wf_item (index = 2)
+
+
+    begin_wf_item (index = 3)
+    timestep_delete (schedule_strategy_name=typed_object_name (obj_name="strategy",
+          obj_type="gt_schedule_rules_data"),
+          first_date=datetime (year=2020,
+          month=1,
+          day=1,
+          hour=0,
+          minute=0,
+          second=0,
+          microsecond=0),
+          last_date=datetime (year=2021,
+          month=1,
+          day=1,
+          hour=0,
+          minute=0,
+          second=0,
+          microsecond=0),
+          step_length="One Week",
+          custom_step_length=1,
+          custom_step_type="Second")
+    end_wf_item (index = 3)
+
+
+    begin_wf_item (index = 4)
+    timestep_add (schedule_strategy_name=typed_object_name (obj_name="strategy",
+          obj_type="gt_schedule_rules_data"),
+          first_date=datetime (year=2020,
+          month=1,
+          day=1,
+          hour=0,
+          minute=0,
+          second=0,
+          microsecond=0),
+          last_date=datetime (year=2020,
+          month=1,
+          day=15,
+          hour=0,
+          minute=0,
+          second=0,
+          microsecond=0),
+          step_length="Custom",
+          custom_step_length=1,
+          custom_step_type="Hour")
+    end_wf_item (index = 4)
+
+
+    begin_wf_item (index = 5)
+    schedule_rule_add_prod_well_limits_forecast (schedule_strategy=typed_object_name (obj_name="strategy",
+          obj_type="gt_schedule_rules_data"),
+          date=datetime (year=2020,
+          month=1,
+          day=1,
+          hour=0,
+          minute=0,
+          second=0,
+          microsecond=0),
+          use_rule_name=True,
+          rule_name="Well Production Limits (Forecast)",
+          params_table=[{"well" : "P_1", "well_status" : "stop", "control_mode" : "BHP", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : None, "lincom_rate" : None, "resv_rate" : None, "bhp" : 20, "thp" : None, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
+    end_wf_item (index = 5)
+
+
+    begin_wf_item (index = 6)
+    schedule_rule_add_prod_well_limits_forecast (schedule_strategy=typed_object_name (obj_name="strategy",
+          obj_type="gt_schedule_rules_data"),
+          date=datetime (year=2020,
+          month=1,
+          day=2,
+          hour=0,
+          minute=0,
+          second=0,
+          microsecond=0),
+          use_rule_name=True,
+          rule_name="Well Production Limits (Forecast)1",
+          params_table=[{"well" : "P_1", "well_status" : "open", "control_mode" : "LRAT", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : 50, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : None, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
+    end_wf_item (index = 6)
+
+
+    begin_wf_item (index = 7)
+    schedule_rule_add_prod_well_limits_forecast (schedule_strategy=typed_object_name (obj_name="strategy",
+          obj_type="gt_schedule_rules_data"),
+          date=datetime (year=2020,
+          month=1,
+          day=7,
+          hour=0,
+          minute=0,
+          second=0,
+          microsecond=0),
+          use_rule_name=True,
+          rule_name="Well Production Limits (Forecast)2",
+          params_table=[{"well" : "P_1", "well_status" : "stop", "control_mode" : "LRAT", "oil_rate" : None, "water_rate" : None, "gas_rate" : None, "liquid_rate" : 50, "lincom_rate" : None, "resv_rate" : None, "bhp" : None, "thp" : None, "lift" : None, "wgra" : None, "tmra" : None, "stra" : None, "satt" : None, "satp" : None, "cval" : None, "ngl" : None, "vfp_table" : 0}])
+    end_wf_item (index = 7)
+
+
+</n>
+    <g name="guid">
+     <n name="guid" />
+     <a name="data" size="16">
+      <an name="0">
+       <n name="v">147</n>
+      </an>
+      <an name="1">
+       <n name="v">172</n>
+      </an>
+      <an name="2">
+       <n name="v">215</n>
+      </an>
+      <an name="3">
+       <n name="v">207</n>
+      </an>
+      <an name="4">
+       <n name="v">95</n>
+      </an>
+      <an name="5">
+       <n name="v">178</n>
+      </an>
+      <an name="6">
+       <n name="v">128</n>
+      </an>
+      <an name="7">
+       <n name="v">207</n>
+      </an>
+      <an name="8">
+       <n name="v">44</n>
+      </an>
+      <an name="9">
+       <n name="v">88</n>
+      </an>
+      <an name="10">
+       <n name="v">187</n>
+      </an>
+      <an name="11">
+       <n name="v">255</n>
+      </an>
+      <an name="12">
+       <n name="v">107</n>
+      </an>
+      <an name="13">
+       <n name="v">196</n>
+      </an>
+      <an name="14">
+       <n name="v">68</n>
+      </an>
+      <an name="15">
+       <n name="v">195</n>
+      </an>
+     </a>
+     <n name="type_original">gt_workflow</n>
+    </g>
+   </g>
+  </an>
+ </a>
+</root>
