@@ -30,16 +30,16 @@ Simple_well_BHP_control_251_frac_variables = {
 "BOUNDARY_CONST_PRESSURE" : False,
 "PERM" : 50,
 "POROSITY" : 0.15,
-"SKIN" : 3,
+"SKIN" : 0,
 "FRACTURE" : True,
-"WELL_STEP_CONTROL" : False,
+"WELL_STEP_CONTROL" : True,
 "RES_SIZE" : 500,
 "COUNTS_XY" : 61,
 "COUNTS_Z" : 1,
-"RES_H" : 30,
+"RES_H" : 10,
 "RES_TOP" : 1500,
 "PERF_TOP" : 1500,
-"PERF_LEN" : 30,
+"PERF_LEN" : 10,
 "FRAC_HALF_LEN_M" : 50,
 "FRAC_WIDTH_MM" : 5,
 "FRAC_PERM_D" : 500,
@@ -1175,17 +1175,36 @@ v0.2
         end_wf_item (index = 64)
 
 
-        if FRACTURE:
+        if WELL_STEP_CONTROL:
             if_statement_contents ()
             begin_wf_item (index = 65)
 
 
-            begin_wf_item (index = 66, is_custom_code = True)
-            FRAC_MD = PERF_TOP + PERF_LEN / 2
+            begin_wf_item (index = 66)
+            run_project_workflow (project_type = "gt_project",
+                  project_name = "",
+                  workflow = "Welltest_rates",
+                  variable_types = {},
+                  variables_object = {
+
+            })
             end_wf_item (index = 66)
 
 
-            begin_wf_item (index = 67)
+            end_wf_item (index = 65)
+
+
+        if FRACTURE:
+            if_statement_contents ()
+            begin_wf_item (index = 68)
+
+
+            begin_wf_item (index = 69, is_custom_code = True)
+            FRAC_MD = PERF_TOP + PERF_LEN / 2
+            end_wf_item (index = 69)
+
+
+            begin_wf_item (index = 70)
             run_project_workflow (project_type = "gt_project",
                   project_name = "",
                   workflow = "Workflow_create_frac",
@@ -1198,29 +1217,10 @@ v0.2
             "FRAC_WIDTH_EFFECTIVE_MULT" : FRAC_WIDTH_EFFECTIVE_MULT,
             "FRAC_MD" : FRAC_MD
             })
-            end_wf_item (index = 67)
-
-
-            end_wf_item (index = 65)
-
-
-        if WELL_STEP_CONTROL:
-            if_statement_contents ()
-            begin_wf_item (index = 69)
-
-
-            begin_wf_item (index = 70)
-            run_project_workflow (project_type = "gt_project",
-                  project_name = "",
-                  workflow = "Welltest_rates",
-                  variable_types = {},
-                  variables_object = {
-
-            })
             end_wf_item (index = 70)
 
 
-            end_wf_item (index = 69)
+            end_wf_item (index = 68)
 
 
 
