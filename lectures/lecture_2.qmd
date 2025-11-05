@@ -1396,12 +1396,7 @@ soln = sp.dsolve(diff_eq, p_d(r_d))
 soln
 ```
 
-```{python}
-#| code-fold: false
-
-# проверим, что решение полученное dsolve удовлетворяет уравнению
-sp.checkodesol(diff_eq, soln)
-```
+c
 
 Уравнение Бесселя легко решается, 
 $$

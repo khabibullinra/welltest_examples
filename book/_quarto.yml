@@ -1,0 +1,57 @@
+project:
+  type: book
+
+book:
+  title: "Построение решений уравнения фильтрации"
+  author: "Краснов Виталий, Хабибуллин Ринат, Автомонов Павел"
+  date: "11/01/2025"
+  chapters:
+    - index.qmd
+    - 010_eq_derivation.qmd
+    - 020_steady_state_sols.qmd
+    - 030_transient_line_source_inf_sols.qmd
+    - 040_transient_lapl_radial_inf_sols.qmd
+    - 041_transient_lapl_radial_bound_sols.qmd
+    - 045_transient_lapl_complex_complitions_sols.qmd
+    - 047_transient_lapl_complex_reservoir_sols.qmd
+    - 050_transient_superposition_time.qmd
+    - 060_transient_superposition_space.qmd
+    - references.qmd
+  appendices:
+    - 1001_sympy_dimentions_manipulations.ipynb
+    - 1010_special_functions.qmd
+    - 1020_some_Laplace_transform_properties.qmd
+    - summary.qmd
+
+bibliography: refs.bib
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    lang: ru
+    #embed-resources: true    
+    #html-math-method: katex
+    #elf-contained-math: true
+    code-fold: true
+    code-summary: "Показать код"
+    highlight-style: github
+    code-block-bg: true
+    code-block-border-left: true
+      
+  pdf:
+    documentclass: scrreprt
+    toc: true
+    number-sections: true
+    section-numbering: 1.1.1
+    lang: ru
+    echo: false
+    mainfont: Times New Roman
+    sansfont: Comic Sans MS
+    monofont: Courier New
+    monofontoptions: 
+       - Scale=0.8
+
+
+

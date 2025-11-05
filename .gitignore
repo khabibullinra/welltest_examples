@@ -30,3 +30,5 @@ lecture_1_files/
 *.tex
 observable_files/
 *_files
+book/.quarto/
+book/_book/

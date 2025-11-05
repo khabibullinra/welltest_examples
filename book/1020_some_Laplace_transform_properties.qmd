@@ -1,0 +1,16 @@
+# Преобразование Лапласа {#sec-Laplace_props}
+
+
+
+Некоторые свойства преобразования Лапласа
+
+$$ 
+\mathcal{L} \left [ a \right] = \dfrac{a}{u}
+$$ {#eq-lapl_const}
+
+
+$$ 
+\mathcal{L} \left [ \dfrac{df}{dt} \right] = u \tilde{f}(s) - f(t=0)
+$$  {#eq-lapl_derivative}
+
+надо расширить

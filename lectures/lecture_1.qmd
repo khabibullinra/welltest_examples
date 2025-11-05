@@ -14,6 +14,8 @@ format:
     section-numbering: 1.1.1
     lang: ru
     embed-resources: true    
+    html-math-method: katex
+    self-contained-math: true
     code-fold: true
     code-summary: "Показать код"
   #pdf:
@@ -33,11 +35,13 @@ format:
   #  number-sections: true
   #  section-numbering: 1.1.1
   #  lang: ru   
+    #typst-prelude: prelude.typ
+
 reference-location: margin
 citation-location: margin
 ---
 
-версия 0.6 от 16.09.2025
+версия 0.7 от 27.10.2025
 
 Хабибуллин Ринат
 
@@ -163,11 +167,11 @@ $$ {#eq-diff_eq_2}
 В дифференциальной форме, для потока в направлении $x$
 
 $$
--f_1 \dfrac{\partial (\rho  u_x)}{\partial x} = \dfrac{\partial(\rho \phi)}{\partial t} 
+-f_1 \dfrac{\partial (\rho  u_x)}{\partial x} = \dfrac{\partial(\rho \varphi)}{\partial t} 
 $$ {#eq-mass_conserv_0}
 
 $$
--f_1 \dfrac{\partial (\rho q_x)}{\partial x} = A \dfrac{\partial(\rho \phi)}{\partial t} 
+-f_1 \dfrac{\partial (\rho q_x)}{\partial x} = A \dfrac{\partial(\rho \varphi)}{\partial t} 
 $$ {#eq-mass_conserv_1}
 
 где
@@ -176,7 +180,7 @@ $$ {#eq-mass_conserv_1}
 -   $\rho$ - плотность флюида, кг/м^3^, lbm/ft^3^
 -   $q_x$ - объемный расход в направлении $x$, м^3^/сут, bbl/day, учитываем для практических метрических единиц $1$ м^3^/сут $= 0.04167$ м^3^/час и для промысловых американских $1$ bbl/day $= 0.23394$ ft^3^/hr\
 -   x - координата, м, ft
--   $\phi$ - пористость, доли единиц
+-   $\varphi$ - пористость, доли единиц
 -   $t$ - время, часы
 -   $A$ - площадь, м^2^, ft^2^
 
@@ -185,7 +189,7 @@ $$ {#eq-mass_conserv_1}
 Для практических метрических единиц ([-@eq-mass_conserv_1]) можно записать в виде 
 
 $$
--0.04167 \dfrac{ \partial (\rho q_x) }{\partial x} = A \dfrac{\partial(\rho \phi)}{\partial t} 
+-0.04167 \dfrac{ \partial (\rho q_x) }{\partial x} = A \dfrac{\partial(\rho \varphi)}{\partial t} 
 $$ {#eq-mass_conserv_2}
 
 **Закон Дарси**
@@ -235,7 +239,7 @@ c_t = c_{formation} + c_{fluid} = const
 $$ {#eq-eos_2}
 
 -   $c_t$ - общая сжимаемость (total compressibility)
--   $c_{formation}$ - сжимаемость породы (formation compressibility), $c_{formation} = \dfrac{1}{\phi}\dfrac{\partial \phi}{\partial p}$
+-   $c_{formation}$ - сжимаемость породы (formation compressibility), $c_{formation} = \dfrac{1}{\varphi}\dfrac{\partial \varphi}{\partial p}$
 -   $c_{fluid}$ - сжимаемость флюида (fluid compressibility), $c_{fluid} = \dfrac{1}{\rho}\dfrac{\partial \rho}{\partial p}$
 
 **Уравнение фильтрации**
@@ -243,19 +247,19 @@ $$ {#eq-eos_2}
 Подставим выражение для закона Дарси ([-@eq-darcy_law_3]) в уравнение мат баланса ([-@eq-mass_conserv_2])
 
 $$ 
-0.04167 \dfrac{ \partial}{\partial x} { \left[ \rho   \dfrac{k_x A}{115.74\mu} \dfrac{\partial p}{\partial x} \right] } = A \dfrac{\partial(\rho \phi)}{\partial t}  
+0.04167 \dfrac{ \partial}{\partial x} { \left[ \rho   \dfrac{k_x A}{115.74\mu} \dfrac{\partial p}{\partial x} \right] } = A \dfrac{\partial(\rho \varphi)}{\partial t}  
 $$ {#eq-diff_eq_2_}
 
 Упрощая ([-@eq-diff_eq_2]) получим
 
 $$ 
-\frac{\partial (\rho \phi)}{\partial t} = 0.00036 k_x \dfrac{ \partial}{\partial x}\left[ \dfrac{\rho}{\mu}\dfrac{\partial p}{\partial x} \right] 
+\frac{\partial (\rho \varphi)}{\partial t} = 0.00036 k_x \dfrac{ \partial}{\partial x}\left[ \dfrac{\rho}{\mu}\dfrac{\partial p}{\partial x} \right] 
 $$ {#eq-diff_eq_3}
 
 Уравнение ([-@eq-diff_eq_3]) подходит для потока газа. Для жидкости, предполагая малую сжимаемость флюида можно его упростить до вида
 
 $$ 
-\frac{\partial p}{\partial t} = 0.00036 \dfrac{k_x}{\phi \mu c_t} \dfrac{ \partial^2 p}{\partial x^2} 
+\frac{\partial p}{\partial t} = 0.00036 \dfrac{k_x}{\varphi \mu c_t} \dfrac{ \partial^2 p}{\partial x^2} 
 $$ {#eq-diff_eq_4}
 
 Напомним, здесь
@@ -264,7 +268,7 @@ $$ {#eq-diff_eq_4}
 -   $t$ - время, час
 -   $k_x$ - проницаемость в направлении движения потока, мД
 -   $\mu$ - динамическая вязкость, сП
--   $\phi$ - пористость, д.е.
+-   $\varphi$ - пористость, д.е.
 -   $c_t$ - сжимаемость, 1/атм
 -   $x$ - расстояние, м
 
@@ -299,7 +303,7 @@ $$ {#eq-darcy_law_4}
 Комбинируя уравнения ([-@eq-mass_balance_2]) , ([-@eq-darcy_law_4]) получим:
 
 $$ 
-\frac{1}{r}\frac{\partial\left( \dfrac{r\rho k}{\mu}\dfrac{\partial p}{dr}\right)}{\partial r}=\varphi\frac{\partial \rho}{\partial t}
+\frac{1}{r}\frac{\partial }{\partial r} \left( \dfrac{r\rho k}{\mu}\dfrac{\partial p}{dr}\right) =\varphi\frac{\partial \rho}{\partial t}
 $$ {#eq-diff_eq_rad_1}
 
 Уравнение ([-@eq-diff_eq_rad_1]) -- дифференциальное уравнение в частных производных описывающее нестационарный поток однофазного флюида в пористой среде при ламинарном потоке.
@@ -413,7 +417,7 @@ r_D = \frac{r}{r_w}
 $$
 
 $$ 
-t_D = \frac{kt}{\phi \mu c_t r_w^2}
+t_D = \frac{kt}{\varphi \mu c_t r_w^2}
 $$
 
 $$ 
@@ -429,7 +433,7 @@ $$
 -   $r_w$ - радиус скважины, м
 -   $r$ - расстояние от центра скважины до точки в пласте, м
 -   $q_{ref}$ - референсный дебит скважины на поверхности, приведенный к нормальным условиям м^3^/с
--   $\phi$ - пористость, доли единиц
+-   $\varphi$ - пористость, доли единиц
 -   $\mu$ - вязкость нефти в пласте, Па с
 -   $B$ - объемный коэффициент нефти, м^3^/м^3^
 -   $p_i$ - начальное давление в пласте, Па
@@ -483,7 +487,7 @@ $$
 Уравнение фильтрации для радиального потока в линеаризованном виде можно записать в виде
 
 $$ 
-\frac{\partial p}{\partial t} = 0.00036 \dfrac{k}{\phi \mu c_t} \dfrac{1}{r} \left[ \dfrac{\partial}{\partial r} \left( r \dfrac{ \partial p} {\partial r} \right) \right]  
+\frac{\partial p}{\partial t} = 0.00036 \dfrac{k}{\varphi \mu c_t} \dfrac{1}{r} \left[ \dfrac{\partial}{\partial r} \left( r \dfrac{ \partial p} {\partial r} \right) \right]  
 $$
 
 Использование безразмерных переменных позволяет упростить уравнение фильтрации, которое примет вид
@@ -502,15 +506,15 @@ $$
 
 Несмотря на простоту определений безразмерных переменных их часто приходится применять при проведении расчетов. Поэтому в надстройке Unifloc VBA реализован набор функций расчета безразмерных переменных.
 
-Эти функции начинаются с префикса transient_def.
+Эти функции начинаются с префикса tr_def.
 
 ```         
-    transient_def_cd
-    transient_def_cs_1atm
-    transient_def_td
-    transient_def_t_day
-    transient_def_pd
-    transient_def_pwf_atma
+    tr_def_cd
+    tr_def_cs_1atm
+    tr_def_td
+    tr_def_t_day
+    tr_def_pd
+    tr_def_pwf_atma
 ```
 
 Описания функций и из аргументов можно найти в руководстве пользователя Unifloc VBA
@@ -1488,7 +1492,7 @@ $$ {#eq-JD}
 <!--
 Продуктивность скважины определяется как: %$$J_{ss} = \frac{q_s}{P_e - P_{wf}} = \frac{k h}{18.42\mu B(\ ln\frac{r_e}{r_w} + S)} $$
 
-Скин фактор и нестационарное решение %$$ P(r, t) = P{t} - \frac {9.21\mu {q_s} B }{k h}(\ ln\frac {k t}{ \phi \mu {c_t} {r^2}} +7.12 + 2S) $$
+Скин фактор и нестационарное решение %$$ P(r, t) = P{t} - \frac {9.21\mu {q_s} B }{k h}(\ ln\frac {k t}{ \varphi \mu {c_t} {r^2}} +7.12 + 2S) $$
 -->
 ```
 
@@ -1515,7 +1519,7 @@ $$ {#eq-JD}
 Уравнение фильтрации для радиального потока в линеаризованном виде можно записать в виде
 
 $$ 
-\frac{\partial p}{\partial t} = 0.00036 \dfrac{k}{\phi \mu c_t} \dfrac{1}{r} \left[ \dfrac{\partial}{\partial r} \left( r \dfrac{ \partial p} {\partial r} \right) \right]  
+\frac{\partial p}{\partial t} = 0.00036 \dfrac{k}{\varphi \mu c_t} \dfrac{1}{r} \left[ \dfrac{\partial}{\partial r} \left( r \dfrac{ \partial p} {\partial r} \right) \right]  
 $$ {#eq-diff_eq_solution}
 
 Напомним, здесь
@@ -1524,7 +1528,7 @@ $$ {#eq-diff_eq_solution}
 -   $t$ - время, час
 -   $k$ - проницаемость в направлении движения потока, мД
 -   $\mu$ - динамическая вязкость, сП
--   $\phi$ - пористость, д.е.
+-   $\varphi$ - пористость, д.е.
 -   $c_t$ - сжимаемость, 1/атм
 -   $r$ - расстояние от центра, м
 
@@ -1534,7 +1538,7 @@ $$
 r_D = \frac{r}{r_w} 
 $$
 $$ 
-t_D = \frac{0.00036 kt}{\phi \mu c_t r_w^2}
+t_D = \frac{0.00036 kt}{\varphi \mu c_t r_w^2}
 $$
 $$ 
 p_D = \frac{kh}{ 18.42 q_{ref} B \mu} \left( p_i - p \right) 
@@ -1548,7 +1552,7 @@ $$
 -   $r_w$ - радиус скважины, м
 -   $r$ - расстояние от центра скважины до точки в пласте, м
 -   $q_s$ - референсный дебит скважины на поверхности, приведенный к нормальным условиям м^3^/сут
--   $\phi$ - пористость, доли единиц
+-   $\varphi$ - пористость, доли единиц
 -   $\mu$ - вязкость нефти в пласте, сП
 -   $B$ - объемный коэффициент нефти, м^3^/м^3^
 -   $p_i$ - начальное давление в пласте, атм
@@ -1956,7 +1960,7 @@ r_D = \frac{r}{r_w}
 $$ 
 
 $$ 
-t_D = \frac{0.00036 kt}{\phi \mu c_t r_w^2} 
+t_D = \frac{0.00036 kt}{\varphi \mu c_t r_w^2} 
 $$ 
 
 $$ 
@@ -1968,7 +1972,7 @@ $$
 -   $r_w$ - радиус скважины, м
 -   $r$ - расстояние от центра скважины до точки в пласте, м
 -   $q_s$ - дебит скважины на поверхности, приведенный к нормальным условиям м^3^/сут
--   $\phi$ - пористость, доли единиц
+-   $\varphi$ - пористость, доли единиц
 -   $\mu$ - вязкость нефти в пласте, сП
 -   $B$ - объемный коэффициент нефти, м^3^/м^3^
 -   $p_i$ - начальное давление в пласте, атм
@@ -2652,7 +2656,7 @@ r_D = \frac{r}{r_w}
 $$ 
 
 $$ 
-t_D = \frac{0.00036 kt}{\phi \mu c_t r_w^2} 
+t_D = \frac{0.00036 kt}{\varphi \mu c_t r_w^2} 
 $$ 
 
 $$ 
@@ -2664,7 +2668,7 @@ $$
 -   $r_w$ - радиус скважины, м
 -   $r$ - расстояние от центра скважины до точки в пласте, м
 -   $q_s$ - дебит скважины на поверхности, приведенный к нормальным условиям м3/сут
--   $\phi$ - пористость, доли единиц
+-   $\varphi$ - пористость, доли единиц
 -   $\mu$ - вязкость нефти в пласте, сП
 -   $B$ - объемный коэффициент нефти, м3/м3
 -   $p_i$ - начальное давление в пласте, атм

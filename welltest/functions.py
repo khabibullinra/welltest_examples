@@ -19,7 +19,7 @@ import anaflow
 
 def q_from_qd_sm3day(qd, q_ref_sm3day=1):
     """
-    перевод безразмерного дебита скважины в размерный
+    Перевод безразмерного дебита скважины в размерный
     qd - безразмерный дебит скважины
     q_ref_sm3day - референсный дебит
     """
@@ -27,7 +27,7 @@ def q_from_qd_sm3day(qd, q_ref_sm3day=1):
 
 def qd_from_q(q_sm3day, q_ref_sm3day=1):
     """
-    перевод размерного дебита в безразмерные
+    Перевод размерного дебита в безразмерные
     q_sm3day -  дебит скважины, ст. м3/сут
     q_ref_sm3day - референсный дебит
     """
@@ -41,7 +41,6 @@ def r_from_rd_m(rd, rw_m=0.1):
     """
     return rd*rw_m
 
-
 def rd_from_r(r_m, rw_m=0.1):
     """
     translate dimensional distance to dimensionless distance
@@ -49,7 +48,6 @@ def rd_from_r(r_m, rw_m=0.1):
     rw_m - well radius, m
     """
     return r_m/rw_m
-
 
 def t_from_td_hr(td, k_mD=10, phi=0.2, mu_cP=1, ct_1atm=1e-5, rw_m=0.1):
     """
@@ -62,7 +60,6 @@ def t_from_td_hr(td, k_mD=10, phi=0.2, mu_cP=1, ct_1atm=1e-5, rw_m=0.1):
     rw_m - well radius, m
     """
     return td * phi * mu_cP * ct_1atm * rw_m * rw_m / k_mD / 0.00036
-
 
 def td_from_t(t_hr, k_mD=10, phi=0.2, mu_cP=1, ct_1atm=1e-5, rw_m=0.1):
     """

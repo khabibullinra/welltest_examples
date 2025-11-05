@@ -9,19 +9,19 @@ format:
   #  number-sections: true
   #  highlight-style: github
   html:
-    grid:
-        margin-width: 400px
+  #  grid:
+  #      margin-width: 400px
     toc: true
     toc-depth: 1
-    toc-expand: 2
-    number-sections: true
-    section-numbering: 1.1.1
-    lang: ru
-    embed-resources: true    
-    code-fold: true
-    code-summary: "Показать код"
-    code-block-bg: true
-    code-block-border-left: "#31BAE9"
+  #  toc-expand: 2
+  #  number-sections: true
+  #  section-numbering: 1.1.1
+  #  lang: ru
+  #  embed-resources: true    
+  #  code-fold: true
+  #  code-summary: "Показать код"
+  #  code-block-bg: true
+  #  code-block-border-left: "#31BAE9"
   #pdf:
   #  toc: true
   #  number-sections: true
@@ -32,13 +32,15 @@ format:
   #  monofont: Courier New
   #  monofontoptions: 
   #     - Scale=0.8
-  #typst:
-  #  toc: true
-  #  toc-depth: 2
-  #  toc-title: Оглавление
-  #  number-sections: true
-  #  section-numbering: 1.1.1
-  #  lang: ru   
+  typst:
+    keep-typ: true
+    toc: true
+    toc-depth: 2
+    toc-title: Оглавление
+    number-sections: true
+    section-numbering: 1.1.1
+    lang: ru   
+    typst-prelude: prelude.typ
 #reference-location: margin
 #citation-location: margin
 ---
@@ -56,12 +58,30 @@ print('hello')
 
 ## Картинки и код для проверки
 
+```{=typst}
+#set math.equation(numbering: "(1)")
+#let nonumeq = math.equation.with(block: true, numbering: none)
+#let dm(x) = box[#nonumeq[#x]]
+#let dfrac(x,y) = math.frac(dm(x),dm(y))
+
+$ frac(a,b) $
+
+```
 
 Часто для анализа уравнений неустановившейся фильтрации используются безразмерные переменные. Мы будем использовать переменные в виде:
 
 $$ 
 r_D = \frac{r}{r_w} 
 $$
+
+Обычная дробь в строке: $a / b$, а вот крупная дробь: \#frac(a, b).
+
+$$
+f_D =\frac{ (\dfrac{d}{s})}{ a}
+$$
+
+A large inline fraction is shown here:
+$ x = \text(display(frac(1,2))) $
 
 $$ 
 t_D = \frac{kt}{\varphi \mu c_t r_w^2}
