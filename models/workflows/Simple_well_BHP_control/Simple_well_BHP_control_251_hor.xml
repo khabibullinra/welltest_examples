@@ -22,22 +22,18 @@ from datetime import datetime, timedelta
 
 
 declare_workflow (workflow_name="Simple_well_BHP_control_251_hor",
-      variables=[{"name" : "CIRCLE", "type" : "py_expr", "min" : 0, "max" : 0, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "BOUNDARY_CONST_PRESSURE", "type" : "py_expr", "min" : 0, "max" : 0, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "PERM", "type" : "real", "min" : 0, "max" : 100, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "POROSITY", "type" : "real", "min" : 0, "max" : 1, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "SKIN", "type" : "real", "min" : 0, "max" : 10, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "WELL_STEP_CONTROL", "type" : "py_expr", "min" : 0, "max" : 0, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "RES_SIZE", "type" : "real", "min" : 0, "max" : 2000, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "COUNTS_XY", "type" : "integer", "min" : 0, "max" : 101, "values" : [], "distribution_type" : "Discrete", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "COUNTS_Z", "type" : "integer", "min" : 0, "max" : 10, "values" : [], "distribution_type" : "Discrete", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "RES_H", "type" : "real", "min" : 0, "max" : 100, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "RES_TOP", "type" : "real", "min" : 0, "max" : 2500, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "PERF_TOP", "type" : "real", "min" : 0, "max" : 2000, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "PERF_LEN", "type" : "real", "min" : 0, "max" : 1000, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "HOR_H_MULT", "type" : "real", "min" : 0, "max" : 1, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}])
+      variables=[{"name" : "CIRCLE", "type" : "py_expr", "min" : 0, "max" : 0, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "BOUNDARY_CONST_PRESSURE", "type" : "py_expr", "min" : 0, "max" : 0, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "PERM", "type" : "real", "min" : 0, "max" : 100, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "SKIN", "type" : "real", "min" : 0, "max" : 10, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "RES_SIZE", "type" : "real", "min" : 0, "max" : 2000, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "COUNTS_XY", "type" : "integer", "min" : 0, "max" : 101, "values" : [], "distribution_type" : "Discrete", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "COUNTS_Z", "type" : "integer", "min" : 0, "max" : 10, "values" : [], "distribution_type" : "Discrete", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "RES_H", "type" : "real", "min" : 0, "max" : 100, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "PERF_LEN", "type" : "real", "min" : 0, "max" : 1000, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}, {"name" : "HOR_H_MULT", "type" : "real", "min" : 0, "max" : 1, "values" : [], "distribution_type" : "Uniform", "discrete_distr_values" : [], "discrete_distr_probabilities" : [], "initial_distribution" : [], "truncated_mean" : 0, "truncated_sigma" : 0, "mode" : 0}])
 
 
 Simple_well_BHP_control_251_hor_variables = {
 "CIRCLE" : True,
 "BOUNDARY_CONST_PRESSURE" : True,
 "PERM" : 5,
-"POROSITY" : 0.15,
 "SKIN" : 3,
-"WELL_STEP_CONTROL" : True,
 "RES_SIZE" : 500,
 "COUNTS_XY" : 61,
 "COUNTS_Z" : 10,
 "RES_H" : 30,
-"RES_TOP" : 2000,
-"PERF_TOP" : 1500,
 "PERF_LEN" : 300,
 "HOR_H_MULT" : 0.2
 }
@@ -49,15 +45,11 @@ def Simple_well_BHP_control_251_hor (variables = Simple_well_BHP_control_251_hor
     CIRCLE = variables["CIRCLE"]
     BOUNDARY_CONST_PRESSURE = variables["BOUNDARY_CONST_PRESSURE"]
     PERM = variables["PERM"]
-    POROSITY = variables["POROSITY"]
     SKIN = variables["SKIN"]
-    WELL_STEP_CONTROL = variables["WELL_STEP_CONTROL"]
     RES_SIZE = variables["RES_SIZE"]
     COUNTS_XY = variables["COUNTS_XY"]
     COUNTS_Z = variables["COUNTS_Z"]
     RES_H = variables["RES_H"]
-    RES_TOP = variables["RES_TOP"]
-    PERF_TOP = variables["PERF_TOP"]
     PERF_LEN = variables["PERF_LEN"]
     HOR_H_MULT = variables["HOR_H_MULT"]
 
@@ -103,9 +95,8 @@ v0.2
         grid_3d_create_simple (mesh=typed_object_name (obj_name="Simple_grid",
               obj_type="Grid3d"),
               partition_type="uniform",
-              min_z=arithmetic (expression="res_top",
-              variables=variables),
-              max_z=arithmetic (expression="res_top+res_h",
+              min_z=2000,
+              max_z=arithmetic (expression="2000+res_h",
               variables=variables),
               z_sample_object=absolute_object_name (name=None,
               typed_names=None),
@@ -374,8 +365,7 @@ v0.2
               minute=0,
               second=0,
               microsecond=0),
-              formula=resolve_variables_in_string (string_with_variables="@POROSITY@",
-              variables=variables),
+              formula="0.15",
               variables=variables)
         end_wf_item (index = 25)
 
@@ -457,7 +447,7 @@ v0.2
     end_wf_item (index = 2)
 
 
-    begin_wf_item (index = 30, name = "Готовим PVT ОФП и начальные условия", collapsed = True)
+    begin_wf_item (index = 30, name = "Готовим PVT ОФП и начальные условия")
     workflow_folder ()
     if True:
         pass
@@ -508,9 +498,10 @@ v0.2
 
         begin_wf_item (index = 35)
         adjust_equil_table (table_name="Equilibration data specification 1",
-              datum_depth=1530,
-              datum_pressure=150,
-              woc_depth=2000,
+              datum_depth=2000,
+              datum_pressure=200,
+              woc_depth=arithmetic (expression="2000+100",
+              variables=variables),
               woc_capillary_pressure=0,
               goc_depth=0,
               goc_capillary_pressure=0,
@@ -628,7 +619,7 @@ v0.2
         # заметим, что все переменные сидят в словаре variables
         # также зададим интервал перфорации из переменных, пригодится для горизонтальных скважин
 
-        PERF_TOP = RES_TOP + RES_H * HOR_H_MULT
+        PERF_TOP = 2000 + RES_H * HOR_H_MULT
         print(PERF_TOP)
         print(variables)
 
@@ -639,14 +630,14 @@ v0.2
                                  "x" : arithmetic (expression="res_size/2-PERF_LEN/2", variables=variables), 
                                  "y" : arithmetic (expression="res_size/2", variables=variables), 
                                  "z" : 0}, 
-                                {"md" : arithmetic (expression="res_top+res_h*hor_h_mult", variables=variables), 
+                                {"md" : arithmetic (expression="2000+res_h*hor_h_mult", variables=variables), 
                                  "x" : arithmetic (expression="res_size/2-PERF_LEN/2", variables=variables), 
                                  "y" : arithmetic (expression="res_size/2", variables=variables), 
-                                 "z" : arithmetic (expression="res_top+res_h*hor_h_mult", variables=variables)}, 
-                                {"md" : arithmetic (expression="res_top+res_h*hor_h_mult+perf_len", variables=variables), 
+                                 "z" : arithmetic (expression="2000+res_h*hor_h_mult", variables=variables)}, 
+                                {"md" : arithmetic (expression="2000+res_h*hor_h_mult+perf_len", variables=variables), 
                                  "x" : arithmetic (expression="res_size/2+PERF_LEN/2", variables=variables), 
                                  "y" : arithmetic (expression="res_size/2", variables=variables), 
-                                 "z" : arithmetic (expression="res_top+res_h*hor_h_mult", variables=variables)}],
+                                 "z" : arithmetic (expression="2000+res_h*hor_h_mult", variables=variables)}],
               date=datetime (year=2020, month=1, day=1, hour=0, minute=0, second=0, microsecond=0),
               table=typed_object_name (obj_name="Well Structure",
                                                obj_type="gt_wells_events_data"),
@@ -1180,23 +1171,15 @@ v0.2
         end_wf_item (index = 64)
 
 
-        if WELL_STEP_CONTROL:
-            if_statement_contents ()
-            begin_wf_item (index = 65)
+        begin_wf_item (index = 65)
+        run_project_workflow (project_type = "gt_project",
+              project_name = "",
+              workflow = "Welltest_rates",
+              variable_types = {},
+              variables_object = {
 
-
-            begin_wf_item (index = 66)
-            run_project_workflow (project_type = "gt_project",
-                  project_name = "",
-                  workflow = "Welltest_rates",
-                  variable_types = {},
-                  variables_object = {
-
-            })
-            end_wf_item (index = 66)
-
-
-            end_wf_item (index = 65)
+        })
+        end_wf_item (index = 65)
 
 
 
@@ -1204,7 +1187,7 @@ v0.2
 
 
     if False:
-        begin_wf_item (index = 69, name = "Simulation running")
+        begin_wf_item (index = 67, name = "Simulation running")
         workflow_folder ()
         if True:
             pass
@@ -1212,7 +1195,7 @@ v0.2
 
 
             if False:
-                begin_wf_item (index = 70)
+                begin_wf_item (index = 68)
                 open_or_reload_dynamic_model (use_model=True,
                       model=typed_object_name (obj_name="DynamicModel",
                       obj_type="Model_ex"),
@@ -1221,18 +1204,18 @@ v0.2
                       graphs_result_mode_for_requested_maps="tnav_graph",
                       graphs_result_mode_for_maps_off="tnav_graph",
                       overwrite_existing_result=True)
-                end_wf_item (index = 70)
+                end_wf_item (index = 68)
 
 
             if False:
-                begin_wf_item (index = 71)
+                begin_wf_item (index = 69)
                 run_dynamic_model_calculations (is_go_to_step=False,
                       go_to_step_number=-1)
-                end_wf_item (index = 71)
+                end_wf_item (index = 69)
 
 
 
-        end_wf_item (index = 69)
+        end_wf_item (index = 67)
 
 
 </n>
