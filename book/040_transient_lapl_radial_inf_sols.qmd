@@ -18,11 +18,12 @@ $$ {#eq-equation_dimensionless}
 
 Для построения частных решений необходимо задать начальное и граничные условия. В данной главе рассмотрим решения для бесконечного пласта для которого справедливы следующие условия:
 
-1. Однородное начальное давление
+1. Однородное начальное давление 
 $$ 
 p_D(t_D=0, r_D) = 0  
-$$
+$$ {#eq-rad_initial_cond}
 
+В начальный момент времени пласт невозмущен, нулевой безразмерный перепад давления для любого расстояния.
 
 2. Граничное условие на бесконечности 
 
@@ -30,45 +31,51 @@ $$
 \lim_{r_D \to \infty} p_D(r_D, t_D) = 0 
 $$ {#eq-rad_boundary_cond_inf}
 
-Также необходимо граничное условие на скважине, которое может быть задано либо как условие на забойное давление на скважине, либо на градиент изменения забойного давления (дебит).
+На бесконечном удалении от скважины пласт остается невозмущенным с нулевым безразмерным перепадом давления.
 
-3. Граничное условие на скважине
 
+3. Граничное условие на скважине может быть задано либо как условие на забойное давление, либо как условие на градиент изменения забойного давления, что соответствует дебиту скважины.
+
+Условие на дебит скважины будет иметь вид
 $$
 \lim_{r_D \to r_{wD}} \left[ r_D \dfrac{ \partial p_D(r_D, t_D)}{\partial r_D} \right] = -f(t_D, q_D)  
-$$ {#eq-rad_boundary_cond_well_1}
+$$ {#eq-rad_boundary_cond_well_q_const}
 
-или
+Условие на забойное давление на скважине будет иметь вид
 $$
 \lim_{r_D \to r_{wD}} p_D(r_D, t_D) = -g(t_D, q_D)  
-$$ {#eq-rad_boundary_cond_well_2}
+$$ {#eq-rad_boundary_cond_well_p_const}
 
 
 Решение такого уравнение может быть получено с использованием [преобразования Лапласа](https://ru.wikipedia.org/wiki/%D0%9F%D1%80%D0%B5%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_%D0%9B%D0%B0%D0%BF%D0%BB%D0%B0%D1%81%D0%B0). 
 
 
 $$ 
-\mathcal{L} \left [ f(t) \right] = \tilde{f}(u) = \int_{0}^{\infty}f(t)e^{-ut}dt 
+\mathcal{L} \left [ f(t) \right] = F(u) = \int_{0}^{\infty}f(t)e^{-ut}dt 
 $$
 
-где $u$ параметр пространства Лапласа соответствующий времени.
+где 
+
+- $u$ - параметр пространства Лапласа соответствующий времени.
+- $f(t)$ - исходная функция времени
+- $F(u)$ - изображение исходной функции в пространстве Лапласа 
 
 Тогда уравнение (-@eq-equation_dimensionless) - дифференциальное уравнение в частных производных в пространстве Лапласа преобразуется к виду:
 
 $$ 
-u \widetilde{p_D} - p_D(0^+) =  \dfrac{1}{r_D} \left[\dfrac{d}{d r_D} \left(r_D \dfrac{d{\tilde{p}_D}}{d r_D} \right) \right] 
+u P_D - P_D(0^+) =  \dfrac{1}{r_D} \left[\dfrac{d}{d r_D} \left(r_D \dfrac{d{P_D}}{d r_D} \right) \right] 
 $$ {#eq-bessel}
 
 Уравнение (-@eq-bessel) - обыкновенное дифференциальное уравнение известное как [модифицированное уравнение Бесселя](https://ru.wikipedia.org/wiki/%D0%9C%D0%BE%D0%B4%D0%B8%D1%84%D0%B8%D1%86%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5_%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8_%D0%91%D0%B5%D1%81%D1%81%D0%B5%D0%BB%D1%8F). Общее решение этого уравнения можно записать в виде 
 
 $$ 
-\widetilde{p_D}(u, r_D, q_D) = A(u, q_D) K_0(r_D \sqrt u) + B(u, d_D) I_0(r_D \sqrt u) 
+P_D(u, r_D, q_D) = A(u, q_D) K_0(r_D \sqrt u) + B(u, d_D) I_0(r_D \sqrt u) 
 $$ {#eq-lapl_general_solution}
 
 где 
 
 - $u$ - переменная пространства Лапласа, соответствующая времени
-- $\widetilde{p_D}(u, r_D)$ - изображение давления в пространстве Лапласа
+- $P_D(u, r_D)$ - изображение давления в пространстве Лапласа
 - $K_0, I_0$ - модифицированные функции Бесселя нулевого порядка (могут быть вычислены, например, с использованием реализации в библиотке `scipy.special`)
 - $A(u, q_D), B(u, q_D)$ - произвольные функции, которые могут быть определены при задании начальных и граничных условий
 
@@ -79,59 +86,56 @@ $$ {#eq-lapl_general_solution}
 Граничное условия на бесконечности (-@eq-rad_boundary_cond_inf) в пространстве Лапласа   преобразуется в следующее
 
 $$
-\lim_{r_D \to \infty} \widetilde{p_D} = 0 
-$$ {#eq-line_source_boundary_cond_inf_2}
+\lim_{r_D \to \infty} P_D = 0 
+$$ {#eq-lapl_boundary_cond_inf}
 
-Граничное условие на скважине (-@eq-rad_boundary_cond_well_1) в пространстве Лапласа   с учетом выражения (-@eq-lapl_const) преобразуется к
+Граничное условие на скважине (-@eq-rad_boundary_cond_well_q_const) в пространстве Лапласа   с учетом выражения (-@eq-lapl_const) преобразуется к
 
 
 $$
-\lim_{r_D \to r_{wD}} \left[ r_D \dfrac{ d \widetilde{p_D}}{d r_D} \right] = \mathcal{L}\left(f(t_D, q_D)\right) 
+\lim_{r_D \to r_{wD}} \left[ r_D \dfrac{ d P_D}{d r_D} \right] = \mathcal{L}\left(f(t_D, q_D)\right) 
 $$ {#eq-lapl_boundary_cond_well} 
 
-Граничное условие на скважине (-@eq-rad_boundary_cond_well_2) в пространстве Лапласа   с учетом выражения (-@eq-lapl_const) преобразуется к
+Граничное условие на скважине (-@eq-rad_boundary_cond_well_p_const) в пространстве Лапласа   с учетом выражения (-@eq-lapl_const) преобразуется к
 
 $$
-\lim_{r_D \to r_{wD}} \widetilde{p_D}  = \mathcal{L}\left(g(t_D, q_D)\right) 
+\lim_{r_D \to r_{wD}} P_D  = \mathcal{L}\left(g(t_D, q_D)\right) 
 $$ {#eq-lapl_boundary_cond_well_2} 
 
 ## Использование `sympy` для построения решений
-
 
 С уравнением (-@eq-equation_dimensionless) и его решениями удобно работать с использованием системы компьютерной алгебры [`sympy`](https://www.sympy.org/en/index.html). 
 
 ```{python}
 #| code-fold: false
 #| echo: true
-
 import sympy as sp
-
 ```
+
+Определим переменные `sympy` с которыми будем работать 
 
 ```{python}
 #| code-fold: false
 #| echo: true
-# определим переменные с которыми будем работать 
+# 
 
 # безразмерные расстояние, время, давление и дебит
 r_d = sp.symbols('r_D')
 t_d = sp.symbols('t_D')
 q_d = sp.symbols('q_D')
-p_d = sp.symbols('p_D', cls=sp.Function)
-# изображения давления и дебита в пространстве Лапласа
-Lp_d = sp.symbols(R"{\widetilde{p_{D}}}", cls=sp.Function)
-Lq_d = sp.symbols(R"{\widetilde{q_{D}}}")
+p_d = sp.Function('p_D')
+# изображения давления в пространстве Лапласа
+Lp_d = sp.Function("P_D")
+# параметр пространства Лапласа
 u = sp.symbols('u', positive=True)
-
-u = sp.symbols('u',real=True, positive=True)
-
 ```
 
+Зададим уравнение фильтрации в пространстве Лапласа в символьном виде
 ```{python}
 #| code-fold: false
 #| echo: true
 #| output: false
-# зададим уравнение фильтрации в пространстве Лапласа в символьном виде
+ 
 eq_Lapld = sp.Eq(u * Lp_d(r_d),
                 1 / r_d * (sp.diff(r_d * sp.diff(Lp_d(r_d),r_d),r_d)))
 eq_Lapld 
@@ -144,6 +148,16 @@ eq_Lapld
 print(f"$$\n{sp.latex(eq_Lapld)} \n $$ {{#eq-Lapld}}")
 
 ```
+
+
+здесь
+
+- $P_D$ - изображение давления в пространстве Лапласа.
+- $u$ - параметр пространства Лапласа
+- $r_D$ - безразмерное расстояние
+
+Вообще изображение давления $P_D(u, r_D)$ функция параметра пространства Лапласа $u$, безразмерное расстояния $r_D$ и безразмерного дебита $q_D$. Но для упрощения расчетов с использованием `sympy` иногда мы будем опускать часть зависимостей в обозначении в зависимости от контекста. Например в (-@eq-Lapld) указываем изображение давления $P_D(r_D)$ только как функцию расстояния, что позволяет `sympy` корректно продиффиринцировать уравнение и найти его решение. Где уместно будет указывать полную зависимость.
+
 
 Модифицированное уравнение Бесселя хорошо изучено. Системы компьютерной алгебры могут его распознать и решить. В `sympy` за решение ОДУ отвечает функция `dsolve`.
 
@@ -186,7 +200,7 @@ $$
 Учитывая эти выражения можно убедиться что выражение вида 
 
 $$ 
-\widetilde{p_D}(u, r_D) = A(u) K_0(r_D \sqrt u) + B(u) I_0(r_D \sqrt u) 
+P_D(u, r_D) = A(u) K_0(r_D \sqrt u) + B(u) I_0(r_D \sqrt u) 
 $$  {#eq-eq25}
 
 которое можно найти в книгах также будет являться решение уравнения фильтрации, что можно проверить командой `sympy.checkodesol`
@@ -205,6 +219,15 @@ soln_2
 #| code-fold: false 
 #| echo: true
 sp.checkodesol(eq_Lapld, soln_2)
+```
+
+Далее для построения решений используем выражение с явным указанием зависимости $P_D(u, r_D)$
+
+```{python}
+#| code-fold: false
+#| echo: true
+soln_2 = sp.Eq(Lp_d(u,r_d) , A * sp.besselk(0, r_d * sp.sqrt(u)) + B * sp.besseli(0, r_d * sp.sqrt(u)))
+soln_2
 ```
 
 Для построения частных решений необходимо найти параметры $A$ $B$ выражения (-@eq-eq25) чтобы удовлетворить граничным условиям (-@eq-bound_condition_inf) (-@eq-bound_condition_well).
@@ -246,46 +269,43 @@ print(f"$$\n{sp.latex(soln_3)} \n $$ {{#eq-soln_3}}")
 
 Дальше покажем как можно работать с решением (-@eq-soln_3) для построения частных решений.
 
-```{python}
-#| code-fold: false
-#| echo: true
-
-def dsolve_eq_laplace_inf(sol, bc):
-    print('граничное условие на скважине')
-    bc_well = sp.Eq( r_d * sp.diff(p_d(t_d, r_d), r_d) ,bc)
-    display(bc_well)
-    print('применим преобразование Лапласа к обеим частям граничного условия')
-    eq_boundary_Laplace = sp.Eq( r_d * sp.diff(Lp_d(t_d, r_d), r_d) ,sp.laplace_transform(bc, t_d, u,  noconds=True))
-    display(eq_boundary_Laplace)
-    print('Выражение для граничного условия на скважине')
-    bc2 = sp.Eq( eq_boundary_Laplace.lhs.subs(Lp_d(t_d, r_d), sol.rhs).simplify(), eq_boundary_Laplace.rhs)
-    display(bc2)
-    print('найдем A')
-    bc2_sol = sp.solve(bc2.subs(r_d, 1), A)
-    print(bc2_sol)
-    display(sp.Eq(A,bc2_sol[0]))
-    print('частное решение для любого расстояния')
-    soln_4 = soln_3.subs(A, bc2_sol[0])
-    display(soln_4)
-    return soln_4
-```
 
 ## Решение линейного стока
 
-Самое простое нестационарное решение можно получить пренебрегая радиусом скважины в бесконечном пласте. 
-Рассматриваем уравнение (-@eq-equation_dimensionless) со следующими граничными условиями
+Самое простое нестационарное решение можно получить для скважины с постоянным дебитом с бесконечно малым радиусом в бесконечном пласте. 
+Запишем уравнение и соответствующие граничные условия. 
+Рассматриваем уравнение (-@eq-equation_dimensionless)
+$$ 
+\frac{\partial p_D}{ \partial t_D} = \frac{1}{r_D}\left[ \frac{ \partial{}}{ \partial{r_D} }\left( r_D \dfrac{\partial p_D}{ \partial r_D} \right) \right]  
+$$ 
+
+В пространстве Лапласа уравление фильтрации примет вид (-@eq-bessel)
+$$ 
+u P_D - P_D(0^+) =  \dfrac{1}{r_D} \left[\dfrac{d}{d r_D} \left(r_D \dfrac{d{P_D}}{d r_D} \right) \right] 
+$$ 
+
+
+Граничное условиее на бесконечности пространстве Лапласа имеет вид (-@eq-lapl_boundary_cond_inf), что позволяет искать решение в виде (-@eq-soln_3)
 
 ```{python}
-#| code-fold: false
-#| echo: true
-
-
-soln_4 = dsolve_eq_laplace_inf(soln_3, q_d) 
-display(soln_4)
-print('частное решение для забойного давления')
-soln_5 = soln_4.subs(r_d, 1)
-display(soln_5)
+#| echo: false
+#| output: asis
+print(f"$$\n{sp.latex(soln_3)} \n $$")
 ```
+
+Граничное условие на скважине бесконечно малого радиуса можно записать как 
+
+$$
+\lim_{r_D \to 0} \left[ r_D \dfrac{ \partial p_D(r_D, t_D)}{\partial r_D} \right] = -с_{qD}  
+$$
+
+в пространстве Лапласа  (3.3) с учетом выражения (12.9) преобразуется к
+
+$$
+\lim_{r_D \to 0} \left[ r_D \dfrac{ d \widetilde{P}_D(u, r_D)}{d r_D} \right] = -\dfrac{с_{qD}}{u} 
+$$ 
+
+
 
 
 ## Решение для радиального притока с конечным радиусом скважины
@@ -295,3 +315,40 @@ display(soln_5)
 ## Решение для линейного меняющегося дебита
 
 ## Решение для линейного меняющегося давления
+
+
+Пример функции для автоматизированного расчета
+```{python}
+#| code-fold: false
+#| echo: true
+
+def dsolve_eq_laplace_inf(sol, bc):
+    print('граничное условие на скважине')
+    bc_well = sp.Eq( r_d * sp.diff(p_d(t_d, r_d), r_d) ,bc)
+    display(bc_well)
+    print('применим преобразование Лапласа к обеим частям граничного условия')
+    eq_boundary_Laplace = sp.Eq( r_d * sp.diff(Lp_d(u, r_d), r_d) ,sp.laplace_transform(bc, t_d, u,  noconds=True))
+    display(eq_boundary_Laplace)
+    print('Выражение для граничного условия на скважине')
+    bc2 = sp.Eq( eq_boundary_Laplace.lhs.subs(Lp_d(u, r_d), sol.rhs).simplify(), eq_boundary_Laplace.rhs)
+    display(bc2)
+    print('найдем A')
+    bc2_sol = sp.solve(bc2.subs(r_d, 1), A)
+    display(sp.Eq(A,bc2_sol[0]))
+    print('частное решение для любого расстояния')
+    soln_4 = soln_3.subs(A, bc2_sol[0])
+    display(soln_4)
+    return soln_4
+```
+
+```{python}
+#| code-fold: false
+#| echo: true
+
+c_qd = sp.symbols('c_{q_D}')
+soln_4 = dsolve_eq_laplace_inf(soln_3, c_qd) 
+display(soln_4)
+print('частное решение для забойного давления')
+soln_5 = soln_4.subs(r_d, 1)
+display(soln_5)
+```

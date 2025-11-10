@@ -1,0 +1,827 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "a57a8e44",
+   "metadata": {},
+   "source": [
+    "# Построение решений с использованием преобразования Лапласа для бесконечного пласта\n",
+    "\n",
+    "\n",
+    "Рассматривается уравнение фильтрации в безразмерных переменных \n",
+    "\n",
+    "$$ \n",
+    "\\frac{\\partial p_D}{ \\partial t_D} = \\frac{1}{r_D}\\left[ \\frac{ \\partial{}}{ \\partial{r_D} }\\left( r_D \\dfrac{\\partial p_D}{ \\partial r_D} \\right) \\right]  \n",
+    "$$ {#eq-equation_dimensionless}\n",
+    "\n",
+    "где введены следующие безразмерные переменные\n",
+    "\n",
+    "- $r_D$ - безразмерное расстояние от центра скважины\n",
+    "- $t_D$ - безразмерное время\n",
+    "- $p_D$ - безразмерное давление\n",
+    "- $q_D$ - безразмерный дебит\n",
+    "\n",
+    "Определения безразмерных переменных (-@eq-def_rd_si), (-@eq-def_td_si), (-@eq-def_pd_si), (-@eq-def_qd_si) в разделе @sec-dimensionless_vars_definitions.\n",
+    "\n",
+    "Для построения частных решений необходимо задать начальное и граничные условия. В данной главе рассмотрим решения для бесконечного пласта для которого справедливы следующие условия:\n",
+    "\n",
+    "1. Однородное начальное давление \n",
+    "$$ \n",
+    "p_D(t_D=0, r_D) = 0  \n",
+    "$$ {#eq-rad_initial_cond}\n",
+    "\n",
+    "В начальный момент времени пласт невозмущен, нулевой безразмерный перепад давления для любого расстояния.\n",
+    "\n",
+    "2. Граничное условие на бесконечности \n",
+    "\n",
+    "$$\n",
+    "\\lim_{r_D \\to \\infty} p_D(r_D, t_D) = 0 \n",
+    "$$ {#eq-rad_boundary_cond_inf}\n",
+    "\n",
+    "На бесконечном удалении от скважины пласт остается невозмущенным с нулевым безразмерным перепадом давления.\n",
+    "\n",
+    "\n",
+    "3. Граничное условие на скважине может быть задано либо как условие на забойное давление, либо как условие на градиент изменения забойного давления, что соответствует дебиту скважины.\n",
+    "\n",
+    "Условие на дебит скважины будет иметь вид\n",
+    "$$\n",
+    "\\lim_{r_D \\to r_{wD}} \\left[ r_D \\dfrac{ \\partial p_D(r_D, t_D)}{\\partial r_D} \\right] = -f(t_D, q_D)  \n",
+    "$$ {#eq-rad_boundary_cond_well_q_const}\n",
+    "\n",
+    "Условие на забойное давление на скважине будет иметь вид\n",
+    "$$\n",
+    "\\lim_{r_D \\to r_{wD}} p_D(r_D, t_D) = -g(t_D, q_D)  \n",
+    "$$ {#eq-rad_boundary_cond_well_p_const}\n",
+    "\n",
+    "\n",
+    "Решение такого уравнение может быть получено с использованием [преобразования Лапласа](https://ru.wikipedia.org/wiki/%D0%9F%D1%80%D0%B5%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_%D0%9B%D0%B0%D0%BF%D0%BB%D0%B0%D1%81%D0%B0). \n",
+    "\n",
+    "\n",
+    "$$ \n",
+    "\\mathcal{L} \\left [ f(t) \\right] = F(u) = \\int_{0}^{\\infty}f(t)e^{-ut}dt \n",
+    "$$\n",
+    "\n",
+    "где \n",
+    "\n",
+    "- $u$ - параметр пространства Лапласа соответствующий времени.\n",
+    "- $f(t)$ - исходная функция времени\n",
+    "- $F(u)$ - изображение исходной функции в пространстве Лапласа \n",
+    "\n",
+    "Тогда уравнение (-@eq-equation_dimensionless) - дифференциальное уравнение в частных производных в пространстве Лапласа преобразуется к виду:\n",
+    "\n",
+    "$$ \n",
+    "u P_D - P_D(0^+) =  \\dfrac{1}{r_D} \\left[\\dfrac{d}{d r_D} \\left(r_D \\dfrac{d{P_D}}{d r_D} \\right) \\right] \n",
+    "$$ {#eq-bessel}\n",
+    "\n",
+    "Уравнение (-@eq-bessel) - обыкновенное дифференциальное уравнение известное как [модифицированное уравнение Бесселя](https://ru.wikipedia.org/wiki/%D0%9C%D0%BE%D0%B4%D0%B8%D1%84%D0%B8%D1%86%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5_%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8_%D0%91%D0%B5%D1%81%D1%81%D0%B5%D0%BB%D1%8F). Общее решение этого уравнения можно записать в виде \n",
+    "\n",
+    "$$ \n",
+    "P_D(u, r_D, q_D) = A(u, q_D) K_0(r_D \\sqrt u) + B(u, d_D) I_0(r_D \\sqrt u) \n",
+    "$$ {#eq-lapl_general_solution}\n",
+    "\n",
+    "где \n",
+    "\n",
+    "- $u$ - переменная пространства Лапласа, соответствующая времени\n",
+    "- $P_D(u, r_D)$ - изображение давления в пространстве Лапласа\n",
+    "- $K_0, I_0$ - модифицированные функции Бесселя нулевого порядка (могут быть вычислены, например, с использованием реализации в библиотке `scipy.special`)\n",
+    "- $A(u, q_D), B(u, q_D)$ - произвольные функции, которые могут быть определены при задании начальных и граничных условий\n",
+    "\n",
+    "Некоторые свойства функций Бесселя в разделе @sec-spec_func_Bessel. Полезные свойства преобразования Лапласа в разеделе @sec-Laplace_props. \n",
+    "\n",
+    "Начальное условие после преобразования Лапласа входит в трансформированное уравнение, граничные условия необходимо преобразовать.\n",
+    "\n",
+    "Граничное условия на бесконечности (-@eq-rad_boundary_cond_inf) в пространстве Лапласа   преобразуется в следующее\n",
+    "\n",
+    "$$\n",
+    "\\lim_{r_D \\to \\infty} P_D = 0 \n",
+    "$$ {#eq-lapl_boundary_cond_inf}\n",
+    "\n",
+    "Граничное условие на скважине (-@eq-rad_boundary_cond_well_q_const) в пространстве Лапласа   с учетом выражения (-@eq-lapl_const) преобразуется к\n",
+    "\n",
+    "\n",
+    "$$\n",
+    "\\lim_{r_D \\to r_{wD}} \\left[ r_D \\dfrac{ d P_D}{d r_D} \\right] = \\mathcal{L}\\left(f(t_D, q_D)\\right) \n",
+    "$$ {#eq-lapl_boundary_cond_well} \n",
+    "\n",
+    "Граничное условие на скважине (-@eq-rad_boundary_cond_well_p_const) в пространстве Лапласа   с учетом выражения (-@eq-lapl_const) преобразуется к\n",
+    "\n",
+    "$$\n",
+    "\\lim_{r_D \\to r_{wD}} P_D  = \\mathcal{L}\\left(g(t_D, q_D)\\right) \n",
+    "$$ {#eq-lapl_boundary_cond_well_2} \n",
+    "\n",
+    "## Использование `sympy` для построения решений\n",
+    "\n",
+    "С уравнением (-@eq-equation_dimensionless) и его решениями удобно работать с использованием системы компьютерной алгебры [`sympy`](https://www.sympy.org/en/index.html). "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "1c311bda",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#| code-fold: false\n",
+    "#| echo: true\n",
+    "import sympy as sp"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "997bd0d8",
+   "metadata": {},
+   "source": [
+    "Определим переменные `sympy` с которыми будем работать "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "7c663130",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#| code-fold: false\n",
+    "#| echo: true\n",
+    "# \n",
+    "\n",
+    "# безразмерные расстояние, время, давление и дебит\n",
+    "r_d = sp.symbols('r_D')\n",
+    "t_d = sp.symbols('t_D')\n",
+    "q_d = sp.symbols('q_D')\n",
+    "p_d = sp.Function('p_D')\n",
+    "# изображения давления в пространстве Лапласа\n",
+    "Lp_d = sp.Function(\"P_D\")\n",
+    "# параметр пространства Лапласа\n",
+    "u = sp.symbols('u', positive=True)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a150f128",
+   "metadata": {},
+   "source": [
+    "Зададим уравнение фильтрации в пространстве Лапласа в символьном виде"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "c8a53a8d",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/latex": [
+       "$\\displaystyle u P_{D}{\\left(r_{D} \\right)} = \\frac{r_{D} \\frac{d^{2}}{d r_{D}^{2}} P_{D}{\\left(r_{D} \\right)} + \\frac{d}{d r_{D}} P_{D}{\\left(r_{D} \\right)}}{r_{D}}$"
+      ],
+      "text/plain": [
+       "Eq(u*P_D(r_D), (r_D*Derivative(P_D(r_D), (r_D, 2)) + Derivative(P_D(r_D), r_D))/r_D)"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#| code-fold: false\n",
+    "#| echo: true\n",
+    "#| output: false\n",
+    " \n",
+    "eq_Lapld = sp.Eq(u * Lp_d(r_d),\n",
+    "                1 / r_d * (sp.diff(r_d * sp.diff(Lp_d(r_d),r_d),r_d)))\n",
+    "eq_Lapld "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "9e1c59e7",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "$$\n",
+      "u P_{D}{\\left(r_{D} \\right)} = \\frac{r_{D} \\frac{d^{2}}{d r_{D}^{2}} P_{D}{\\left(r_{D} \\right)} + \\frac{d}{d r_{D}} P_{D}{\\left(r_{D} \\right)}}{r_{D}} \n",
+      " $$ {#eq-Lapld}\n"
+     ]
+    }
+   ],
+   "source": [
+    "#| echo: false\n",
+    "#| output: asis\n",
+    "\n",
+    "print(f\"$$\\n{sp.latex(eq_Lapld)} \\n $$ {{#eq-Lapld}}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a3dc50d1",
+   "metadata": {},
+   "source": [
+    "здесь\n",
+    "\n",
+    "- $P_D$ - изображение давления в пространстве Лапласа.\n",
+    "- $u$ - параметр пространства Лапласа\n",
+    "- $r_D$ - безразмерное расстояние\n",
+    "\n",
+    "Вообще изображение давления $P_D(u, r_D)$ функция параметра пространства Лапласа $u$, безразмерное расстояния $r_D$ и безразмерного дебита $q_D$. Но для упрощения расчетов с использованием `sympy` иногда мы будем опускать часть зависимостей в обозначении в зависимости от контекста. Например в (-@eq-Lapld) указываем изображение давления $P_D(r_D)$ только как функцию расстояния, что позволяет `sympy` корректно продиффиринцировать уравнение и найти его решение. Где уместно будет указывать полную зависимость.\n",
+    "\n",
+    "\n",
+    "Модифицированное уравнение Бесселя хорошо изучено. Системы компьютерной алгебры могут его распознать и решить. В `sympy` за решение ОДУ отвечает функция `dsolve`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "4ccbc9f8",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/latex": [
+       "$\\displaystyle P_{D}{\\left(r_{D} \\right)} = C_{1} I_{0}\\left(r_{D} \\sqrt{u}\\right) + C_{2} Y_{0}\\left(i r_{D} \\sqrt{u}\\right)$"
+      ],
+      "text/plain": [
+       "Eq(P_D(r_D), C1*besseli(0, r_D*sqrt(u)) + C2*bessely(0, I*r_D*sqrt(u)))"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#| code-fold: false\n",
+    "#| echo: true\n",
+    "#| output: false\n",
+    "soln_0 = sp.dsolve(eq_Lapld, Lp_d(r_d))\n",
+    "soln_0"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "0f2d52f2",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "$$\n",
+      "P_{D}{\\left(r_{D} \\right)} = C_{1} I_{0}\\left(r_{D} \\sqrt{u}\\right) + C_{2} Y_{0}\\left(i r_{D} \\sqrt{u}\\right) \n",
+      " $$ {#eq-soln_0}\n"
+     ]
+    }
+   ],
+   "source": [
+    "#| echo: false\n",
+    "#| output: asis\n",
+    "print(f\"$$\\n{sp.latex(soln_0)} \\n $$ {{#eq-soln_0}}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "75654925",
+   "metadata": {},
+   "source": [
+    "Проверим, что полученное решение (-@eq-soln_0) удовлетворяет уравнению (-@eq-Lapld)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "c0f734d7",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(True, 0)"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#| code-fold: false\n",
+    "#| echo: true\n",
+    "sp.checkodesol(eq_Lapld, soln_0)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6fc75a80",
+   "metadata": {},
+   "source": [
+    "Решение (-@eq-soln_0) по виду немного отличается от того, что обычно приводится в книгах. Вместо мофицированной функции Бесселя второго рода $K_0(x)$ решение выражается через функцию Бесселя второго рода $Y_0(ix)$ для мнимого арумента.\n",
+    "\n",
+    "[Известны выражения](https://en.wikipedia.org/wiki/Bessel_function#Modified_Bessel_functions:_I%CE%B1,_K%CE%B1) связывающие функции Бесселя первого $J_\\alpha(iz)$ и второго рода $Y_\\alpha(iz)$ для мнимых аргументов с модифицированными функциями Бесселя первого $I_\\alpha(z)$  и второго рода $K_\\alpha(z)$.\n",
+    "\n",
+    "\n",
+    "$$ \n",
+    "Y_\\alpha(iz) = e^{\\frac{(\\alpha+1)\\pi i}{2}}I_\\alpha(z) - \\frac{2}{\\pi}e^{-\\frac{\\alpha\\pi i}{2}}K_\\alpha(z) \n",
+    "$$ {#eq-eq23}\n",
+    "\n",
+    "преобразуем (-@eq-eq23)\n",
+    "\n",
+    "$$ \n",
+    "Y_0(iz) = e^{\\frac{\\pi i}{2}}I_0(z) - \\dfrac{2}{\\pi}K_0(z)\n",
+    "$$\n",
+    "\n",
+    "Учитывая эти выражения можно убедиться что выражение вида \n",
+    "\n",
+    "$$ \n",
+    "P_D(u, r_D) = A(u) K_0(r_D \\sqrt u) + B(u) I_0(r_D \\sqrt u) \n",
+    "$$  {#eq-eq25}\n",
+    "\n",
+    "которое можно найти в книгах также будет являться решение уравнения фильтрации, что можно проверить командой `sympy.checkodesol`\n",
+    "\n",
+    "Зададим в явном виде решение с использованием $K_0$ и $I_0$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "6fdf4779",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/latex": [
+       "$\\displaystyle P_{D}{\\left(r_{D} \\right)} = A K_{0}\\left(r_{D} \\sqrt{u}\\right) + B I_{0}\\left(r_{D} \\sqrt{u}\\right)$"
+      ],
+      "text/plain": [
+       "Eq(P_D(r_D), A*besselk(0, r_D*sqrt(u)) + B*besseli(0, r_D*sqrt(u)))"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#| code-fold: false\n",
+    "#| echo: true\n",
+    "A, B = sp.symbols('A B')\n",
+    "soln_2 = sp.Eq(Lp_d(r_d) , A * sp.besselk(0, r_d * sp.sqrt(u)) + B * sp.besseli(0, r_d * sp.sqrt(u)))\n",
+    "soln_2"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1c166b17",
+   "metadata": {},
+   "source": [
+    "Проверим, что это решение также удовлетворяет исходному уравнению"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "d386b662",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(True, 0)"
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#| code-fold: false \n",
+    "#| echo: true\n",
+    "sp.checkodesol(eq_Lapld, soln_2)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b8539fa9",
+   "metadata": {},
+   "source": [
+    "Далее для построения решений используем выражение с явным указанием зависимости $P_D(u, r_D)$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "72e27fa8",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/latex": [
+       "$\\displaystyle P_{D}{\\left(u,r_{D} \\right)} = A K_{0}\\left(r_{D} \\sqrt{u}\\right) + B I_{0}\\left(r_{D} \\sqrt{u}\\right)$"
+      ],
+      "text/plain": [
+       "Eq(P_D(u, r_D), A*besselk(0, r_D*sqrt(u)) + B*besseli(0, r_D*sqrt(u)))"
+      ]
+     },
+     "execution_count": 10,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#| code-fold: false\n",
+    "#| echo: true\n",
+    "soln_2 = sp.Eq(Lp_d(u,r_d) , A * sp.besselk(0, r_d * sp.sqrt(u)) + B * sp.besseli(0, r_d * sp.sqrt(u)))\n",
+    "soln_2"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "88b0b6c0",
+   "metadata": {},
+   "source": [
+    "Для построения частных решений необходимо найти параметры $A$ $B$ выражения (-@eq-eq25) чтобы удовлетворить граничным условиям (-@eq-bound_condition_inf) (-@eq-bound_condition_well).\n",
+    "\n",
+    "Покажем, что для того, чтобы удовлетворить условию на бесконечности (-@eq-bound_condition_inf) необходимо положить $B=0$.\n",
+    "\n",
+    "Проверим поведение решения (-@eq-eq25) на бесконечности"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "9871ef1c",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/latex": [
+       "$\\displaystyle \\infty \\operatorname{sign}{\\left(B \\right)}$"
+      ],
+      "text/plain": [
+       "oo*sign(B)"
+      ]
+     },
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#| code-fold: false \n",
+    "#| echo: true\n",
+    "bc_check = sp.limit(soln_2.rhs, r_d, sp.oo)\n",
+    "bc_check"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "3b71211e",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "$$\n",
+      " \\lim_{r_D \\to \\infty} \\left[ A K_{0}\\left(r_{D} \\sqrt{u}\\right) + B I_{0}\\left(r_{D} \\sqrt{u}\\right) \\right] = \\infty \\operatorname{sign}{\\left(B \\right)} \n",
+      " $$ {#eq-soln_3}\n"
+     ]
+    }
+   ],
+   "source": [
+    "#| echo: false\n",
+    "#| output: asis\n",
+    "\n",
+    "print(f\"$$\\n \\\\lim_{{r_D \\\\to \\\\infty}} \\\\left[ {sp.latex(soln_2.rhs)} \\\\right] = {sp.latex(bc_check)} \\n $$ {{#eq-soln_3}}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9fb3a799",
+   "metadata": {},
+   "source": [
+    "Получим, что поведение на бесконечности определяется параметром $B$. В этом можно убедиться посмотрев на графики функции  $I_0$ (раздел -@sec-spec_func_Bessel).\n",
+    "\n",
+    "Таким образом решение для бесконечного пласта будет иметь вид"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "eede427a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#| code-fold: false\n",
+    "#| echo: true\n",
+    "#| output: false\n",
+    "soln_3 = soln_2.subs(B, 0)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "c6d3ce55",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "$$\n",
+      "P_{D}{\\left(u,r_{D} \\right)} = A K_{0}\\left(r_{D} \\sqrt{u}\\right) \n",
+      " $$ {#eq-soln_3}\n"
+     ]
+    }
+   ],
+   "source": [
+    "#| echo: false\n",
+    "#| output: asis\n",
+    "print(f\"$$\\n{sp.latex(soln_3)} \\n $$ {{#eq-soln_3}}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "346378d6",
+   "metadata": {},
+   "source": [
+    "Дальше покажем как можно работать с решением (-@eq-soln_3) для построения частных решений.\n",
+    "\n",
+    "\n",
+    "## Решение линейного стока\n",
+    "\n",
+    "Самое простое нестационарное решение можно получить для скважины с постоянным дебитом с бесконечно малым радиусом в бесконечном пласте. \n",
+    "Запишем уравнение и соответствующие граничные условия. \n",
+    "Рассматриваем уравнение (-@eq-equation_dimensionless)\n",
+    "$$ \n",
+    "\\frac{\\partial p_D}{ \\partial t_D} = \\frac{1}{r_D}\\left[ \\frac{ \\partial{}}{ \\partial{r_D} }\\left( r_D \\dfrac{\\partial p_D}{ \\partial r_D} \\right) \\right]  \n",
+    "$$ \n",
+    "\n",
+    "В пространстве Лапласа уравление фильтрации примет вид (-@eq-bessel)\n",
+    "$$ \n",
+    "u P_D - P_D(0^+) =  \\dfrac{1}{r_D} \\left[\\dfrac{d}{d r_D} \\left(r_D \\dfrac{d{P_D}}{d r_D} \\right) \\right] \n",
+    "$$ \n",
+    "\n",
+    "\n",
+    "Граничное условиее на бесконечности пространстве Лапласа имеет вид (-@eq-lapl_boundary_cond_inf), что позволяет искать решение в виде (-@eq-soln_3)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "6675db85",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "$$\n",
+      "P_{D}{\\left(u,r_{D} \\right)} = A K_{0}\\left(r_{D} \\sqrt{u}\\right) \n",
+      " $$\n"
+     ]
+    }
+   ],
+   "source": [
+    "#| echo: false\n",
+    "#| output: asis\n",
+    "print(f\"$$\\n{sp.latex(soln_3)} \\n $$\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "19928fbf",
+   "metadata": {},
+   "source": [
+    "Граничное условие на скважине бесконечно малого радиуса можно записать как \n",
+    "\n",
+    "$$\n",
+    "\\lim_{r_D \\to 0} \\left[ r_D \\dfrac{ \\partial p_D(r_D, t_D)}{\\partial r_D} \\right] = -с_{qD}  \n",
+    "$$\n",
+    "\n",
+    "в пространстве Лапласа  (3.3) с учетом выражения (12.9) преобразуется к\n",
+    "\n",
+    "$$\n",
+    "\\lim_{r_D \\to 0} \\left[ r_D \\dfrac{ d \\widetilde{P}_D(u, r_D)}{d r_D} \\right] = -\\dfrac{с_{qD}}{u} \n",
+    "$$ \n",
+    "\n",
+    "\n",
+    "\n",
+    "\n",
+    "## Решение для радиального притока с конечным радиусом скважины\n",
+    "\n",
+    "## Решение для постоянного давления\n",
+    "\n",
+    "## Решение для линейного меняющегося дебита\n",
+    "\n",
+    "## Решение для линейного меняющегося давления\n",
+    "\n",
+    "\n",
+    "Пример функции для автоматизированного расчета"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "7fe889e2",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#| code-fold: false\n",
+    "#| echo: true\n",
+    "\n",
+    "def dsolve_eq_laplace_inf(sol, bc):\n",
+    "    print('граничное условие на скважине')\n",
+    "    bc_well = sp.Eq( r_d * sp.diff(p_d(t_d, r_d), r_d) ,bc)\n",
+    "    display(bc_well)\n",
+    "    print('применим преобразование Лапласа к обеим частям граничного условия')\n",
+    "    eq_boundary_Laplace = sp.Eq( r_d * sp.diff(Lp_d(u, r_d), r_d) ,sp.laplace_transform(bc, t_d, u,  noconds=True))\n",
+    "    display(eq_boundary_Laplace)\n",
+    "    print('Выражение для граничного условия на скважине')\n",
+    "    bc2 = sp.Eq( eq_boundary_Laplace.lhs.subs(Lp_d(u, r_d), sol.rhs).simplify(), eq_boundary_Laplace.rhs)\n",
+    "    display(bc2)\n",
+    "    print('найдем A')\n",
+    "    bc2_sol = sp.solve(bc2.subs(r_d, 1), A)\n",
+    "    display(sp.Eq(A,bc2_sol[0]))\n",
+    "    print('частное решение для любого расстояния')\n",
+    "    soln_4 = soln_3.subs(A, bc2_sol[0])\n",
+    "    display(soln_4)\n",
+    "    return soln_4"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "id": "f3818396",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "граничное условие на скважине\n"
+     ]
+    },
+    {
+     "data": {
+      "text/latex": [
+       "$\\displaystyle r_{D} \\frac{\\partial}{\\partial r_{D}} p_{D}{\\left(t_{D},r_{D} \\right)} = c_{q_D}$"
+      ],
+      "text/plain": [
+       "Eq(r_D*Derivative(p_D(t_D, r_D), r_D), c_{q_D})"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "применим преобразование Лапласа к обеим частям граничного условия\n"
+     ]
+    },
+    {
+     "data": {
+      "text/latex": [
+       "$\\displaystyle r_{D} \\frac{\\partial}{\\partial r_{D}} P_{D}{\\left(u,r_{D} \\right)} = \\frac{c_{q_D}}{u}$"
+      ],
+      "text/plain": [
+       "Eq(r_D*Derivative(P_D(u, r_D), r_D), c_{q_D}/u)"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Выражение для граничного условия на скважине\n"
+     ]
+    },
+    {
+     "data": {
+      "text/latex": [
+       "$\\displaystyle - A r_{D} \\sqrt{u} K_{1}\\left(r_{D} \\sqrt{u}\\right) = \\frac{c_{q_D}}{u}$"
+      ],
+      "text/plain": [
+       "Eq(-A*r_D*sqrt(u)*besselk(1, r_D*sqrt(u)), c_{q_D}/u)"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "найдем A\n"
+     ]
+    },
+    {
+     "data": {
+      "text/latex": [
+       "$\\displaystyle A = - \\frac{c_{q_D}}{u^{\\frac{3}{2}} K_{1}\\left(\\sqrt{u}\\right)}$"
+      ],
+      "text/plain": [
+       "Eq(A, -c_{q_D}/(u**(3/2)*besselk(1, sqrt(u))))"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "частное решение для любого расстояния\n"
+     ]
+    },
+    {
+     "data": {
+      "text/latex": [
+       "$\\displaystyle P_{D}{\\left(u,r_{D} \\right)} = - \\frac{c_{q_D} K_{0}\\left(r_{D} \\sqrt{u}\\right)}{u^{\\frac{3}{2}} K_{1}\\left(\\sqrt{u}\\right)}$"
+      ],
+      "text/plain": [
+       "Eq(P_D(u, r_D), -c_{q_D}*besselk(0, r_D*sqrt(u))/(u**(3/2)*besselk(1, sqrt(u))))"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/latex": [
+       "$\\displaystyle P_{D}{\\left(u,r_{D} \\right)} = - \\frac{c_{q_D} K_{0}\\left(r_{D} \\sqrt{u}\\right)}{u^{\\frac{3}{2}} K_{1}\\left(\\sqrt{u}\\right)}$"
+      ],
+      "text/plain": [
+       "Eq(P_D(u, r_D), -c_{q_D}*besselk(0, r_D*sqrt(u))/(u**(3/2)*besselk(1, sqrt(u))))"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "частное решение для забойного давления\n"
+     ]
+    },
+    {
+     "data": {
+      "text/latex": [
+       "$\\displaystyle P_{D}{\\left(u,1 \\right)} = - \\frac{c_{q_D} K_{0}\\left(\\sqrt{u}\\right)}{u^{\\frac{3}{2}} K_{1}\\left(\\sqrt{u}\\right)}$"
+      ],
+      "text/plain": [
+       "Eq(P_D(u, 1), -c_{q_D}*besselk(0, sqrt(u))/(u**(3/2)*besselk(1, sqrt(u))))"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "#| code-fold: false\n",
+    "#| echo: true\n",
+    "\n",
+    "c_qd = sp.symbols('c_{q_D}')\n",
+    "soln_4 = dsolve_eq_laplace_inf(soln_3, c_qd) \n",
+    "display(soln_4)\n",
+    "print('частное решение для забойного давления')\n",
+    "soln_5 = soln_4.subs(r_d, 1)\n",
+    "display(soln_5)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3",
+   "path": "/usr/share/jupyter/kernels/python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.12.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
