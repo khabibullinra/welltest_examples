@@ -6,7 +6,13 @@ Khabibullin Rinat
 import numpy as np
 import scipy.special as sp
 #from scipy.special import  expi
-import anaflow 
+from .laplace import get_lap_inv
+
+
+
+# ==========================================================
+# dimensionless variables definition
+# ==========================================================
 
 
 # Define functions for converting dimensional variables into dimensionless variables and vice versa
@@ -103,24 +109,6 @@ def pd_from_p(p_atma, k_mD=10, h_m=10, q_sm3day=20, b_m3m3=1.2, mu_cP=1, pi_atma
 #
 # ==========================================================
 
-# Решение линейного стока уравнения фильтрации
-def pd_line_source_ei(td, rd, qd=1, skin=0):
-    """
-    Решение линейного стока уравнения фильтрации
-    rd - безразмерное расстояние
-    td - безразмерное время
-    qd - безразмерный дебит
-    skin - величина скин-фактора
-    """
-    # оценим приведенный радиус скважины
-    rd_eff = np.exp(-skin) * np.heaviside(-skin, 0) + np.heaviside(skin, 1)
-    # преобразуем входные радиусы в приведенные с учетом величины скин-фактора
-    rd_calc = rd * np.heaviside(rd - rd_eff, 0) + np.exp(-skin) * np.heaviside(rd_eff - rd, 1)
-    # исключим нулевые величины времени, чтобы избежать деления на ноль
-    td_safe = 100 * np.heaviside(-td, 1) + td * np.heaviside(td, 0)
-    pd = - qd / 2 / np.pi * ( 1 / 2  * sp.expi(-rd_calc**2 / 4 / td_safe)  )
-    # в конце обнулим результаты для нулевых моментов времени
-    return  pd * np.heaviside(td, 0)
 
 
 def pd_ss(rd, r_ed=2500, qd=1, skin=0):
@@ -135,48 +123,6 @@ def pd_ss_(rd, r_ed=2500, qd=1, skin=0):
     skin_eff = skin * np.heaviside(1 - rd, 1)
     rd_eff = rd * np.heaviside(rd - 1, 1) + np.heaviside(1 - rd, 0)
     return qd / 2 / np.pi * (np.log(r_ed/rd_eff) + skin_eff)
-
-
-def pd_line_source_ei_build_up(td, td_p, rd, qd=1, skin=0):
-    """
-    расчет давления для запуска и последующей остановки скважины
-    td - время после запуска
-    td_p - время безразмерное - которое скважина работала до остановки
-    rd - расстояния от скважины
-    qd - безразмерный дебит
-    skin - величина скин-фактора
-    """
-    
-    # применение функции Хевисайда здесь делает расчет корректным
-    # для входных векторов td
-    return pd_line_source_ei(td, rd, qd, skin) - np.heaviside(td-td_p,1) * pd_line_source_ei(td-td_p, rd, qd, skin)
-
-def p_line_source_ei_atma(t_hr, r_m, q_sm3day, 
-                          k_mD=10, h_m=10, phi=0.2, mu_cP=1, b_m3m3=1.2, ct_1atm=1e-5, rw_m=0.1, p_init_atma=250, skin=0):
-    """
-    Функция расчета перепада давления в произвольной точке пласта 
-    на расстоянии r_m от центра скважины для решения линейного стока
-    
-    - r_m - расстояние на котором проводится расчет, м
-    - q_sm3day - дебит жидкости на поверхности в стандартных условиях
-    - k_mD
-    - h_m
-    - phi
-    - mu_cP - вязкость нефти (в пластовых условиях)
-    - b_m3m3 - объемный коэффициент нефти 
-    - ct_1atm 
-    - rw_m - радиус скважины, м
-    - p_init_atma
-    - skin - скин фактор
-    """ 
-    q_ref_sm3day = 1
-    td = td_from_t(t_hr, k_mD=k_mD, phi=phi, mu_cP=mu_cP, ct_1atm=ct_1atm, rw_m=rw_m)
-    rd = rd_from_r(r_m, rw_m=rw_m)
-    qd = qd_from_q(q_sm3day, q_ref_sm3day=q_ref_sm3day)
-    pd = pd_line_source_ei(td, rd, qd, skin)
-    return p_from_pd_atma(pd, k_mD=k_mD, h_m=h_m, q_sm3day=q_ref_sm3day, b_m3m3=b_m3m3, mu_cP=mu_cP, pi_atma=p_init_atma)
-
-# ====================================================================================
 
 
 # Определим функции для расчета стационарного решения
@@ -241,6 +187,74 @@ def p_ss_atma(p_res_atma = 250,
                                 r_m = r_m,
                                 skin = skin)
 
+
+# ==========================================================
+# line source solutions
+# ==========================================================
+
+# Решение линейного стока уравнения фильтрации
+def pd_line_source_ei(td, rd, qd=1, skin=0):
+    """
+    Решение линейного стока уравнения фильтрации
+    rd - безразмерное расстояние
+    td - безразмерное время
+    qd - безразмерный дебит
+    skin - величина скин-фактора
+    """
+    # оценим приведенный радиус скважины
+    rd_eff = np.exp(-skin) * np.heaviside(-skin, 0) + np.heaviside(skin, 1)
+    # преобразуем входные радиусы в приведенные с учетом величины скин-фактора
+    rd_calc = rd * np.heaviside(rd - rd_eff, 0) + np.exp(-skin) * np.heaviside(rd_eff - rd, 1)
+    # исключим нулевые величины времени, чтобы избежать деления на ноль
+    td_safe = 100 * np.heaviside(-td, 1) + td * np.heaviside(td, 0)
+    pd = - qd / 2 / np.pi * ( 1 / 2  * sp.expi(-rd_calc**2 / 4 / td_safe)  )
+    # в конце обнулим результаты для нулевых моментов времени
+    return  pd * np.heaviside(td, 0)
+
+
+def pd_line_source_ei_build_up(td, td_p, rd, qd=1, skin=0):
+    """
+    расчет давления для запуска и последующей остановки скважины
+    td - время после запуска
+    td_p - время безразмерное - которое скважина работала до остановки
+    rd - расстояния от скважины
+    qd - безразмерный дебит
+    skin - величина скин-фактора
+    """
+    
+    # применение функции Хевисайда здесь делает расчет корректным
+    # для входных векторов td
+    return pd_line_source_ei(td, rd, qd, skin) - np.heaviside(td-td_p,1) * pd_line_source_ei(td-td_p, rd, qd, skin)
+
+def p_line_source_ei_atma(t_hr, r_m, q_sm3day, 
+                          k_mD=10, h_m=10, phi=0.2, mu_cP=1, b_m3m3=1.2, ct_1atm=1e-5, rw_m=0.1, p_init_atma=250, skin=0):
+    """
+    Функция расчета перепада давления в произвольной точке пласта 
+    на расстоянии r_m от центра скважины для решения линейного стока
+    
+    - r_m - расстояние на котором проводится расчет, м
+    - q_sm3day - дебит жидкости на поверхности в стандартных условиях
+    - k_mD
+    - h_m
+    - phi
+    - mu_cP - вязкость нефти (в пластовых условиях)
+    - b_m3m3 - объемный коэффициент нефти 
+    - ct_1atm 
+    - rw_m - радиус скважины, м
+    - p_init_atma
+    - skin - скин фактор
+    """ 
+    q_ref_sm3day = 1
+    td = td_from_t(t_hr, k_mD=k_mD, phi=phi, mu_cP=mu_cP, ct_1atm=ct_1atm, rw_m=rw_m)
+    rd = rd_from_r(r_m, rw_m=rw_m)
+    qd = qd_from_q(q_sm3day, q_ref_sm3day=q_ref_sm3day)
+    pd = pd_line_source_ei(td, rd, qd, skin)
+    return p_from_pd_atma(pd, k_mD=k_mD, h_m=h_m, q_sm3day=q_ref_sm3day, b_m3m3=b_m3m3, mu_cP=mu_cP, pi_atma=p_init_atma)
+
+# ====================================================================================
+
+
+
 # =================================================================================
 
 # пример функции реализующий расчет решения в пространстве Лапласа
@@ -263,7 +277,7 @@ def pd_line_source_inv(td, rd=1.):
          должно быть числом
     результат массив массивов давления от времени
     """
-    pd_inv = anaflow.get_lap_inv(pd_lapl_line_source, rd=rd)
+    pd_inv = get_lap_inv(pd_lapl_line_source, rd=rd)
     return pd_inv(td)
 
     # пример функции реализующий расчет решения в пространстве Лапласа
@@ -290,5 +304,5 @@ def pd_finite_rw_inv(td, rd=1.):
     rd - безразмерный радиус, по умолчанию rd=1 - соответствует давлению на забое
     результат массив массивов давления от времени
     """
-    pd_inv = anaflow.get_lap_inv(pd_lapl_finite_rw, rd=rd)
+    pd_inv = get_lap_inv(pd_lapl_finite_rw, rd=rd)
     return pd_inv(td)
