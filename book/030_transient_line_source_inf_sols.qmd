@@ -263,7 +263,135 @@ plt.show()
 ### Произвольная история работы
 
 ### Интеграл Дюамеля
+В случае, когда дебит представлен не ступенями,а непрерывной функцией от времени(например, через нестационарное уравнение фильтрации с Ei), чтобы получить давление на забое (или в любой другой точке также) от времени. 
 
+В предложенном примере рассматривается задача, в которой при помощи интеграла Дюамеля по ранее полученной зависимости дебита от времени при постоянном забойном давлении восстанавливается забойное давление по времени (должно быть также постоянным постоянным).
+
+**Порядок выполнения задачи:**
+
+Проверить обратную связь между дебитом и давлением в упругом режиме:
+
+- Сначала рассчитываем дебит $q(t)$ при **постоянной депрессии** $\Delta p = 6\,\text{МПа}$.
+- Затем восстанавливаем давление $p(t)$ из этого дебита с помощью **интеграла Дюамеля**.
+- Если реализация верна, восстановленное давление должно быть близко к постоянному $\Delta p$.
+
+ **Интеграл Дюамеля**:
+
+$$
+p(t) = \int_0^t q(\tau) \cdot p_1(t - \tau) \, d\tau,
+$$
+
+где:
+- $q(\tau)$ — дебит в момент $\tau$,
+- $ p_1(t) $ — функция влияния давления от **единичного импульса дебита** (δ-функции).
+
+Если $p_{\text{const}}(t)$ — давление при **постоянном дебите** $q = 1$, то:
+
+$$
+p_1(t) = \frac{d}{dt} p_{\text{const}}(t).
+$$
+
+---
+
+**Реализация в коде:**
+
+1. **Аналитические решения в пространстве Лапласа**:
+   - Давление от единичного дебита:
+     $$
+     \tilde{p}(s) = \frac{\mu}{2\pi k h} \cdot \frac{K_0\!\left(r \sqrt{s/\eta}\right)}{s \, r_w \sqrt{s/\eta} \, K_1\!\left(r_w \sqrt{s/\eta}\right)}
+     $$
+   - Дебит от единичного давления ($ \Delta p = 1 $):
+     $$
+     \tilde{q}(s) = \frac{2\pi k h}{\mu B} \cdot \frac{1}{s} \cdot \frac{r_w \sqrt{s/\eta} \, K_1\!\left(r_w \sqrt{s/\eta}\right)}{K_0\!\left(r_w \sqrt{s/\eta}\right)}
+     $$
+
+2. **Обратное преобразование Лапласа** → временные функции `p_ls_d(t)` и `qd_unit(t)`.
+
+3. **Масштабирование**:
+   - Реальный дебит:$q(t) = q_{\text{unit}}(t) \cdot \Delta p$,
+   - Функция влияния: $p_1(t) = \dfrac{d}{dt} p_{\text{const}}(t)$ (численно через `np.gradient`).
+
+4. **Свёртка** (дискретный интеграл Дюамеля):
+   $$
+   p(t) \approx \sum_{\tau=0}^{t} q(\tau) \cdot p_1(t - \tau) \cdot \Delta t
+   $$
+
+---
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.special as sc
+import anaflow
+
+
+dp = 6000000          # Па
+B = 1.25                # м³/м³
+k = 5e-15               # м²
+h = 9.144               # м
+phi = 0.3               # -
+c_f = 1.47e-9           # 1/Па
+c_r = 1e-9              # 1/Па
+c_t = c_f + c_r         # 1/Па
+rw = 0.1524             # м
+r = rw                  # наблюдение в скважине
+mu = 3e-3               # Па·с
+
+eta = k / (mu * phi * c_t)
+def pd_lapl_1(s, r=r, r_w=rw, k=k, h=h, mu=mu, eta=eta):
+    u_r = r * np.sqrt(s / eta)
+    u_rw = r_w * np.sqrt(s / eta)
+    numerator = sc.kn(0, u_r)
+    denominator = s * r_w * np.sqrt(s / eta) * sc.kn(1, u_rw)
+    return mu * B / (2 * np.pi * k * h) * numerator / denominator
+
+def q_lapl_unit(s, r_w=rw, B=B, k=k, h=h, mu=mu, eta=eta):
+    u = r_w * np.sqrt(s / eta)
+    return (2 * np.pi * k * h) / (mu * B) * (1 / s) * (u * sc.k1(u)) / sc.k0(u)
+
+p_ls = anaflow.get_lap_inv(pd_lapl_1)
+q_ls_unit = anaflow.get_lap_inv(q_lapl_unit)
+x = np.linspace(1, 20000, 1500)
+dt = x[1] - x[0]
+
+
+qd_unit = q_ls_unit(x)
+qd = qd_unit * dp
+
+
+p_ls_d = p_ls(x)
+p1_d = np.gradient(p_ls_d, dt)
+pd_values = []
+for t_idx in range(len(x)):
+    p_t = 0.0
+    for tau_idx in range(t_idx + 1):
+        p_t += qd[tau_idx] * p1_d[t_idx - tau_idx] * dt
+    pd_values.append(p_t)
+
+pd_values = np.array(pd_values)
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
+
+ax1.plot(x, pd_values, label='Депрессия', color='blue')
+ax1.axhline(y=dp, color='red', linestyle='--', label=f'Target dp = {dp/1e6:.1f} MPa')
+ax1.set_ylabel('Pressure [Pa]')
+ax1.set_title('Сверка депрессии')
+ax1.legend()
+ax1.grid(True)
+
+ax2.plot(x, qd, label='Rate (qd)', color='red')
+ax2.set_xlabel('Time [s]')
+ax2.set_ylabel('Rate [m³/s]')
+ax2.set_title('Production Rate')
+ax2.grid(True)
+
+plt.tight_layout()
+plt.show()
+
+print(f"Initial rate: {qd[0]:.6e} m³/s")
+print(f"Initial p1 (impulse response): {p1_d[0]:.3e} Pa/s per m³/s")
+print(f"Final recovered pressure: {pd_values[-1]:.3e} Pa")
+print(f"Relative error at end: {(pd_values[-1] - dp) / dp * 100:.2f} %")
+```
 ## Решение для линейного меняющегося дебита
 
 ### Кусочно линейное решение для произвольной истории дебитов
@@ -277,4 +405,556 @@ plt.show()
 
 ## Влияние границ
 
-Разные примеры решений с границами и соответствующие графики
+В ходе моделирования нефтедобычи необходимо учитывать границы залежи, которые могут представлять собой, как выклинивания (непроницаемые границы), так и границы постоянного давления (аквифер). В этом разделе реализуется такой сценарий с помощью **метода фиктивных источников**, сочетающего аналитическое решение уравнения Лапласса через Ei и численное определение дебитов «фиктивных» скважин за пределами пласта с помощью системы уравнений.
+
+
+### Физическая постановка задачи с непроницаемыми границами
+
+Рассмотрим квадратный пласт $800 \times 800$ м. Пусть добывающая скважина расположена в центре пласта. Тогда мы будем иметь 4 границы нашего геометризированного горного отвода. Условие непротекания записывается в следующей форме:
+$$
+\left.\frac{\partial p}{\partial n}\right|_{\text{непроницаемая граница}} = 0.
+$$
+Для выполнения этого условия вводятся фиктивные источники за пределами области. Дебиты каждого фиктивного источника подбираются при решении системы уравнений $n \times n$, где n - n - число фиктивных источников (при увеличении количества повышается точность и теряется скорость расчёта).
+
+
+Для каждого момента времени система уравнений записывается как:
+
+$$
+\begin{bmatrix}
+A_{11} & A_{12} & \cdots & A_{1N} \\
+A_{21} & A_{22} & \cdots & A_{2N} \\
+\vdots & \vdots & \ddots & \vdots \\
+A_{N1} & A_{N2} & \cdots & A_{NN}
+\end{bmatrix}
+\begin{bmatrix}
+q^{\text{fict}}_1 \\
+q^{\text{fict}}_2 \\
+\vdots \\
+q^{\text{fict}}_N
+\end{bmatrix}
+=
+\begin{bmatrix}
+-\left.\dfrac{\partial p^{\text{real}}}{\partial n}\right|_{\mathbf{r}_1} \\
+-\left.\dfrac{\partial p^{\text{real}}}{\partial n}\right|_{\mathbf{r}_2} \\
+\vdots \\
+-\left.\dfrac{\partial p^{\text{real}}}{\partial n}\right|_{\mathbf{r}_N}
+\end{bmatrix},
+\qquad
+\text{или короче: } \mathbf{A} \, \mathbf{q}^{\text{fict}} = \mathbf{b}.
+$$
+
+Здесь:
+- $A_{ij}$ — нормальная производная отклика давления на единичный дебит от $j$-го фиктивного источника в точке $i$ на границе,
+- $b_i$ = $-\left.\dfrac{\partial p^{\text{real}}}{\partial n}\right|_{\mathbf{r}_i}$ - нормальная производная отклика давления от реальных скважин в точке i границы.
+
+### Решение задачи
+
+1. **Дискретизация границы**: каждая из четырёх сторон разбивается на `$N_seg = 90$` сегментов.
+2. **Размещение фиктивных источников**: за каждой границей на расстоянии 50 м размещаются источники, совпадающие по проекции с сегментами.
+3. **Формирование СЛАУ**: для каждого момента времени строится система  
+   $\mathbf{A} \cdot \mathbf{q}_{\text{fict}} = \mathbf{b}$,  
+   где $\mathbf{A}_{ij}$ — нормальная производная давления от $j$-го фиктивного источника в точке $i$, а $\mathbf{b}_i$ — компенсирующий вклад от реальной скважины.
+4. **Решение системы** и расчёт полного поля давления как суперпозиции вкладов от всех источников.
+5. **Визуализация** с помощью интерактивного контурного графика.
+
+
+
+
+```{python}
+    import numpy as np
+    import plotly.graph_objects as go
+    from scipy.special import expi
+
+    np.set_printoptions(linewidth=200, threshold=10000, precision=4, suppress=True)
+
+    # === Параметры пласта (все в СИ) ===
+    k_m2 = 1e-15
+    thickness_m = 10
+    porosity = 0.2
+    compressibility = 0.5e-9
+    mu_eff = 1.0e-3
+    B = 1.0
+    initial_pressure = 250.0      # атм
+    atm_to_pa = 101325
+    days_to_seconds = 86400
+
+    # === Параметры границ ===
+    L = 800.0
+    N_seg = 90
+    dx = L / N_seg
+    half_domain = 400.0
+
+    # === Центральная скважина ===
+    q_center_well_m3_per_day = 8.0
+    x_center, y_center = 0.0, 0.0
+    q_center_SI = q_center_well_m3_per_day / days_to_seconds  # м3/с
+
+    # === Точки на границе ===
+    def get_boundary_points():
+        centers = np.linspace(-L/2 + dx/2, L/2 - dx/2, N_seg)
+        north = (centers, np.full_like(centers, half_domain), (0, 1))
+        south = (centers, np.full_like(centers, -half_domain), (0, -1))
+        west  = (np.full_like(centers, -half_domain), centers, (-1, 0))
+        east  = (np.full_like(centers, half_domain), centers, (1, 0))
+        all_x = np.concatenate([north[0], south[0], west[0], east[0]])
+        all_y = np.concatenate([north[1], south[1], west[1], east[1]])
+        normals = [north[2]]*N_seg + [south[2]]*N_seg + [west[2]]*N_seg + [east[2]]*N_seg
+        return all_x, all_y, normals
+
+    x_bound, y_bound, normals = get_boundary_points()
+    N_bound = len(x_bound)
+
+    # === Фиктивные источники — снаружи ===
+    def get_fictitious_sources():
+        offset = 50
+        centers = np.linspace(-L/2 + dx/2, L/2 - dx/2, N_seg)
+        north = (centers, np.full_like(centers, half_domain + offset), (0, 1))
+        south = (centers, np.full_like(centers, -half_domain - offset), (0, -1))
+        west  = (np.full_like(centers, -half_domain - offset), centers, (-1, 0))
+        east  = (np.full_like(centers, half_domain + offset), centers, (1, 0))
+        all_x = np.concatenate([north[0], south[0], west[0], east[0]])
+        all_y = np.concatenate([north[1], south[1], west[1], east[1]])
+        return all_x, all_y
+
+    x_fict, y_fict = get_fictitious_sources()
+
+    # === Время и сетка для карты давления ===
+    time_points = np.linspace(0, 300, 30)
+    time_seconds = time_points * days_to_seconds
+
+    x_plot = np.linspace(-600, 600, 100)
+    y_plot = np.linspace(-600, 600, 100)
+    X, Y = np.meshgrid(x_plot, y_plot)
+
+    eta = k_m2 / (porosity * mu_eff * compressibility)
+
+    all_q_bound = []
+    all_P = []
+
+    for t_idx, t_sec in enumerate(time_seconds):
+    
+
+        b_vec = np.zeros(N_bound)
+        A_mat = np.zeros((N_bound, N_bound))
+
+        for i in range(N_bound):
+            x_b, y_b = x_bound[i], y_bound[i]
+            nx, ny = normals[i]
+
+            # --- вклад центральной скважины в dp/dn на границе ---
+            dx_c = x_b - x_center
+            dy_c = y_b - y_center
+            r2_c = dx_c**2 + dy_c**2
+            r_c = np.sqrt(r2_c) + 1e-30
+
+            u_c = r2_c / (4.0 * eta * t_sec + 1e-30)
+            dphi_du_c = np.exp(-u_c) / (u_c + 1e-30)
+            du_dr_c = r_c / (2.0 * eta * t_sec + 1e-30)
+
+            C_center = q_center_SI * mu_eff * B / (4.0 * np.pi * k_m2 * thickness_m)
+            dp_dr_c = C_center * dphi_du_c * du_dr_c
+
+            cos_nc = (dx_c * nx + dy_c * ny) / r_c
+            dp_dn_c = dp_dr_c * cos_nc
+
+            b_vec[i] = -dp_dn_c
+
+            # --- вклад j‑го фиктивного источника в dp/dn ---
+            for j in range(N_bound):
+                dx_j = x_b - x_fict[j]
+                dy_j = y_b - y_fict[j]
+                r2_j = dx_j**2 + dy_j**2
+                r_j = np.sqrt(r2_j) + 1e-30
+
+                u_j = r2_j / (4.0 * eta * t_sec + 1e-30)
+                dphi_du_j = np.exp(-u_j) / (u_j + 1e-30)
+                du_dr_j = r_j / (2.0 * eta * t_sec + 1e-30)
+
+                C = mu_eff * B / (4.0 * np.pi * k_m2 * thickness_m)
+                dp_dr_j = C * dphi_du_j * du_dr_j
+
+                cos_nj = (dx_j * nx + dy_j * ny) / r_j
+                dp_dn_j = dp_dr_j * cos_nj
+
+                A_mat[i, j] = dp_dn_j
+
+        # Решаем систему
+        try:
+            q_bound_SI = np.linalg.solve(A_mat, b_vec)
+        except np.linalg.LinAlgError:
+        
+            q_bound_SI = np.zeros(N_bound)
+
+        q_bound_m3_per_day = q_bound_SI * days_to_seconds
+        all_q_bound.append(q_bound_m3_per_day)
+
+        # === Поле давления P_atm на сетке ===
+        P_pa = np.full_like(X, initial_pressure * atm_to_pa, dtype=np.float64)
+
+        for j in range(N_bound):
+            q_j = q_bound_SI[j]
+            r2 = (X - x_fict[j])**2 + (Y - y_fict[j])**2
+            u = r2 / (4.0 * eta * t_sec + 1e-30)
+            dp = (q_j * mu_eff * B / (4.0 * np.pi * k_m2 * thickness_m)) * (-expi(-u))
+            P_pa -= dp
+
+        r2_c = (X - x_center)**2 + (Y - y_center)**2
+        u_c = r2_c / (4.0 * eta * t_sec + 1e-30)
+        dp_c = (q_center_SI * mu_eff * B / (4.0 * np.pi * k_m2 * thickness_m)) * (-expi(-u_c))
+        P_pa -= dp_c
+
+        P_atm = P_pa / atm_to_pa
+        all_P.append(P_atm)
+
+    # === Визуализация ===
+    fig = go.Figure()
+
+    fig.add_trace(go.Contour(
+        x=x_plot,
+        y=y_plot,
+        z=all_P[0],
+        colorscale='Viridis',
+        contours=dict(
+            start=all_P[0].min(),
+            end=all_P[0].max(),
+            size=(all_P[0].max()-all_P[0].min())/80
+        ),
+        colorbar=dict(len=0.8, y=0.65, title="Давление, атм"),
+        showscale=True,
+        name="Карта давления"
+    ))
+
+    for coord in [-400, 400]:
+        fig.add_trace(go.Scatter(
+            x=[coord, coord], y=[-600, 600],
+            mode='lines', line=dict(color='black', dash='dot', width=2),
+            showlegend=False
+        ))
+        fig.add_trace(go.Scatter(
+            x=[-600, 600], y=[coord, coord],
+            mode='lines', line=dict(color='black', dash='dot', width=2),
+            showlegend=False
+        ))
+
+    fig.add_trace(go.Scatter(
+        x=[x_center], y=[y_center], mode='markers',
+        marker=dict(size=10, color='white', line=dict(width=2, color='black')),
+        name="Центральная скважина"
+    ))
+
+    q_first = all_q_bound[0]
+    text_labels = [f"{q:.1f}" if abs(q) > 0.1 else "" for q in q_first]
+
+    fig.add_trace(go.Scatter(
+        x=x_fict, y=y_fict, mode='markers+text',
+        marker=dict(size=6, color='red', symbol='cross'),
+        text=text_labels, textposition="top center", textfont=dict(size=9),
+        name="Фиктивные источники"
+    ))
+
+    fig.update_layout(
+        title=f"Непроницаемые границы — аналитическое dp/dn (t = {time_points[0]:.2f} сут)",
+        xaxis_title="x, м",
+        yaxis_title="y, м",
+        width=1000,
+        height=800,
+        xaxis=dict(scaleanchor="y", scaleratio=1),
+        yaxis=dict(scaleanchor="x", scaleratio=1)
+    )
+
+    steps = []
+    for i in range(len(time_points)):
+        new_z = all_P[i]
+        contour_start = new_z.min()
+        contour_end = new_z.max()
+        contour_size = max((contour_end - contour_start) / 80, 0.01)
+
+        q_current = all_q_bound[i]
+        text_labels = [f"{q:.1f}" if abs(q) > 0.1 else "" for q in q_current]
+
+        steps.append(dict(
+            method="update",
+            args=[{
+                "z": [new_z],
+                "contours": dict(start=contour_start, end=contour_end, size=contour_size),
+                "text": [text_labels]
+            }, {
+                "title": f"Непроницаемые границы — аналитическое dp/dn (t = {time_points[i]:.2f} сут)"
+            }],
+            label=f"{time_points[i]:.1f} сут"
+        ))
+
+    sliders = [dict(active=0, currentvalue={"prefix": "Время: "}, pad={"t": 50}, steps=steps)]
+    fig.update_layout(sliders=sliders)
+    fig.show()
+```
+
+Показателем того, что система дифференциальных уравнений решена верно, является перпендикулярность изолиний границам. Это признак того, что выполнено условия непротекания. 
+
+### Физическая постановка задачи с границами постоянного давления
+Снова рассмотрим квадратный пласт $800 \times 800$ м. Добывающая скважина расположена в центре пласта. Квадратная граница в данной задаче будет представлять собой единый аквифер, на котором нам необходимо установить постоянное давление. 
+
+При задании **постоянного давления** $p = p_0$ на границах пласта условие принимает вид:
+
+$$
+p(\mathbf{r}_i) = p_0, \quad \forall\, \mathbf{r}_i \in \Gamma,
+$$
+
+где $\Gamma$ — совокупность граничных точек.
+
+Аналогично предыдущей задаче дебиты фиктивных источников $q^{\text{fict}}_j$ подбираются так, чтобы суммарное влияние от реальной скважины было равно влиянию всех фиктивных в каждой граничной точке. 
+
+СЛАУ выглядит следующим образом:
+
+$$
+\begin{bmatrix}
+G_{11} & G_{12} & \cdots & G_{1N} \\
+G_{21} & G_{22} & \cdots & G_{2N} \\
+\vdots & \vdots & \ddots & \vdots \\
+G_{N1} & G_{N2} & \cdots & G_{NN}
+\end{bmatrix}
+\begin{bmatrix}
+q^{\text{fict}}_1 \\
+q^{\text{fict}}_2 \\
+\vdots \\
+q^{\text{fict}}_N
+\end{bmatrix}
+=
+\begin{bmatrix}
+p_0 - p^{\text{real}}(\mathbf{r}_1) \\
+p_0 - p^{\text{real}}(\mathbf{r}_2) \\
+\vdots \\
+p_0 - p^{\text{real}}(\mathbf{r}_N)
+\end{bmatrix},
+\qquad
+\text{или короче: } \mathbf{G} \, \mathbf{q}^{\text{fict}} = \mathbf{d}.
+$$
+
+Здесь:
+- $N = 4 \cdot N_{\text{seg}}$ — общее число фиктивных источников,
+- $G_{ij} = p^{(j)}(\mathbf{r}_i)$ — отклик давления на единичный дебит в граничной точке $\mathbf{r}_i$, создаваемый  фиктивным источником $j$,
+$p_0$ - $p^{\text{real}}(\mathbf{r}_i)$ — отклик давления в точке $\mathbf{r}_i$, вызванное реальной скважиной,
+- $\mathbf{d}$ — вектор воздействия реальных скважин на границу, необходимый для «доведения» давления до $p_0$.
+
+
+
+```{python}
+import numpy as np
+import plotly.graph_objects as go
+from scipy.special import expi
+
+np.set_printoptions(linewidth=200, threshold=10000, precision=4, suppress=True)
+
+# === Параметры пласта (все в СИ) ===
+k_m2 = 1e-15
+thickness_m = 10
+porosity = 0.2
+compressibility = 0.5e-9
+mu_eff = 1.0e-3
+B = 1.0
+initial_pressure = 250.0      # атм — это и есть p0 на границе!
+atm_to_pa = 101325
+days_to_seconds = 86400
+
+# === Параметры границ ===
+L = 800.0
+N_seg = 90
+dx = L / N_seg
+half_domain = 400.0
+
+# === Центральная скважина ===
+q_center_well_m3_per_day = 8.0
+x_center, y_center = 0.0, 0.0
+q_center_SI = q_center_well_m3_per_day / days_to_seconds  # м3/с
+
+# === Точки на границе (где p = p0) ===
+def get_boundary_points():
+    centers = np.linspace(-L/2 + dx/2, L/2 - dx/2, N_seg)
+    north = (centers, np.full_like(centers, half_domain))
+    south = (centers, np.full_like(centers, -half_domain))
+    west  = (np.full_like(centers, -half_domain), centers)
+    east  = (np.full_like(centers, half_domain), centers)
+    all_x = np.concatenate([north[0], south[0], west[0], east[0]])
+    all_y = np.concatenate([north[1], south[1], west[1], east[1]])
+    return all_x, all_y
+
+x_bound, y_bound = get_boundary_points()
+N_bound = len(x_bound)
+
+# === Фиктивные источники — снаружи ===
+def get_fictitious_sources():
+    offset = 1
+    centers = np.linspace(-L/2 + dx/2, L/2 - dx/2, N_seg)
+    north = (centers, np.full_like(centers, half_domain + offset))
+    south = (centers, np.full_like(centers, -half_domain - offset))
+    west  = (np.full_like(centers, -half_domain - offset), centers)
+    east  = (np.full_like(centers, half_domain + offset), centers)
+    all_x = np.concatenate([north[0], south[0], west[0], east[0]])
+    all_y = np.concatenate([north[1], south[1], west[1], east[1]])
+    return all_x, all_y
+
+x_fict, y_fict = get_fictitious_sources()
+
+# === Время и сетка для карты давления ===
+time_points = np.linspace(0, 300, 30)
+time_seconds = time_points * days_to_seconds
+
+x_plot = np.linspace(-600, 600, 100)
+y_plot = np.linspace(-600, 600, 100)
+X, Y = np.meshgrid(x_plot, y_plot)
+
+eta = k_m2 / (porosity * mu_eff * compressibility)
+
+# Давление на границе (в Па)
+p0_pa = initial_pressure * atm_to_pa
+
+all_q_bound = []
+all_P = []
+
+for t_idx, t_sec in enumerate(time_seconds):
+
+    d_vec = np.zeros(N_bound)   # правая часть: p0 - p_real
+    G_mat = np.zeros((N_bound, N_bound))
+
+    for i in range(N_bound):
+        x_b, y_b = x_bound[i], y_bound[i]
+
+        # --- давление от центральной скважины в точке границы ---
+        dx_c = x_b - x_center
+        dy_c = y_b - y_center
+        r2_c = dx_c**2 + dy_c**2
+        u_c = r2_c / (4.0 * eta * t_sec + 1e-30)
+        C_center = q_center_SI * mu_eff * B / (4.0 * np.pi * k_m2 * thickness_m)
+        p_real_i = C_center * (-expi(-u_c))  # давление понижается → вычитаем
+
+        # Правая часть: чтобы суммарное давление стало p0
+        d_vec[i] = p0_pa - (p0_pa - p_real_i)  # = p_real_i
+        # Но так как полное давление = p0 - Σ(dp), то:
+        # p_total = p0 - p_real - Σ(p_fict_j) = p0  → Σ(p_fict_j) = -p_real
+        # Поэтому корректнее:
+        d_vec[i] = -p_real_i
+
+        # --- вклад j‑го фиктивного источника в давление в точке i ---
+        for j in range(N_bound):
+            dx_j = x_b - x_fict[j]
+            dy_j = y_b - y_fict[j]
+            r2_j = dx_j**2 + dy_j**2
+            u_j = r2_j / (4.0 * eta * t_sec + 1e-30)
+            C = mu_eff * B / (4.0 * np.pi * k_m2 * thickness_m)
+            p_j = C * (-expi(-u_j))
+            G_mat[i, j] = p_j
+
+    # Решаем систему: G @ q_fict = d  → q_fict = G^{-1} @ d
+    try:
+        q_bound_SI = np.linalg.solve(G_mat, d_vec)
+    except np.linalg.LinAlgError:
+        q_bound_SI = np.zeros(N_bound)
+
+    q_bound_m3_per_day = q_bound_SI * days_to_seconds
+    all_q_bound.append(q_bound_m3_per_day)
+
+    # === Поле давления P_atm на сетке ===
+    P_pa = np.full_like(X, p0_pa, dtype=np.float64)  # начальное поле = p0
+
+    # Вычитаем вклады всех источников (реального + фиктивных)
+    for j in range(N_bound):
+        q_j = q_bound_SI[j]
+        r2 = (X - x_fict[j])**2 + (Y - y_fict[j])**2
+        u = r2 / (4.0 * eta * t_sec + 1e-30)
+        dp = (q_j * mu_eff * B / (4.0 * np.pi * k_m2 * thickness_m)) * (-expi(-u))
+        P_pa -= dp
+
+    r2_c = (X - x_center)**2 + (Y - y_center)**2
+    u_c = r2_c / (4.0 * eta * t_sec + 1e-30)
+    dp_c = (q_center_SI * mu_eff * B / (4.0 * np.pi * k_m2 * thickness_m)) * (-expi(-u_c))
+    P_pa -= dp_c
+
+    P_atm = P_pa / atm_to_pa
+    all_P.append(P_atm)
+
+# === Визуализация ===
+fig = go.Figure()
+
+fig.add_trace(go.Contour(
+    x=x_plot,
+    y=y_plot,
+    z=all_P[0],
+    colorscale='Viridis',
+    contours=dict(
+        start=all_P[0].min(),
+        end=all_P[0].max(),
+        size=(all_P[0].max()-all_P[0].min())/80
+    ),
+    colorbar=dict(len=0.8, y=0.65, title="Давление, атм"),
+    showscale=True,
+    name="Карта давления"
+))
+
+# Линии границ пласта (±400 м)
+for coord in [-400, 400]:
+    fig.add_trace(go.Scatter(
+        x=[coord, coord], y=[-600, 600],
+        mode='lines', line=dict(color='black', dash='dot', width=2),
+        showlegend=False
+    ))
+    fig.add_trace(go.Scatter(
+        x=[-600, 600], y=[coord, coord],
+        mode='lines', line=dict(color='black', dash='dot', width=2),
+        showlegend=False
+    ))
+
+fig.add_trace(go.Scatter(
+    x=[x_center], y=[y_center], mode='markers',
+    marker=dict(size=10, color='white', line=dict(width=2, color='black')),
+    name="Центральная скважина"
+))
+
+q_first = all_q_bound[0]
+text_labels = [f"{q:.1f}" if abs(q) > 0.1 else "" for q in q_first]
+
+fig.add_trace(go.Scatter(
+    x=x_fict, y=y_fict, mode='markers+text',
+    marker=dict(size=6, color='red', symbol='cross'),
+    text=text_labels, textposition="top center", textfont=dict(size=9),
+    name="Фиктивные источники"
+))
+
+fig.update_layout(
+    title=f"Границы постоянного давления (p = {initial_pressure} атм), t = {time_points[0]:.2f} сут",
+    xaxis_title="x, м",
+    yaxis_title="y, м",
+    width=1000,
+    height=800,
+    xaxis=dict(scaleanchor="y", scaleratio=1),
+    yaxis=dict(scaleanchor="x", scaleratio=1)
+)
+
+steps = []
+for i in range(len(time_points)):
+    new_z = all_P[i]
+    contour_start = new_z.min()
+    contour_end = new_z.max()
+    contour_size = max((contour_end - contour_start) / 80, 0.01)
+
+    q_current = all_q_bound[i]
+    text_labels = [f"{q:.1f}" if abs(q) > 0.1 else "" for q in q_current]
+
+    steps.append(dict(
+        method="update",
+        args=[{
+            "z": [new_z],
+            "contours": dict(start=contour_start, end=contour_end, size=contour_size),
+            "text": [text_labels]
+        }, {
+            "title": f"Границы постоянного давления (p = {initial_pressure} атм), t = {time_points[i]:.2f} сут"
+        }],
+        label=f"{time_points[i]:.1f} сут"
+    ))
+
+sliders = [dict(active=0, currentvalue={"prefix": "Время: "}, pad={"t": 50}, steps=steps)]
+fig.update_layout(sliders=sliders)
+
+fig.show()
+```
+
+Ключевым моментом, который мы можем наблюдать на картинке - изолинии (изобары) параллельны границам. Это является признаком того, что граница держит постоянное давление и СЛАУ решена верно. 
