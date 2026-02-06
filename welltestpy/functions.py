@@ -29,7 +29,7 @@ def q_from_qd_sm3day(qd, q_ref_sm3day=1):
     qd - безразмерный дебит скважины
     q_ref_sm3day - референсный дебит
     """
-    return  qd * q_ref_sm3day / 2 / np.pi
+    return  qd * q_ref_sm3day #/ 2 / np.pi
 
 def qd_from_q(q_sm3day, q_ref_sm3day=1):
     """
@@ -37,7 +37,7 @@ def qd_from_q(q_sm3day, q_ref_sm3day=1):
     q_sm3day -  дебит скважины, ст. м3/сут
     q_ref_sm3day - референсный дебит
     """
-    return 2 * np.pi * q_sm3day / q_ref_sm3day
+    return  q_sm3day / q_ref_sm3day # * 2 * np.pi 
 
 def r_from_rd_m(rd, rw_m=0.1):
     """
