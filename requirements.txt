@@ -6,4 +6,4 @@ ipympl
 mpmath
 scipy
 pandas
-anaflow
+jupyter

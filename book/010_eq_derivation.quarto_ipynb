@@ -435,7 +435,7 @@
         "\n",
         "Для расчетов в размерных переменных необходимо определить функции перевода размерных координаты в безразмерные и обратно. Приведем пример определелие таких функций с использованием python. В дальнейшем при необходимости перевода размерных единиц в размерные и безразмерные будет использовать реализацию этих функций или модуля `welltest.functions`."
       ],
-      "id": "26cb96c4"
+      "id": "f262f8fb"
     },
     {
       "cell_type": "code",
@@ -534,7 +534,7 @@
         "    \"\"\"\n",
         "    return 2 * np.pi * q_sm3day / q_ref_sm3day"
       ],
-      "id": "17c2f92b",
+      "id": "cfe2a464",
       "execution_count": null,
       "outputs": []
     }
@@ -544,7 +544,7 @@
       "name": "python3",
       "language": "python",
       "display_name": "Python 3 (ipykernel)",
-      "path": "/usr/share/jupyter/kernels/python3"
+      "path": "/home/rnt/projects/welltest/welltest_examples/.venv/share/jupyter/kernels/python3"
     }
   },
   "nbformat": 4,

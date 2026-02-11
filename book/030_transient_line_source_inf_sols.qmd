@@ -187,7 +187,7 @@ plt.show()
 # импортируем ранее определенные расчетные функции
 import sys
 sys.path.append('..') # модуль с функциями располагается на уровень выше скрипта
-from welltest import functions as wf
+from welltestpy import functions as wf
 ```
 
 ```{python}
