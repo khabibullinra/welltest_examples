@@ -7,3 +7,4 @@ mpmath
 scipy
 pandas
 jupyter
+anaflow
