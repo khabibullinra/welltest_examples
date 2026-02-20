@@ -362,9 +362,339 @@ plt.show()
 
 ## Суперпозиция в пространстве для стационарного решения
 
-Привети пример построения карты давления для нескольких скважин
+**Принцип суперпозиции:**
 
-Привести пример расчета для галереи скважин
+Для системы из $N$ скважин суммарное давление в точке $(x, y)$ определяется как алгебраическая сумма давлений от каждой скважины:
+
+$$
+p(x, y) = p_e - \frac{\mu}{2 \pi k h} \sum_{i=1}^{N} Q_i \ln \frac{r_e}{r_i}
+$$
+
+где $r_i = \sqrt{(x - x_i)^2 + (y - y_i)^2}$ — расстояние до $i$-ой скважины.
+
+### Теоретическая постановка задачи
+
+На стационарном режиме при фильтрации жидкости  распределение давления в однородном пласте описывается формулой Дюпюи:
+
+$$
+p(r) = p_e - \frac{Q \mu}{2 \pi k h} \ln \frac{r_e}{r}
+$$
+
+где:
+- $p_e$ — давление на контуре питания (Па)
+- $Q$ — дебит скважины (м³/с), $Q>0$ для добывающих, $Q<0$ для нагнетательных
+- $\mu$ — вязкость флюида (Па·с)
+- $k$ — проницаемость пласта (м²)
+- $h$ — эффективная толщина пласта (м)
+- $r$ — расстояние от скважины (м)
+- $r_e$ — радиус контура питания (м)
+
+Примечание: радиусом контура питания принято считать расстояние от скважины до точки пласта, в которой изменение давления пренебрежимо мало. 
+
+
+
+::: {.callout-note}
+Чтобы выражение для принципа суперпозиции было применимо необходимо, чтобы расстояние между скважинами значительно превышало их радиусы ($r_i \gg r_w$).
+:::
+
+### Построение карты давления для произвольной группы скважин
+
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import cm
+import matplotlib.colors as mcolors
+
+# Параметры пласта
+k = 1e-13      # проницаемость, м² (100 мД)
+h = 10.0       # толщина пласта, м
+mu = 1e-3      # вязкость, Па·с (1 сП)
+p_e = 20e6     # давление на контуре, Па (20 МПа)
+r_e = 1000.0   # радиус контура питания, м
+
+# Скважины: [x, y, Q] — Q>0 добывающие, Q<0 нагнетательные
+wells = np.array([
+    [200, 300,  0.002],   # добывающая
+    [600, 400,  0.0015],  # добывающая
+    [400, 600, -0.001],   # нагнетательная
+    [300, 700,  0.0018],  # добывающая
+    [700, 700,  0.0022]   # добывающая
+])
+
+# Создание сетки
+x = np.linspace(0, 1000, 200)
+y = np.linspace(0, 1000, 200)
+X, Y = np.meshgrid(x, y)
+
+# Расчет давления по принципу суперпозиции
+P = np.full_like(X, p_e)
+
+for wx, wy, Q in wells:
+    r = np.sqrt((X - wx)**2 + (Y - wy)**2)
+    # Защита от деления на ноль и логарифма от нуля
+    r = np.maximum(r, 0.1)
+    P -= (Q * mu) / (2 * np.pi * k * h) * np.log(r_e / r)
+
+# Визуализация
+fig, ax = plt.subplots(figsize=(10, 8))
+levels = np.linspace(P.min(), P.max(), 25)
+
+# Контурные линии давления
+contour = ax.contourf(X, Y, P/1e6, levels=levels/1e6, cmap='viridis')
+cbar = fig.colorbar(contour, ax=ax, label='Давление, МПа')
+
+# Линии одинакового давления
+ax.contour(X, Y, P/1e6, levels=levels[::3]/1e6, colors='white', 
+           linewidths=0.3, alpha=0.5)
+
+# Отображение скважин
+prod_wells = wells[wells[:, 2] > 0]
+inj_wells = wells[wells[:, 2] < 0]
+
+ax.scatter(prod_wells[:, 0], prod_wells[:, 1], 
+           s=200, c='red', marker='o', edgecolors='darkred', 
+           linewidths=2, label='Добывающие', zorder=5)
+ax.scatter(inj_wells[:, 0], inj_wells[:, 1], 
+           s=200, c='blue', marker='^', edgecolors='darkblue', 
+           linewidths=2, label='Нагнетательные', zorder=5)
+
+# Подписи скважин
+for i, (wx, wy, Q) in enumerate(wells):
+    label = f'W{i+1}\nQ={Q*86400:.2f} м³/сут'  # конвертация в м³/сут
+    ax.annotate(label, (wx, wy), xytext=(15, 15), 
+                textcoords='offset points', fontsize=9,
+                bbox=dict(boxstyle='round,pad=0.3', facecolor='yellow', alpha=0.7))
+
+ax.set_xlabel('X, м')
+ax.set_ylabel('Y, м')
+ax.set_title('Карта распределения давления для группы скважин\n(принцип суперпозиции)')
+ax.legend(loc='upper right')
+ax.grid(True, alpha=0.3)
+ax.set_aspect('equal')
+plt.tight_layout()
+plt.show()
+
+
+```
+
+
+
+**Анализ результатов**
+
+На карте видны:
+- **Зоны депрессии** (низкое давление) вокруг добывающих скважин (красные круги)
+- **Зоны репрессии** (повышенное давление) вокруг нагнетательной скважины (синий треугольник)
+- **Интерференция скважин**: искажение изобар в областях пересечения зон влияния
+- **Градиенты давления** определяют направление фильтрационных потоков
+
+
+
+### Особенности галереи скважин
+Галлерея скважин - группа скважин, находящихся на одной линии, дебит которых подбирается, таким образом, чтобы было одинаковое забойное с учётом интерференции всех скважин. Галлереи скважин используют в моделировании пластовых систем для создании границ, трещин и горизонтальных скважин. 
+
+1. **Равномерное распределение депрессии** вдоль линии галереи при одинаковых дебитах
+2. **Максимальная интерференция** между соседними скважинами — давление в промежутках выше, чем у одиночной скважины
+3. **Эффективность охвата** — галерея создает «фронт» пониженного давления, вытесняющий флюид в направлении, перпендикулярном линии галереи
+4. **Оптимальное расстояние** между скважинами определяется из условия: $ \sigma \approx 2\pi r_c $, где $r_c$ — радиус контура питания единичной скважины
+
+```{python}
+import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+from scipy.special import expi
+
+
+k_m2 = 5e-15          # проницаемость, м²
+thickness_m = 10       # толщина, м
+porosity = 0.2         # пористость
+compressibility = 1e-9 # сжимаемость, 1/Па
+mu_eff = 1.0e-3        # вязкость, Па·с
+B = 1.0                # объёмный коэффициент (для упрощения)
+pwf_atm = 200.0        # забойное давление, атм
+initial_pressure = 250.0  # начальное давление, атм
+atm_to_pa = 101325
+days_to_seconds = 86400
+
+# Горизонтальная скважина
+L = 300.0              # длина, м
+N_seg = 15             # число сегментов
+dx = L / N_seg
+x_seg = np.linspace(-L/2 + dx/2, L/2 - dx/2, N_seg)
+rw_eq = 0.28 * dx      # эффективный радиус сегмента
+
+# Временные точки
+time_points = np.logspace(-2, 3, 12)  # от 0.01 до 1000 сут
+time_seconds = time_points * days_to_seconds
+
+# Сетка для карты давления
+x_plot = np.linspace(-600, 600, 60)
+y_plot = np.linspace(-600, 600, 60)
+X, Y = np.meshgrid(x_plot, y_plot)
+
+eta = k_m2 / (porosity * mu_eff * compressibility)  # м²/с
+
+all_q = []      # дебиты сегментов (м³/сут)
+all_P = []      # поля давления (атм)
+
+for t_sec in time_seconds:
+    A = np.zeros((N_seg, N_seg))
+    for i in range(N_seg):
+        for j in range(N_seg):
+            r2 = rw_eq**2 if i == j else (x_seg[i] - x_seg[j])**2
+            u = r2 / (4 * eta * t_sec + 1e-30)
+            A[i, j] = -expi(-u)  # ядро Ei
+    
+    # Правая часть: Δp = p_i - p_wf (в Па)
+    dp_pa = (initial_pressure - pwf_atm) * atm_to_pa
+    # Константа из решения уравнения
+    C = (4 * np.pi * k_m2 * thickness_m / (mu_eff * B)) * dp_pa
+    
+    try:
+        q_m3_per_sec = np.linalg.solve(A, np.full(N_seg, (4 * np.pi * k_m2 * thickness_m / (mu_eff * B)) * dp_pa))
+        q_m3_per_day = q_m3_per_sec * days_to_seconds
+    except:
+        q_m3_per_day = np.full(N_seg, np.nan)
+    
+    all_q.append(q_m3_per_day)
+    
+    # === 2. Расчёт поля давления ===
+    P_pa = np.full_like(X, initial_pressure * atm_to_pa, dtype=np.float64)
+    
+    for j in range(N_seg):
+        if np.isnan(q_m3_per_day[j]):
+            continue
+        q_j = q_m3_per_day[j] / days_to_seconds  # м³/с
+        r2 = (X - x_seg[j])**2 + Y**2
+        u = r2 / (4 * eta * t_sec + 1e-30)
+        dp_local = (q_j * mu_eff * B / (4 * np.pi * k_m2 * thickness_m)) * (-expi(-u))
+        P_pa -= dp_local
+    
+    P_atm = P_pa / atm_to_pa
+    all_P.append(P_atm)
+    
+
+
+
+fig = make_subplots(
+    rows=2, cols=1,
+    subplot_titles=("Профиль притока вдоль горизонтальной скважины", "Карта давления в пласте"),
+    vertical_spacing=0.1,
+    row_heights=[0.4, 0.6]
+)
+
+
+colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan', 'magenta', 'yellow']
+
+
+for idx, t in enumerate(time_points):
+    q = all_q[idx]
+    P = all_P[idx]
+    color = colors[idx % len(colors)]
+    
+   
+    fig.add_trace(
+        go.Scatter(
+            x=x_seg,
+            y=q,
+            mode='lines+markers',
+            name=f'Приток, t={t:.1f} сут',
+            line=dict(color=color),
+            marker=dict(size=6),
+            visible=(idx == 0),
+            legendgroup=f"group{idx}",
+            showlegend=True
+        ),
+        row=1, col=1
+    )
+    
+    
+    fig.add_trace(
+        go.Contour(
+            x=x_plot,
+            y=y_plot,
+            z=P,
+            colorscale='Viridis',
+            contours=dict(start=200, end=250, size=2),
+            colorbar=dict(len=0.6, y=0.25, title="Давление, атм"),
+            visible=(idx == 0),
+            showscale=True,
+            legendgroup=f"group{idx}",
+            showlegend=False
+        ),
+        row=2, col=1
+    )
+    
+    
+    fig.add_trace(
+        go.Scatter(
+            x=x_seg,
+            y=np.zeros_like(x_seg),
+            mode='markers',
+            marker=dict(size=5, color='white'),
+            visible=(idx == 0),
+            showlegend=False,
+            legendgroup=f"group{idx}"
+        ),
+        row=2, col=1
+    )
+
+
+steps = []
+for step_idx in range(len(time_points)):
+    # Всего трасс: 3 * N (профиль + карта + сегменты)
+    visible = [False] * len(fig.data)
+    
+    # Включаем трассы для текущего времени
+    visible[3 * step_idx] = True      # профиль
+    visible[3 * step_idx + 1] = True  # карта
+    visible[3 * step_idx + 2] = True  # сегменты
+    
+    step = dict(
+        method="update",
+        args=[{"visible": visible},
+              {"title": f"Горизонтальная скважина (t = {time_points[step_idx]:.2f} сут)"}],
+        label=f"{time_points[step_idx]:.1f} сут"
+    )
+    steps.append(step)
+
+sliders = [dict(
+    active=0,
+    currentvalue={"prefix": "Время: "},
+    pad={"t": 50},
+    steps=steps
+)]
+
+
+fig.update_layout(
+    title="Горизонтальная скважина как батарея: неустановившийся приток и поле давления",
+    height=900,
+    sliders=sliders,
+    legend=dict(groupclick="toggleitem")
+)
+
+fig.update_xaxes(title_text="Координата вдоль ствола, м", row=1, col=1)
+fig.update_yaxes(title_text="Дебит сегмента, м³/сут", row=1, col=1)
+
+fig.update_xaxes(title_text="x, м", row=2, col=1)
+fig.update_yaxes(title_text="y, м", scaleanchor="x", scaleratio=1, row=2, col=1)
+
+
+fig.show()
+```
+
+
+Принцип суперпозиции позволяет:
+
+- Учитывать интерференцию скважин при проведении расчётов на прокси-моделях
+- Оптимизировать расположение новых скважин с учётом влияния действующего фонда
+- Моделировать работу законтурных и внутриконтурных систем заводнения
+- Моделировать правильно снижение пластового давления, сохраняя матбаланс
+
+
+::: {.callout-warning}
+Для нестационарных процессов (упругий режим) применяется суперпозиция по времени с использованием функции экспоненциального интеграла $\text{Ei}(-x)$, что требует более сложных вычислений.
+:::
 
 ## Приток к скважине с ГРП (линейный источник на плоскости)
 
